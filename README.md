@@ -321,7 +321,7 @@ Visueel voorgesteld ziet dit er als volgt uit:
 
 ![alt\_text](images/APIReq02.png "")
 
-Elke **resource** heeft zijn **respresentatie**. Een representatie bestaat uit een set attributen dewelke de **state** van de resource
+Elke **resource** heeft zijn **representatie**. Een representatie bestaat uit een set attributen dewelke de **state** van de resource
 omschrijven.
 
 Het dataformaat waarin de resource representatie wordt voorgesteld wordt een **media-type** of MIME-type genoemd.
