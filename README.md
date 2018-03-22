@@ -361,10 +361,15 @@ Hanteer onderstaande conventies voor berichten die JSON als payload formaat hebb
 "5street" : "Generaal Armstrongweg" wordt NIET toegelaten
 ```
 
--   Verwijder `null `en lege waardes uit de resource representatie indien deze optioneel zijn.
+-   Verwijder `null` waardes uit de resource representatie indien deze geen betekenis hebben.
 ```prettyprint
-"middleName" : ""
- kan je best verwijderen uit de resource representatie indien optioneel
+"middleName" : null
+```
+
+-   Toon lege waardes in de resource representatie.
+```prettyprint
+"middleName" : "",
+"orders" : []
 ```
 
 -   Encapsuleer arrays steeds in een object. Dit omdat bepaalde frameworks niet goed overweg kunnen met native arrays
