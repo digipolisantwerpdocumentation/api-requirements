@@ -391,8 +391,9 @@ Hanteer onderstaande conventies voor berichten die JSON als payload formaat hebb
 
 Formatteer datums en timestamps steeds volgens [RFC3339](https://www.ietf.org/rfc/rfc3339.txt). JSON definieert immers geen standaard formaat voor datums en timestamps.
 ```prettyprint
-"finishedAt" : "2012-01-01T00:00:00Z"
+"finishedAt" : "2012-01-01T01:00:00+01:00"
 ```
+Het is aangewezen om de timezone "+01:00" te gebruiken maar "2012-01-01T00:00:00Z" is ook mogelijk.
 
 ### Durations
 
