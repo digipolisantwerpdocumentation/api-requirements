@@ -109,7 +109,7 @@ Swagger v2.0, JSON
             EN waarde null of leeg
     -   values
         -   string : dubbele quotes
-        -   datum en timestamp : "YYYY-MM-DDThh:mm:ssZ" (RFC3339)
+        -   datum en timestamp : "YYYY-MM-DDThh:mm:ss+01:00" (RFC3339)
         -   duration : "PYYYY-MM-DDThh:mm:ss" (ISO8601)   
             vb. "P0003-04-06T12:00:00" (3 jaar, 4 maanden, 6 dagen, 12 uur)
         -   geolocation : lengte en breedte coördinaten (ISO8601)  
