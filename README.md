@@ -112,6 +112,7 @@ Swagger v2.0, JSON
         -   niet opnemen in de resource representatie indien optioneel
             EN waarde null of leeg
     -   values
+        -   null : attribuut is optioneel indien deze value geen meerwaarde heeft
         -   string : dubbele quotes
         -   datum en timestamp : "YYYY-MM-DDThh:mm:ss+01:00" (RFC3339)
         -   duration : "PYYYY-MM-DDThh:mm:ss" (ISO8601)   
