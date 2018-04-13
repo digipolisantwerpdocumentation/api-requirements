@@ -1,4 +1,4 @@
-# Digipolis API design & style requirements v4.2.1
+# Digipolis API design & style requirements v4.2.2
 
 
 ## Inhoudstabel
@@ -82,6 +82,7 @@ Versie   | Auteur                 | Datum      | Opmerkingen
 5        | Peter Claes            | 23/11/2017 | HTTP response code 204.
 6        | Bart Van Steen         | 28/11/2017 | Aanpassing richtlijn versionering.
 7        | Peter Claes            | 01/02/2018 | Markdown versie (Github).
+8        | Peter Claes            | 12/04/2018 | null values, timezone, event resource.
 
 
 ## Cheat sheet
@@ -123,7 +124,7 @@ Swagger v2.0, JSON
     -   https://{hostname}/{namespace}/{vx}/{resource-URI}
     -   opm. : op de API gateway zal de namespace bestaan uit organization/apiname
 -   afspraken
-    -   altijd in het meervoud (uitzondering : controllers, status resource, monitoring resource)
+    -   altijd in het meervoud (uitzondering : controllers (=commands), status resource, monitoring resource)
     -   lowercase (zowel URI als query parameters)
     -   geen underscores
     -   geen dots '.' (behalve in hostname)
@@ -197,6 +198,10 @@ Swagger v2.0, JSON
 	}
 }
 ```
+### Event resources
+
+POST [/\<groeperingscollection>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoord
+
 
 ### Error model
 
@@ -248,7 +253,7 @@ Verb   | Usage                                                                  
 GET    | opvragen van de representatie van een resource                                                               | leeg                                      | (gedeeltelijke) resource representatie
 PUT    | vervangen van  een bestaande resource (of creatie indien die nog niet bestaat, op basis van de opgegeven id) | representatie  van te vervangen resource  | optioneel       
 POST   | creëren van een nieuwe resource                                                                              | representatie van te creëren resource    | optioneel, Location header met URI 
-POST   | voor het uitvoeren van een controller (werkwoord, vb. search)                                                | representatie van info voor controller   | optioneel   
+POST   | voor het uitvoeren van een controller(=command) (werkwoord, vb. search)                                      | representatie van info voor controller   | optioneel   
 PATCH  | vervangen van een gedeelte van een bestaande resource                                                        | te vervangen velden                     | optioneel       
 DELETE | verwijderen van een resource                                                                                 | leeg                                      | optioneel       
 
@@ -545,7 +550,7 @@ HTTP Verb | Safe | Idempotent | Toepassing                                      
 GET       | Ja   | Ja         | Voor het ophalen van de representatie van een resource. Opeenvolgende calls hebben geen invloed op de state van de resource.                           | Is steeds leeg
 PUT       | Neen | Ja         | Voor het vervangen van een bestaande resource. Indien de resource niet bestaat, wordt deze aangemaakt.                                                 | Representatie van de te vervangen resource
 POST      | Neen | Neen       | Voor het aanmaken van een nieuwe resource binnen een collection.                                                                                       | Representatie van de aan te maken resource (optionele velden niet)
-POST      | Neen | Neen       | Voor het uitvoeren van een activity of controller resource.                                                                                            | 
+POST      | Neen | Neen       | Voor het uitvoeren van een activity of controller (=command) resource.                                                                                 | 
 PATCH     | Neen | Neen       | Voor het updaten van een set velden binnen een bestaande resource. Enkel de opgegeven velden worden gewijzigd. Alle andere velden blijven ongewijzigd. | Enkel die velden van de resource die men wenst te updaten
 DELETE    | Neen | Ja         | Voor het verwijderen van een resource binnen een collection.                                                                                           | Is steeds leeg
 
@@ -976,6 +981,25 @@ Geeft als resultaat
 **Bij het ophalen van een collection zonder specificatie van query parameters dient paginatie informatie altijd aanwezig te zijn in de
 response message**.  
 Het aantal elementen dat in zulk geval wordt teruggegeven (page size) is API specifiek en dient te worden bepaald tijdens de API design fase.
+
+## Event resources
+Event resources worden als volgt aangegeven : 
+
+POST [/\<groeperingscollection>]*/\<event>
+
+parameter                | omschrijving
+---------                | ------------
+\<groeperingscollection> | 0 of meerdere keren mag voor komen om het event te verduidelijken
+\<event>                 | eindigt op voltooid deelwoord
+
+### Voorbeelden
+
+POST https://api-gateway/digipolis/business-party/v1/events/businesspartycreated
+POST https://api-gateway/digipolis/business-party/v1/events/business-party-created
+
+POST https://api-gateway/digipolis/business-party/v1/businesspartycreated
+POST https://api-gateway/digipolis/business-party/v1/business-party-created
+
 
 ## Error handling
 
