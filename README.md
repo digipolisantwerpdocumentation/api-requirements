@@ -998,9 +998,11 @@ parameter                | omschrijving
 ### Voorbeelden
 
 POST https://api-gateway/digipolis/business-party/v1/events/businesspartycreated
+
 POST https://api-gateway/digipolis/business-party/v1/events/business-party-created
 
 POST https://api-gateway/digipolis/business-party/v1/businesspartycreated
+
 POST https://api-gateway/digipolis/business-party/v1/business-party-created
 
 
