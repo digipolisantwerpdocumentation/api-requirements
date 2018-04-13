@@ -992,7 +992,7 @@ POST [/\<groeperingscollection>]*/\<event>
 
 parameter                | omschrijving
 ---------                | ------------
-\<groeperingscollection> | 0 of meerdere keren mag voor komen om het event te verduidelijken
+\<groeperingscollection> | mag 0 of meerdere keren voor komen om het event te verduidelijken
 \<event>                 | eindigt op voltooid deelwoord
 
 ### Voorbeelden
