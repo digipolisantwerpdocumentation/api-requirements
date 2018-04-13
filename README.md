@@ -109,10 +109,9 @@ Swagger v2.0, JSON
         -   camelCase
         -   geen dots (.)
         -   niet starten met een cijfer
-        -   niet opnemen in de resource representatie indien optioneel
-            EN waarde null of leeg
+        -   attribuut is optioneel indien de value geen meerwaarde heeft EN waarde null heeft
     -   values
-        -   null : attribuut is optioneel indien deze value geen meerwaarde heeft
+        -   null
         -   string : dubbele quotes
         -   datum en timestamp : "YYYY-MM-DDThh:mm:ss+01:00" (RFC3339)
         -   duration : "PYYYY-MM-DDThh:mm:ss" (ISO8601)   
