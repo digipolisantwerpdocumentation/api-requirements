@@ -109,9 +109,9 @@ Swagger v2.0, JSON
         -   camelCase
         -   geen dots (.)
         -   niet starten met een cijfer
-        -   niet opnemen in de resource representatie indien optioneel
-            EN waarde null of leeg
+        -   attribuut is optioneel indien de value geen meerwaarde heeft EN waarde null heeft
     -   values
+        -   null
         -   string : dubbele quotes
         -   datum en timestamp : "YYYY-MM-DDThh:mm:ss+01:00" (RFC3339)
         -   duration : "PYYYY-MM-DDThh:mm:ss" (ISO8601)   
@@ -369,10 +369,15 @@ Hanteer onderstaande conventies voor berichten die JSON als payload formaat hebb
 "5street" : "Generaal Armstrongweg" wordt NIET toegelaten
 ```
 
--   Verwijder `null `en lege waardes uit de resource representatie indien deze optioneel zijn.
+-   Verwijder `null` waardes uit de resource representatie indien deze geen betekenis hebben.
 ```prettyprint
-"middleName" : ""
- kan je best verwijderen uit de resource representatie indien optioneel
+"middleName" : null
+```
+
+-   Toon lege waardes in de resource representatie.
+```prettyprint
+"middleName" : "",
+"orders" : []
 ```
 
 -   Encapsuleer arrays steeds in een object. Dit omdat bepaalde frameworks niet goed overweg kunnen met native arrays
