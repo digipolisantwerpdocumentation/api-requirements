@@ -85,7 +85,7 @@ Versie   | Auteur                 | Datum      | Opmerkingen
 5        | Peter Claes            | 23/11/2017 | HTTP response code 204.
 6        | Bart Van Steen         | 28/11/2017 | Aanpassing richtlijn versionering.
 7        | Peter Claes            | 01/02/2018 | Markdown versie (Github).
-8        | Peter Claes            | 12/04/2018 | null values, timezone, event resource.
+8        | Peter Claes            | 13/04/2018 | null values, timezone, event resource.
 
 
 ## Cheat sheet
