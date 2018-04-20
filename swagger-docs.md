@@ -17,13 +17,13 @@ Merk op dat je Github Flavoured Markdown kan gebruiken in onder andere `descript
 ## Swagger file ##
 Momenteel supporteren we [OpenAPI specification 2.0](http://swagger.io/)
 
-In de volgende hoofdstukken gaan we in op de verschillende delen van de Swagger file, meerbepaald:
+In de volgende hoofdstukken gaan we in op de verschillende delen van de Swagger file, meer bepaald:
 
 * [Het Info Object](#Info-object)
 * [Werken met Tags](#Werken-met-Tags)
 * [De Operations](#De-Operations) 
-* Parameters
-* Responses
+* [Parameters](#Parameters)
+* [Responses](#Responses)
 
 ### Info object ###
 [zie specificatie hier](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#infoObject)
@@ -35,7 +35,7 @@ Het `info` object is de plaats waar je jouw API in de kijker kan zetten. Het is 
 * description
 * contact
 
-Wanneer je een `description` geeft, probeer dan met overtuiging, zinvole informatie te geven. Geef aan:
+Wanneer je een `description` geeft, probeer dan met overtuiging, zinvolle informatie te geven. Geef aan:
 
 * waarvoor deze API kan gebruikt worden
 * welke andere API's er bijhoren
@@ -75,7 +75,7 @@ kan je beter:
 
 [zie specificatie hier](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#tagObject)
 
-Je kan één of meerdere tags per operation (zie hieronder) toevoegen. Het beste is dat je tags op voorhand definiëert en er omschrijvingen voor voorziet. In het voorbeeld hieronder zie je hoe je dit best kan doen met een  `name` een `description` en een `externalDocs` waarde.
+Je kan één of meerdere tags per operation (zie hieronder) toevoegen. Het beste is dat je tags op voorhand definiëert en er omschrijvingen voor voorziet. In het voorbeeld hieronder zie je hoe je dit best kan doen met een  `name`, een `description` en een `externalDocs` waarde.
 
 ![Tags Example 1](images/tags-example-1.png)
 
@@ -83,11 +83,11 @@ Door gebruik te maken van tags, worden operaties gegroepeerd en geef je er een w
 
 ![Tags Example 2](images/tags-example-2.png)
 
-Stel dat je nu geen tags gebruikt. Wel, dan gaat Swagger UI dit onder een *Default* tag hangen. Dit wordt voor API's met meerdere operaties snel onoverzichtelijk:
+Als je geen tags gebruikt dan gaat Swagger UI dit onder een *Default* tag hangen. Dit wordt voor API's met meerdere operaties snel onoverzichtelijk:
 
 ![Tags Example 3](images/tags-example-3.png)
 
-Dus, met en : 
+Dus:
 
 1. Definiëer tags op voorhand en geef ze een omschrijving
 2. Pas bij elke Operatie een tag toe
@@ -101,7 +101,7 @@ De belangrijkste zaken in het Operations luik van de Swagger spec voor de docume
 * Tags
 * Summary
 * Description
-* Depricated
+* Deprecated
 
 #### Tags ####
 Bij elke operatie kan je een `tag` meegeven zodat ze de operaties in logische groepen verdeeld worden. Zie ook het [inrichten van de tags](#werken-met-tags) hierboven.
@@ -118,11 +118,11 @@ Gebruik de `description` om te beschrijven hoe je het kan gebruiken.
 
 #### Deprecated ####
 
-Als je een operatie hebt dat je wil uitfaseren, maak je gebruik van de `Depricated` vlag (boolean).
+Als je een operatie hebt dat je wil uitfaseren, maak je gebruik van de `Deprecated` vlag (boolean).
 
 ![Operations Example 2](images/operations-example-2.png)
 
-In het voorbeeld hierboven zie je dat Swagger UI een depricated operation gaat doorkruisen en er komt een *'Warning: depricated'* indicatie bij.
+In het voorbeeld hierboven zie je dat Swagger UI een deprecated operation gaat doorkruisen en er komt een *'Warning: deprecated'* indicatie bij.
 
 ### Parameters ###
 
