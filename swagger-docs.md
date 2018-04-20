@@ -128,7 +128,7 @@ In het voorbeeld hierboven zie je dat Swagger UI een deprecated operation gaat d
 
 [zie specificatie hier](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject)
 
-Het is steeds aangewezen om een `Description` toe te voegen bij elke parameter. Nog beter is dat je een voorbeeld ervan toevoegd.
+Het is steeds aangewezen om een `Description` toe te voegen bij elke parameter. Nog beter is dat je een voorbeeld ervan toevoegt.
  
 Hier is een voorbeeld van de Uber API:
 
