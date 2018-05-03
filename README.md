@@ -203,7 +203,7 @@ Swagger v2.0, JSON
 ```
 ### Event resources
 
-POST [/\<groeperingscollection>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoord
+POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoord
 
 
 ### Error model
@@ -993,12 +993,12 @@ Het aantal elementen dat in zulk geval wordt teruggegeven (page size) is API spe
 ## Event resources
 Event resources worden als volgt aangegeven : 
 
-POST [/\<groeperingscollection>]*/\<event>
+POST [/\<groepering>]*/\<event>
 
-parameter                | omschrijving
----------                | ------------
-\<groeperingscollection> | mag 0 of meerdere keren voor komen om het event te verduidelijken
-\<event>                 | eindigt op voltooid deelwoord
+parameter     | omschrijving
+---------     | ------------
+\<groepering> | mag 0 of meerdere keren voor komen om het event te verduidelijken
+\<event>      | eindigt op voltooid deelwoord
 
 ### Voorbeelden
 
@@ -1006,10 +1006,13 @@ POST https://api-gateway/digipolis/business-party/v1/events/businesspartycreated
 
 POST https://api-gateway/digipolis/business-party/v1/events/business-party-created
 
+POST https://api-gateway/digipolis/business-party/v1/events/digipolis/business-party-created 
+
 POST https://api-gateway/digipolis/business-party/v1/businesspartycreated
 
 POST https://api-gateway/digipolis/business-party/v1/business-party-created
 
+POST https://api-gateway/digipolis/business-party/v1/digipolis/business-party-created 
 
 ## Error handling
 
