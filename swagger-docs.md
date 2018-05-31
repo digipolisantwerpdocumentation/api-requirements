@@ -3,7 +3,7 @@
 Als je API klaar is, heb je - als alles goed is - een Swagger file. Soms wordt deze gegenereerd, soms met de hand gemaakt. Belangrijk is dat deze Swagger file goed is gedocumenteerd. Een operatie `GET /assets` met als omschrijving *"Gets the assets"* is vrijwel nutteloos. We merken nochtans, dat veel gegenereerde Swagger files z'n resultaat opleveren. Vandaar, dat we je graag enkele tips geven hoe dit beter kan.  
 
 ## Tone of voice ##
-Vooraleer we in de specifieke details duiken, willen we het even hebben over uw schrijfstijl, ofwel *"Tone of Voice"*. 
+Vooraleer we in de specifieke details duiken, willen we het even hebben over jouw schrijfstijl, ofwel *"Tone of Voice"*. 
 
 * benader de ontwikkelaars persoonlijk
 * beeld je in wat je tegen hen zou zeggen alsof ze naast je zouden zitten
