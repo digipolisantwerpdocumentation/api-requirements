@@ -116,7 +116,7 @@ Swagger v2.0, JSON
         -   datum en timestamp : "YYYY-MM-DDThh:mm:ss+01:00" (RFC3339)
         -   duration : "PYYYY-MM-DDThh:mm:ss" (ISO8601)   
             vb. "P0003-04-06T12:00:00" (3 jaar, 4 maanden, 6 dagen, 12 uur)
-        -   geolocation : lengte en breedte coördinaten (ISO8601)  
+        -   geolocation : lengte en breedte coördinaten (ISO6709)  
             vb. "+51.53215,+004.89451"
         -   Arrays worden altijd geëncapsuleerd in een object
     -   Hiërarchische structuur (objecten)
