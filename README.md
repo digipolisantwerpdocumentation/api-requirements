@@ -264,21 +264,21 @@ DELETE | verwijderen van een resource                                           
 
 **Altijd moet de meest specifieke responsecode worden gebruikt; vb. 401 bij security ipv 400, 404 bij not found ipv 400.**
 
-Code                         | GET | PUT | POST                | PATCH | DELETE | Error object 
-----                         | --- | --- | ----                | ----- | ------ | ------------ 
-200 : OK (sync)              | X   | X   | Optioneel Zie Status codes & response     | X     | X      |              
-201 : Created (sync)         |     |     | X                   |       |        |              
-202 : Accepted (async)       |     | X   | X                   | X     | X      |              
-204 : No content             |     | X   | X                   | X     | X      |              
-303 : See other (async)      |     |     | X                   |       |        |              
-400 : Bad request            | X   | X   | X                   | X     | X      | Ja           
-401 : Unauthorized           | X   | X   | X                   | X     | X      | Optioneel    
-403 : Forbidden              | X   | X   | X                   | X     | X      | Optioneel    
-404 : Not Found              | X   | X   | X (parent resource) | X     | X      |              
-405 : Method not allowed     | X   | X   | X                   | X     | X      |              
-415 : Unsupported media type | X   | X   | X                   | X     | X      |              
-429 : Too many requests      | X   | X   | X                   | X     | X      | Optioneel    
-500 : Internal server error  | X   | X   | X                   | X     | X      | Ja           
+Code                         | GET | PUT | POST                                      | PATCH | DELETE | Error object 
+----                         | --- | --- | ----                                      | ----- | ------ | ------------ 
+200 : OK (sync)              | X   | X   | Optioneel (Zie Status codes & response)   | X     | X      |              
+201 : Created (sync)         |     |     | X                                         |       |        |              
+202 : Accepted (async)       |     | X   | X                                         | X     | X      |              
+204 : No content             |     | X   | X                                         | X     | X      |              
+303 : See other (async)      |     |     | X                                         |       |        |              
+400 : Bad request            | X   | X   | X                                         | X     | X      | Ja           
+401 : Unauthorized           | X   | X   | X                                         | X     | X      | Optioneel    
+403 : Forbidden              | X   | X   | X                                         | X     | X      | Optioneel    
+404 : Not Found              | X   | X   | X (parent resource)                       | X     | X      |              
+405 : Method not allowed     | X   | X   | X                                         | X     | X      |              
+415 : Unsupported media type | X   | X   | X                                         | X     | X      |              
+429 : Too many requests      | X   | X   | X                                         | X     | X      | Optioneel    
+500 : Internal server error  | X   | X   | X                                         | X     | X      | Ja           
 
 ## API's
 
