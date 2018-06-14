@@ -248,7 +248,7 @@ POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoo
 
 ### HTTP verbs
 
--   RFC2616 compliant
+-   RFC7231 compliant
 
 
 Verb   | Usage                                                                                                        | Request body                              | Response body   
@@ -551,7 +551,7 @@ Bovenstaand voorbeeld is niet enkel onleesbaar, het laat ook niet toe om hiërar
 ### HTTP verbs
 
 Gebruik steeds de juiste HTTP verbs voor de bijhorende request zoals weergegeven in onderstaande tabel. HTTP verbs moeten in lijn zijn
-met [RFC2616](https://www.w3.org/Protocols/rfc2616/rfc2616-sec9.html)
+met [RFC7231](https://tools.ietf.org/html/rfc7231)
 
 HTTP Verb | Safe | Idempotent | Toepassing                                                                                                                                             | Request
 --------- | ---- | ---------- | ----------                                                                                                                                             | ------- 
