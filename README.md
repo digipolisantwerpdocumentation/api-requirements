@@ -1,5 +1,6 @@
-# Digipolis API design & style requirements v4.2.2
+# Digipolis API design & style requirements v4.3.0
 
+geldig vanaf 01/07/2018
 
 ## Inhoudstabel
 <!-- PC : generated with doctoc (https://www.npmjs.com/package/doctoc) with option --notitle -->
@@ -76,16 +77,17 @@
 
 ## Document historiek
 
-Versie   | Auteur                 | Datum      | Opmerkingen
-------   | -------                | -----      | ------------
-1        | Dimitri Van Kerckhoven | 06/06/2016 | Initial draft.
-2        | Dimitri Van Kerckhoven | 12/07/2016 | Update REST introductie en uitbreiding JSON conventies met array encapsulation.
-3        | Steven Vanden Broeck   | 25/10/2016 | Typo's en correcties.
-4        | Peter Claes            | 28/04/2017 | Cheat sheet & verduidelijkingen.
-5        | Peter Claes            | 23/11/2017 | HTTP response code 204.
-6        | Bart Van Steen         | 28/11/2017 | Aanpassing richtlijn versionering.
-7        | Peter Claes            | 01/02/2018 | Markdown versie (Github).
-8        | Peter Claes            | 13/04/2018 | null values, timezone, event resource.
+Versie       | Auteur                 | Datum      | Opmerkingen
+------       | -------                | -----      | ------------
+---          | Dimitri Van Kerckhoven | 06/06/2016 | Initial draft.
+---          | Dimitri Van Kerckhoven | 12/07/2016 | Update REST introductie en uitbreiding JSON conventies met array encapsulation.
+---          | Steven Vanden Broeck   | 25/10/2016 | Typo's en correcties.
+---          | Peter Claes            | 28/04/2017 | Cheat sheet & verduidelijkingen.
+---          | Peter Claes            | 23/11/2017 | HTTP response code 204.
+---          | Bart Van Steen         | 28/11/2017 | Aanpassing richtlijn versionering.
+---          | Peter Claes            | 01/02/2018 | Markdown versie (Github).
+---          | Peter Claes            | 13/04/2018 | null values, timezone, event resource.
+4.3.0        | Peter Claes            | 29/06/2018 | arrays in querystring, versie alignering.
 
 
 ## Cheat sheet
@@ -143,6 +145,9 @@ Swagger v2.0, JSON
     -   filtering
         -   op resource
             -   unieke query parameter per veld
+            -   indien meerdere waarden voor een veld filter :
+             
+            **resource?parameter=waarde1,waarde2,waarde3**
             -   GEEN query parameter voor id's !
         -   op resource representatie
                -   reserved : **fields**= (comma separated)
@@ -714,6 +719,8 @@ De URI om enkel die resources terug te krijgen waarvoor city gelijk is aan New Y
 ``` prettyprint
 https://api-gateway/digipolis/business-party/v1/business-parties?city=New%20York
 ```
+
+Indien de query parameter waarmee je gaat filteren meerdere waarden kan bevatten, dan gebruik je volgende conventie (comma separated) : **resource?parameter=waarde1,waarde2,waarde3** 
 
 ### Filteren op resource representatie
 
