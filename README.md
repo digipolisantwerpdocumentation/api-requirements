@@ -1,6 +1,6 @@
-# Digipolis API design & style requirements v4.3.0
+# Digipolis API design & style requirements v5.0.0
 
-geldig vanaf 01/07/2018
+geldig vanaf 01 septmeber 2018
 
 ## Inhoudstabel
 <!-- PC : generated with doctoc (https://www.npmjs.com/package/doctoc) with option --notitle -->
@@ -88,6 +88,7 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 ---          | Peter Claes            | 01/02/2018 | Markdown versie (Github).
 ---          | Peter Claes            | 13/04/2018 | null values, timezone, event resource.
 4.3.0        | Peter Claes            | 29/06/2018 | arrays in querystring, versie alignering.
+5.0.0        | Peter Claes            | 28/08/2018 | geen HTTP response code 200 meer toegelaten bij POST.
 
 
 ## Cheat sheet
@@ -261,7 +262,7 @@ Verb   | Usage                                                                  
 GET    | opvragen van de representatie van een resource                                                               | leeg                                      | (gedeeltelijke) resource representatie
 PUT    | vervangen van  een bestaande resource (of creatie indien die nog niet bestaat, op basis van de opgegeven id) | representatie  van te vervangen resource  | optioneel       
 POST   | creëren van een nieuwe resource                                                                              | representatie van te creëren resource    | optioneel, Location header met URI 
-POST   | voor het uitvoeren van een controller(=command) (werkwoord, vb. search)                                      | representatie van info voor controller   | optioneel   
+POST   | voor het uitvoeren(=creëren) van een controller(=command) (werkwoord, vb. search)                                      | representatie van info voor controller   | optioneel   
 PATCH  | vervangen van een gedeelte van een bestaande resource                                                        | te vervangen velden                     | optioneel       
 DELETE | verwijderen van een resource                                                                                 | leeg                                      | optioneel       
 
@@ -667,14 +668,15 @@ Altijd moet de meest specifieke responsecode worden gebruikt; vb. 401 bij securi
 
 HTTP status code           | Betekenis                                                                                                                                                                                                                                                                 | Response Body en headers
 ----------------           | ---------                                                                                                                                                                                                                                                                 | ------------------------
-200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET bij succesvolle response, PUT en PATCH indien de update succesvol was en DELETE indien de resource succesvol werd verwijderd. Ook voor POST bij een controller.                                    | Volledige of partiële resource representatie(s) bij GET. Optioneel bij PUT/POST/PATCH/DELETE.
-201 Created                | Indien een nieuwe resource succesvol is aangemaakt bij het uitvoeren van een POST of PUT call.                                                                                                                                                                            | Location header met uri van aangemaakte resource + optioneel volledige of partiële resource representatie van de aangemaakte resource.
+200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET bij succesvolle response, PUT en PATCH indien de update succesvol was en DELETE indien de resource succesvol werd verwijderd.                                                                | Volledige of partiële resource representatie(s) bij GET. Optioneel bij PUT/POST/PATCH/DELETE.
+201 Created                | Indien een nieuwe resource succesvol is aangemaakt bij het uitvoeren van een POST of PUT call, of bij een succesvolle uitvoering van een POST van een controller.                                                                                               | Indien resource aangemaakt :<br/> Location header met uri van aangemaakte resource + optioneel volledige of partiële resource representatie van de aangemaakte resource.
 202 Accepted               | De request is succesvol geaccepteerd voor een PUT, POST, DELETE of PATCH en wordt verder asynchroon verwerkt.                                                                                                                                                             | Neen                 
 303 See Other              | Wordt gebruikt voor het asynchroon afhandelen van langlopende operaties.                                                                                                                                                                                                  | Neen                 
-400 Bad request            | De request kan niet worden verwerkt omdat de request body niet geparsed kan worden. Wordt gebruikt indien er geen specifiekere foutboodschap bestaat binnen de 4xx range.                                                                                                 | Optioneel, het wordt aangeraden om de reden van de weigering te geven.         
+400 Bad request            | De request kan niet worden verwerkt omdat de request body niet geparsed kan worden. Wordt gebruikt indien er geen specifiekere foutboodschap bestaat binnen de 4xx range.                                                                                               | Optioneel, het wordt aangeraden om de reden van de weigering te geven.         
 401 Unauthorized           | De request faalt omdat de gebruiker niet geauthenticeerd is.                                                                                                                                                                                                              | Optioneel            
 403 Forbidden              | De request faalt omdat de gebruiker niet geauthoriseerd is om de actie uit te voeren.                                                                                                                                                                                     | Optioneel            
-404 Not found              | De resource kon niet worden gevonden. Van toepassing op GET, PUT, POST, PATCH en DELETE indien een specifieke resource wordt aangesproken (dmv id) dewelke niet bestaat. Van toepassing op PUT, PATCH en DELETE indien deze worden toegepast op een volledige collection. | Optioneel            
+404 Not found              | De resource kon niet worden gevonden. Van toepassing op GET, PUT, POST, PATCH en DELETE indien een specifieke resource wordt aangesproken (dmv id) dewelke niet bestaat. Van toepassing op PUT, PATCH en DELETE indien deze worden toegepast op een volledige collection. 
+     | Optioneel            
 405 Method not allowed     | De methode (HTTP verb) is niet toegelaten op deze resource.                                                                                                                                                                                                               | Geen body, wel Allow header met de methods die wel mogen. 
 415 Unsupported media type | De request faalt omdat de entiteit in de request in een formaat is die niet ondersteund wordt door de resource voor de bepaalde methode.                                                                                                                                  | Optioneel            
 429 Too many requests      | De API consumer heeft te veel requests gestuurd.                                                                                                                                                                                                                          | Optioneel            
@@ -1109,7 +1111,7 @@ Deze sectie beschrijft welke HTTP status codes vergezeld dienen te worden van ee
 HTTP status code           | Betekenis                                                                                                                                   | Error object                  
 ----------------           | ---------                                                                                                                                   | ------------
 200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET bij succesvol response, PUT en PATCH indien de update succesvol was. | Neen                          
-201 Created                | Indien een nieuwe resource succesvol is aangemaakt bij het uitvoeren van een PUT of POST call.                                              | Neen                          
+201 Created                | Indien een nieuwe resource succesvol is aangemaakt bij het uitvoeren van een PUT of POST call, of bij een succesvolle uitvoering van een POST van een controller.                                              | Neen                          
 202 Accepted               | De request is succesvol geaccepteerd voor een PUT, POST, DELETE of PATCH en wordt verder asynchroon verwerkt.                               | Neen                          
 303 See Other              | Wordt gebruikt voor het asynchroon afhandelen van langlopende operaties.                                                                    | Neen                          
 400 Bad request            | De request kan niet worden verwerkt omdat de request body niet geparsed kan worden.                                                         | Ja                            
