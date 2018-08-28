@@ -261,7 +261,7 @@ Verb   | Usage                                                                  
 ----   | -----                                                                                                        | ------------                              | -------------
 GET    | opvragen van de representatie van een resource                                                               | leeg                                      | (gedeeltelijke) resource representatie
 PUT    | vervangen van  een bestaande resource (of creatie indien die nog niet bestaat, op basis van de opgegeven id) | representatie  van te vervangen resource  | optioneel       
-POST   | creëren van een nieuwe resource                                                                              | representatie van te creëren resource    | **Location** header met URI<br/>optioneel
+POST   | creëren van een nieuwe resource                                                                              | representatie van te creëren resource    | **Location** header met URI<br/>,body optioneel
 POST   | voor het uitvoeren(=creëren) van een controller(=command) (werkwoord, vb. search)                            | representatie van info voor controller   | optioneel   
 PATCH  | vervangen van een gedeelte van een bestaande resource                                                        | te vervangen velden                     | optioneel       
 DELETE | verwijderen van een resource                                                                                 | leeg                                      | optioneel       
