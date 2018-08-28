@@ -261,7 +261,7 @@ Verb   | Usage                                                                  
 ----   | -----                                                                                                        | ------------                              | -------------
 GET    | opvragen van de representatie van een resource                                                               | leeg                                      | (gedeeltelijke) resource representatie
 PUT    | vervangen van  een bestaande resource (of creatie indien die nog niet bestaat, op basis van de opgegeven id) | representatie  van te vervangen resource  | optioneel       
-POST   | creëren van een nieuwe resource                                                                              | representatie van te creëren resource    | optioneel, Location header met URI 
+POST   | creëren van een nieuwe resource                                                                              | representatie van te creëren resource    | **Location** header met URI<br/>optioneel
 POST   | voor het uitvoeren(=creëren) van een controller(=command) (werkwoord, vb. search)                            | representatie van info voor controller   | optioneel   
 PATCH  | vervangen van een gedeelte van een bestaande resource                                                        | te vervangen velden                     | optioneel       
 DELETE | verwijderen van een resource                                                                                 | leeg                                      | optioneel       
@@ -1109,7 +1109,7 @@ Deze sectie beschrijft welke HTTP status codes vergezeld dienen te worden van ee
 
 HTTP status code           | Betekenis                                                                                                                                   | Error object                  
 ----------------           | ---------                                                                                                                                   | ------------
-200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET bij succesvol response, PUT en PATCH indien de update succesvol was. | Neen                          
+200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET bij succesvol response, PUT en PATCH indien de update succesvol was en DELETE indien de resource succesvol werd verwijderd. | Neen                          
 201 Created                | Indien een nieuwe resource succesvol is aangemaakt bij het uitvoeren van een PUT of POST call, of bij een succesvolle uitvoering van een POST van een controller.                                              | Neen                          
 202 Accepted               | De request is succesvol geaccepteerd voor een PUT, POST, DELETE of PATCH en wordt verder asynchroon verwerkt.                               | Neen                          
 303 See Other              | Wordt gebruikt voor het asynchroon afhandelen van langlopende operaties.                                                                    | Neen                          
