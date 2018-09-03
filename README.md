@@ -1111,18 +1111,18 @@ In sommige gevallen kan het nuttig zijn om **extra gegevens** mee te geven zodat
 ```json
 {
 "type": "http://api-gateway/digipolis/payment/v1/payments/validation-error",
-"title": "Er zijn validatiefouten",
+"title": "There are validation errors.",
 "status": 400,
 "identifier": "f4D27A4A-6bed-47D6-9487-1961DBB6C631",
 "code": "VAL001",
 "validation-errors": [
                        {
                            "name": "account",
-                           "reason": "Het meegegeven rekeningnummer bestaat niet."
+                           "reason": "The provided account does not exist."
                        },
                        {
                            "name": "amount", 
-                           "reason": "Het bedrag moet groter dan 0 zijn."
+                           "reason": "The amount must be greater than 0."
                        }
                      ]
 }
