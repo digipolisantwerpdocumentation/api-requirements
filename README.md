@@ -89,7 +89,7 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 ---          | Peter Claes            | 13/04/2018 | Null values, timezone, event resource.
 4.3.0        | Peter Claes            | 29/06/2018 | Arrays in querystring, versie alignering.
 5.0.0        | Peter Claes            | 28/08/2018 | Geen HTTP response code 200 meer toegelaten bij POST.
-5.1.0        | Steven Vanden Broeck   | 03/09/2018 | Verduidelijking extra parameters in error model.
+5.1.0        | Steven Vanden Broeck   | 03/09/2018 | Verduidelijking extra info in error model.
 
 ## Cheat sheet
 
@@ -224,7 +224,7 @@ POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoo
     "status": number                           (verplicht, HTTP response code),
     "identifier": "string"                     (verplicht, uniek),
     "code": "string"                           (verplicht, foutcode voor ontwikkelaars),
-    "eventuele_extra_parameters": "custom"     (optioneel, bv een array van validatiefouten)
+    "extra_info": "custom"                     (optioneel, bv een array van validatiefouten)
 }
 ```
 
@@ -1061,7 +1061,7 @@ Het response error object kan volgende velden bevatten:
 -   **Status (number):** de HTTP status code. De reden van vermelding in het error object is omdat eventuele intermediaries zoals gateways de HTTP status code steeds kunnen wijzigen.
 -   **Detail (string):** Meer specifieke human-readable detail informatie die specifiek is voor deze instantie van het probleem.
 -   **Instance (string):** Een URI referentie (absoluut of relatief) dewelke de instantie van het probleem identificeert unieke identifier om de foutboodschap terug te vinden in log bestanden.
--   **Optionele extra parameters** die nuttig zijn voor de API consumer om het probleem te kunnen begrijpen.
+-   **Optionele extra info** die nuttig is voor de API consumer om het probleem te kunnen begrijpen.
 
 Hierbij wordt gebruik gemaakt van het **`application/problem+json`** media type om foutboodschappen aan te duiden.
 
@@ -1106,7 +1106,7 @@ Toegepast op bovenstaand error model kan onderstaande structuur gehanteerd worde
 
 Aangezien het principe van exception shielding wordt gehanteerd wordt slechts 1 type technical error gedefinieerd, waarbij we de technische error details bovendien verbergen. De identificatie van de technische fout gebeurt steeds aan de hand van de meegegeven identifier. De API consumer dient deze identifier te gebruiken in alle communicatie rond de eigenlijke fout, zodat de operationele teams deze kunnen gebruiken om meer gedetailleerde informatie op te zoeken.
 
-In sommige gevallen kan het nuttig zijn om **extra gegevens** mee te geven zodat de consumer beter begrijpt wat het probleem is, zoals bvb bij validatiefouten :
+In sommige gevallen kan het nuttig zijn om **extra info** mee te geven zodat de consumer beter begrijpt wat het probleem is, zoals bvb bij validatiefouten :
 
 ```json
 {
