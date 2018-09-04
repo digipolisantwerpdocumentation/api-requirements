@@ -224,7 +224,7 @@ POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoo
     "status": number                           (verplicht, HTTP response code),
     "identifier": "string"                     (verplicht, uniek),
     "code": "string"                           (verplicht, foutcode voor ontwikkelaars),
-    "extra_info": "custom"                     (optioneel, bv een array van validatiefouten)
+    "extraInfo": "custom"                      (optioneel, bv een array van validatiefouten)
 }
 ```
 
@@ -1115,16 +1115,19 @@ In sommige gevallen kan het nuttig zijn om **extra info** mee te geven zodat de 
 "status": 400,
 "identifier": "f4D27A4A-6bed-47D6-9487-1961DBB6C631",
 "code": "VAL001",
-"validation-errors": [
-                       {
-                           "name": "account",
-                           "reason": "The provided account does not exist."
-                       },
-                       {
-                           "name": "amount", 
-                           "reason": "The amount must be greater than 0."
-                       }
-                     ]
+"extraInfo": {
+             "validationErrors":
+                 [
+                     {
+                     "name": "account",
+                     "reason": "The provided account does not exist."
+                    },
+                    {
+                    "name": "amount", 
+                    "reason": "The amount must be greater than 0."
+                    }
+                 ]
+             }
 }
 ```  
 
