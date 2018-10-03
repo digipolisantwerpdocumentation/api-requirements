@@ -659,7 +659,7 @@ Stel dat contract 42 van business party 6532 volgende resource representatie hee
 	"id": 42,
 	"startDate": "2012-01-01T01:00:00+01:00",
 	"endDate": "2013-01-01T01:00:00+01:00",
-	"contact": {
+	"contract": {
 		"surname": "Doe",
 		"name": "John",
 		"email": "john.doe@dummy.com"
