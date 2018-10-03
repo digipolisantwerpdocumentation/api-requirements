@@ -1,6 +1,6 @@
-# Digipolis API design & style requirements v5.1.0
+# Digipolis API design & style requirements v5.1.1
 
-geldig vanaf 01 september 2018
+geldig vanaf 01 oktober 2018
 
 ## Inhoudstabel
 <!-- PC : generated with doctoc (https://www.npmjs.com/package/doctoc) with option --notitle -->
@@ -257,6 +257,7 @@ POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoo
 ### HTTP verbs
 
 -   RFC7231 compliant
+-   PATCH verb : RFC7386 of RFC6902
 
 
 Verb   | Usage                                                                                                        | Request body                              | Response body   
