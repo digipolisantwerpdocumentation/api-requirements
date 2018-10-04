@@ -1,6 +1,6 @@
-# Digipolis API design & style requirements v5.1.0
+# Digipolis API design & style requirements v5.1.1
 
-geldig vanaf 01 september 2018
+geldig vanaf 01 oktober 2018
 
 ## Inhoudstabel
 <!-- PC : generated with doctoc (https://www.npmjs.com/package/doctoc) with option --notitle -->
@@ -90,6 +90,7 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 4.3.0        | Peter Claes            | 29/06/2018 | Arrays in querystring, versie alignering.
 5.0.0        | Peter Claes            | 28/08/2018 | Geen HTTP response code 200 meer toegelaten bij POST.
 5.1.0        | Steven Vanden Broeck   | 03/09/2018 | Verduidelijking extra info in error model.
+5.1.1        | Peter Claes            | 03/10/2018 | Verduidelijking PATCH methode.
 
 ## Cheat sheet
 
@@ -256,6 +257,7 @@ POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoo
 ### HTTP verbs
 
 -   RFC7231 compliant
+-   PATCH verb : RFC7386 of RFC6902
 
 
 Verb   | Usage                                                                                                        | Request body                              | Response body   
@@ -558,7 +560,13 @@ Bovenstaand voorbeeld is niet enkel onleesbaar, het laat ook niet toe om hiërar
 ### HTTP verbs
 
 Gebruik steeds de juiste HTTP verbs voor de bijhorende request zoals weergegeven in onderstaande tabel. HTTP verbs moeten in lijn zijn
-met [RFC7231](https://tools.ietf.org/html/rfc7231)
+met [RFC7231](https://tools.ietf.org/html/rfc7231).
+
+Voor **PATCH** zijn volgende RFC's van toepassing :
+
+- eenvoudige wijzigingen : [RFC7386](https://tools.ietf.org/html/rfc7386)
+- complexe wijzigingen : [RFC6902](https://tools.ietf.org/html/rfc6902)
+
 
 HTTP Verb | Safe | Idempotent | Toepassing                                                                                                                                             | Request
 --------- | ---- | ---------- | ----------                                                                                                                                             | ------- 
@@ -643,6 +651,41 @@ Voor elk van onderstaande voorbeelden bevat de request body enkel die attributen
 ``` prettyprint
 PATCH https://api-gateway/digipolis/business-party/v1/business-parties/6532/contracts/42
 ```
+
+##### Voorbeeld
+Stel dat contract 42 van business party 6532 volgende resource representatie heeft
+``` json
+{
+	"id": 42,
+	"startDate": "2012-01-01T01:00:00+01:00",
+	"endDate": "2013-01-01T01:00:00+01:00",
+	"contract": {
+		"surname": "Doe",
+		"name": "John",
+		"email": "john.doe@dummy.com"
+	},
+	"pricing": {
+		"currency": "Euro",
+		"value": 850
+	}
+}
+``` 
+en je wil de prijs veranderen naar 950 Euro,<br/>
+dan kan je dit als volgt doen
+
+``` prettyprint
+PATCH https://api-gateway/digipolis/business-party/v1/business-parties/6532/contracts/42
+```
+met als request body
+
+``` json
+{
+	"pricing": {
+		"value": 950
+	}
+}
+``` 
+
 
 #### DELETE
 
