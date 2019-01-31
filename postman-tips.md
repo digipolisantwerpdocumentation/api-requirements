@@ -5,17 +5,23 @@ Ok, even wat context. Een dev team produceert regelmatig een nieuwe Swagger file
 Dit is wat er typisch gedaan wordt:
 1. Je importeerd de swagger file in een Postman collection. 
 2. Je maakt een `Ènvironment file` in Postman aan.
-3. Je voegt variabelen toe
-4. Je gaat naar de Postman Collection en je begint her en der variabelen in te passen.
+3. Je voegt variabelen toe aan de environment file
+4. Je gaat naar de Postman Collection en je begint her en der vaste stukken in de url en headers te vervangen met de  gemaakte variabelen.
 5. Nu kan je testen en spelen door API calls uit te voeren met telkens andere variabele waardes.
 
 ## Het Probleem ##
-Als het Dev team met een nieuwe swagger komt, ben je enerzijds blij. Nieuwe features, bugfixes, etc. Anderzijds zie je ertegen op om heel de collection opbnieuw te importeren en alles terug variabel te maken.
+Als het Dev team met een nieuwe swagger komt, ben je enerzijds blij. Nieuwe features, bugfixes, etc. Anderzijds zie je ertegen op om heel de collection opbnieuw te importeren en alles terug variabel te maken. Punt 4 van hierboven moet je dan helemaal opnieuw doen.
 
 ## De Oplossing ##
-Als het Dev team op bepaalde plaatsen in de swagger extra details invult, dan kan je puntje 4 overslaan en kan je met nagenoeg geen extra werk een nieuwe swagger file importeren. 
+Als het Dev team op bepaalde plaatsen in de swagger extra details invult, of bepaalde syntax hanteert dan kan je puntje 4 overslaan en heb je nagenoeg geen extra werk een nieuwe swagger file importeren. 
 
-### host, basePath en scheme ###
+Er zijn verschillende plaatsen waar variabele tot stand komen
+1. in het basis gedeelte van de url (scheme, host en basepath)
+2. verderop als variabele delen in het path
+3. variabele in het query gedeelte van het path
+
+
+### 1. Variabele in de host, basePath en scheme ###
 
 Laten we een voorbeeld toevoegen:
 
@@ -39,16 +45,68 @@ Laten we een voorbeeld toevoegen:
 ```
 
 In het bovenstaande is:
-* voorzie een goed uitgewerkt info object (zie [Swagger goede documentatie](swagger-docs/md)
-* Voeg een `host` element toe met `"{{baseurl}}"`. (Ik heb gemerkt dat je best enkel lowercase karakters gebruikt, bij de Postman import worden dit allemaal gelower cased)
-* Voeg een `basePath` toe met waarde `"/"` of `"/myapi"` of ...
-* Voeg een `schemes` toe met waarde `["https"]`
+* voorzie een goed uitgewerkt swagger `info` object (zie ook [Swagger  documentatie tips](swagger-docs/md))
+* Voeg een `host` element toe met `"{{baseurl}}"`. 
 
-### query veriabelen ###
-Goed nieuws. In de recentste versies van Postman hoef je niets meer te doen als je volgende syntax hanteert:
+    *(Ik heb gemerkt dat je best enkel lowercase karakters gebruikt. Postman gaat bij een Swagger import enkel lowercased variabelen maken)*
+* Voeg een `basePath` toe met waarde `"/"` of `"/myapi"` of ...
+* Voeg een `schemes` toe met waarde `["https"]` (of andere volgens de swagger spec)
+
+### 2. variabelen in het path ###
+Goed nieuws. In de recentste versies van Postman hoef je niets meer te doen. In de Swagger 2.0 spec, kan je gebruik maken van [Path Templating](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#pathTemplating) voor de opbouw van het path (zie ook [Path Item object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#path-item-object))
+
+Het komt erop neer dat je variabele stukken in het pad - gewoonlijk voor een **id** - tussen brackets `{}` zet.
 
 ```js
-todo
+    "paths": {
+        "/deliverables/{deliverableid}/addons": {
+            "get": {
+                "description": "Get a list of addons from the deliverable"
+            }
+        }
+    }
+```
+
+### 3. query variable ###
+Nog wat verderop in het path heb je het query gedeelte, ofwel alles achter het vraagteken `?`. In een Swagger file, gebruik je hiervoor het [Parameters Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject). 
+
+Als je onderstaande syntax hanteert, zal Postman de parameter `q` automatisch als variabele herkennen bij de import.
+
+```js
+    "paths": {
+        "/addons": {
+            "get": {
+                "description": "Get a list of addons that a user can select.",
+                "summary":"Find addons with an optional search query",
+                "parameters": [
+                    {
+                        "name": "q",
+                        "in": "query",
+                        "description": "Search query",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
 ```
 
 
+### 4. header variable ###
+In hetzelfde [Parameters Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject) van de Swagger spec kan je ook parameters definieren voor in de header. Ook deze gaat Postman herkennen om als variabele te beschouwen.
+
+```js
+    "paths": {
+        "/addons": {
+            "get": {
+                "description": "Get a list of addons that a user can select.",
+                "summary":"Find addons with an optional search query",
+                "parameters": [
+                    {
+                        "name": "authorization",
+                        "description": "Security token to access the service",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+
+```
