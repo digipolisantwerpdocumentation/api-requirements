@@ -1,6 +1,6 @@
-# Digipolis API design & style requirements v5.1.1
+# Digipolis API design & style requirements v5.2.0
 
-geldig vanaf 01 oktober 2018
+geldig vanaf 01 mei 2019
 
 ## Inhoudstabel
 <!-- PC : generated with doctoc (https://www.npmjs.com/package/doctoc) with option --notitle -->
@@ -91,6 +91,7 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 5.0.0        | Peter Claes            | 28/08/2018 | Geen HTTP response code 200 meer toegelaten bij POST.
 5.1.0        | Steven Vanden Broeck   | 03/09/2018 | Verduidelijking extra info in error model.
 5.1.1        | Peter Claes            | 03/10/2018 | Verduidelijking PATCH methode.
+5.2.0        | Steven Vanden Broeck   | 13/02/2019 | Uitbreiding van de paging guidelines.
 
 ## Cheat sheet
 
@@ -143,31 +144,34 @@ Swagger v2.0, JSON
 ### Request
 
 -   filtering op id : steeds mee als node in URI (niet via query parameter)
--   query parameters, enkel voor
-    -   filtering
-        -   op resource
-            -   unieke query parameter per veld
-            -   indien meerdere waarden voor een veld filter :
-             
-            **resource?parameter=waarde1,waarde2,waarde3**
-            -   GEEN query parameter voor id's !
-        -   op resource representatie
-               -   reserved : **fields**= (comma separated)
-    -   sortering
-        -   reserved : **sort**= (comma separated)
-        -   default : ascending
-        -   **-**\<parameter\> : descending
-    -   paginatie
-        -   reserved : **page**= (optional parameter, default value=1)
-        -   reserved : **pagesize**=(optional parameter, default=bepaald door API)
-    -   resource representation
-        -   altijd via body, nooit via query parameters
+- query parameters, enkel voor
+  - filtering
+    - op resource
+      -   unieke query parameter per veld
+      -   indien meerdere waarden voor een veld filter :
+
+      **resource?parameter=waarde1,waarde2,waarde3**
+
+      -   GEEN query parameter voor id's !
+    - op resource representatie
+
+         -   reserved : **fields**= (comma separated)
+  -   sortering
+      -   reserved : **sort**= (comma separated)
+      -   default : ascending
+      -   **-**\<parameter\> : descending
+  -   paginatie
+      -   reserved : **page**= (optional parameter, default value=1)
+      -   reserved : **pagesize**=(optional parameter, default=bepaald door API)
+  - resource representation
+
+    -   altijd via body, nooit via query parameters
 
 ### Paginatie
 
 -   altijd gebruiken bij ophalen van collecties
--   query parameters : **page**= en **pagesize**=
-    -   optioneel mee te geven door clients (default wordt dan gebruikt)
+-   query parameters : **page**= en **pagesize**= en **pagingStrategy**= 
+    -   optioneel mee te geven door clients (bij ontbreken worden de  default waardes gebruikt)
 -   1-based (1e pagina is pagina 1)
 -   Response volgens HAL specificatie
     -   media type : **application/hal+json**
@@ -175,39 +179,9 @@ Swagger v2.0, JSON
         -   \_links
         -   \_embedded
         -   \_page
-    -   voorbeeld
-```json
-{
-	"_links": {
-		"self": {
-			"href": "https://api-gateway/digipolis/business-party/v1/business-parties"
-		},
-		"first": {
-			"href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=1&pagesize=10"
-		},
-		"last": {
-			"href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=7386&pagesize=10"
-		},
-		"next": {
-			"href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=2&pagesize=10"
-		}
-	},
-	"_embedded": {
-		"business-parties": [{
-			
-		},
-		{
-			
-		}]
-	},
-	"_page": {
-		"size": 10,
-		"totalElements": 73853,
-		"totalPages": 7386,
-		"number": 1
-	}
-}
-```
+    -   voorbeelden
+-   beide `pagingStrategy` waardes (`noCount` en `withCount`) moeten ondersteund worden 
+
 ### Event resources
 
 POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoord
@@ -669,7 +643,7 @@ Stel dat contract 42 van business party 6532 volgende resource representatie hee
 		"value": 850
 	}
 }
-``` 
+```
 en je wil de prijs veranderen naar 950 Euro,<br/>
 dan kan je dit als volgt doen
 
@@ -684,7 +658,7 @@ met als request body
 		"value": 950
 	}
 }
-``` 
+```
 
 
 #### DELETE
@@ -847,35 +821,50 @@ Dit geeft als resultaat een lijst van business parties aflopend volgens zip code
 
 Paginatie informatie wordt **steeds** terug gegeven bij het ophalen van collections. Dit om er voor te zorgen dat collections die in eerste instantie een beperkt aantal entiteiten bevatten op termijn te groot kunnen worden om de vooropgestelde performantie te kunnen blijven garanderen.
 
-Vanuit consumer standpunt is het noodzakelijk dat deze volgende informatie in de response terugkrijgt om voldoende informatie te bekomen rond de pagina's:
+Vanuit consumer standpunt is het noodzakelijk dat volgende informatie in de response wordt gegeven om voldoende informatie te bekomen rond de pagina's:
 
--   Link naar de eerste pagina
--   Link naar de laatste pagina
--   Link naar de vorige pagina
--   Link naar de volgende pagina
--   Extra metadata:
-    -   Huidig paginanummer
-    -   Aantal resources per pagina
-    -   Totaal aantal resources
-    -   Totaal aantal pagina's
+| Info                         |                             | Verplicht                      |
+| ---------------------------- | --------------------------- | ------------------------------ |
+| Link naar de eerste pagina   |                             | Ja                             |
+| Link naar de laatste pagina  |                             | Ja                             |
+| Link naar de vorige pagina   |                             | Ja                             |
+| Link naar de volgende pagina |                             | Ja                             |
+| Extra metadata :             |                             |                                |
+|                              | Huidig paginanummer         | Ja                             |
+|                              | Aantal elementen per pagina | Ja                             |
+|                              | Totaal aantal elementen     | Afhankelijk van pagingStrategy |
+|                              | Totaal aantal pagina's      | Afhankelijk van pagingStrategy |
 
-De informatie kan eenvoudig en efficiënt worden berekend in de back-end systemen en verlicht de verwerking langs consumer kant.
+
+
+In veel paginatierichtlijnen wordt gevraagd om het totaal aantal pagina's en/of elementen altijd terug te geven zodat de gebruiker exact kan geïnformeerd worden over de lengte van de opgevraagde lijst. Dit houdt in dat er impliciet altijd een 'count' mechanisme moet geïmplementeerd worden wat bij lijsten van grote aantallen tot een merkbare vertraging kan leiden in het opvragen van de lijst.
+
+Daarom kiezen we met onze API requirements voor een oplossing die 2 strategieën implementeert :
+- een snellere opvraging zonder verplichte 'count'
+- een potentieel tragere opvraging tengevolge een impliciet 'count'-mechanisme
+
+De client toepassing kiest welke strategie wordt toegepast dmv van een (optionele) query parameter : **`pagingStrategy`** (zie verder).
 
 ### Paginatie query parameters
 
-Het ophalen van een bepaalde pagina zelf dient te gebeuren door middel van de **`page`** en **`pagesize`** query parameters.
+Het ophalen van een bepaalde pagina zelf dient te gebeuren door middel van de **`page`** en **`pagesize`** query parameters (behalve voor de `last` link bij `pagingStrategy=noCount`, zie verder).
 ``` prettyprint
 /partners?page=1&pagesize=10
 ```
 
-Paginatie queries starten steeds met *page=1*
+Paginatie queries starten steeds met *page=1*, niet 0. De keuze hiervoor is gemaakt op basis van gebruiksvriendelijkheid naar de API consumer en gebruiker toe.
 
-De keuze hiervoor is gemaakt op basis van gebruiksvriendelijkheid naar de API consumer toe.
-
-De paginatie query parameters zijn **optioneel**. Dat maakt dat indien deze niet zijn opgegeven:
+De paginatie query parameters zijn **optioneel**. Dat maakt dat wanneer deze **niet** zijn opgegeven:
 
 -   Een beperkte set van resources wordt teruggegeven bij het bevragen van collections op basis van een default page size die voor elke API wordt bepaald.
 -   Steeds de eerste pagina wordt terug gegeven.
+
+Om de paging strategie mee te geven, gebruikt de consumer de optionele parameter **`pagingStrategy`**. Deze heeft 2 mogelijke waardes : 
+- withCount   (default als de query parameter niet wordt meegegeven)
+- noCount
+ 
+ Bij **`withCount`** worden __`Totaal aantal elementen`__ en __`Totaal aantal pagina's`__ altijd verplicht terug gegeven. Bovendien bevat de __`link naar de laatste pagina`__ het paginanummer (zie verder voor een voorbeeld). 
+Bij **`noCount`** worden de beide totalen niet terug gegeven en is de link naar de laatste pagina een link zonder paginanummer met de vermelding **`last`** (zie verder voor een voorbeeld).
 
 ### Paginatie response bericht
 
@@ -951,7 +940,9 @@ Dit resulteert in volgende structuur.
 ```
 
 Het **\_page** reserved keyword vormt geen onderdeel van de HAL specificatie, maar is extra metadata die in de response message komt om
-een indicatie te krijgen van de huidige paginanummer, aantal elementen per pagina, het totaal aantal pagina's en het totaal aantal elementen en vereenvoudigt de bewerkingen langs consumer kant om deze informatie te bekomen.
+een indicatie te krijgen van de huidige paginanummer, aantal elementen per pagina, het totaal aantal pagina's en het totaal aantal elementen en vereenvoudigt de bewerkingen langs consumer kant om deze informatie te bekomen. Bij **`pagingStrategy=noCount`** worden `totalElements` en `totalPages` weg gelaten.  
+  
+Voorbeeld bij `pagingStrategy=withCount` : 
 ```json
 {
 "_page": {
@@ -959,9 +950,19 @@ een indicatie te krijgen van de huidige paginanummer, aantal elementen per pagin
     "totalElements": 73853,
     "totalPages": 7386,
     "number": 1
+  }
 }
+``` 
+  
+Voorbeeld bij `pagingStrategy=noCount` : 
+```json
+{
+"_page": {
+    "size": 10,
+    "number": 1
+  }
 }
-```
+``` 
 
 Alle aspecten van paginatie samenvoegend geeft dit volgende response wrapper message voor paginatie:
 ```json
@@ -997,13 +998,15 @@ Alle aspecten van paginatie samenvoegend geeft dit volgende response wrapper mes
    }
 }
 ```
+  
+Zoals reeds vermeld vallen `totalElements` en `totalPages` weg bij `pagingStrategy=noCount`.  
 
 #### Een voorbeeld
 
-Het ophalen van business parties
+Het ophalen van business parties (withCount)  
 
 ``` prettyprint
-https://api-gateway/digipolis/business-party/v1/business-parties
+https://api-gateway/digipolis/business-party/v1/business-parties?pagingStrategy=withCount  
 ```
 
 Geeft als resultaat
@@ -1038,8 +1041,48 @@ Geeft als resultaat
 }
 ```
 
+Het ophalen van business parties (noCount)  
+
+``` prettyprint
+https://api-gateway/digipolis/business-party/v1/business-parties?pagingStrategy=noCount  
+```
+
+Geeft als resultaat
+```json
+{
+   "_links": {
+     "self": {
+         "href": "https://api-gateway/digipolis/business-party/v1/business-parties"
+     },
+     "first": {
+         "href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=1&pagesize=10"
+     },
+     "last": {
+         "href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=last&pagesize=10"
+     },
+         "next": {
+         "href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=2&pagesize=10"
+     }
+   },
+   "_embedded": {
+     "business-parties": [{
+        },
+    {
+        }]
+   },
+   "_page": {
+     "size": 10,
+     "number": 1
+   }
+}
+```
+
+In de **last** link wordt gebruik gemaakt van **page=last** ipv het exacte paginanummer om te vermijden dat een count moet uitgevoerd worden bij het ophalen van de lijst. Dit houdt wel impliciet in **dat de API deze waarde (=last) ook verplicht moet ondersteunen**. Pas wanneer deze wordt gebruikt zal de API een count uitvoeren om op dat moment de laatste pagina te berekenen en terug te geven.  
+
+Een API moet altijd beide `pagingStrategy` methodes ondersteunen.  
+
 **Bij het ophalen van een collection zonder specificatie van query parameters dient paginatie informatie altijd aanwezig te zijn in de
-response message**.  
+response message**, gebruik makend van de `withCount` paginatie strategie.    
 Het aantal elementen dat in zulk geval wordt teruggegeven (page size) is API specifiek en dient te worden bepaald tijdens de API design fase.
 
 ## Event resources
@@ -1172,7 +1215,7 @@ In sommige gevallen kan het nuttig zijn om **extra info** mee te geven zodat de 
                  ]
              }
 }
-```  
+```
 
 ### HTTP status codes en error model
 
