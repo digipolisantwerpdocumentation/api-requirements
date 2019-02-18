@@ -163,6 +163,8 @@ Swagger v2.0, JSON
   -   paginatie
       -   reserved : **page**= (optional parameter, default value=1)
       -   reserved : **pagesize**=(optional parameter, default=bepaald door API)
+      -	  reserved : **paging-strategy**=(optional parameter, default=withCount)
+      
   - resource representation
 
     -   altijd via body, nooit via query parameters
@@ -170,7 +172,7 @@ Swagger v2.0, JSON
 ### Paginatie
 
 -   altijd gebruiken bij ophalen van collecties
--   query parameters : **page**= en **pagesize**= en **pagingStrategy**= 
+-   query parameters : **page**= en **pagesize**= en **paging-strategy**= 
     -   optioneel mee te geven door clients (bij ontbreken worden de  default waardes gebruikt)
 -   1-based (1e pagina is pagina 1)
 -   Response volgens HAL specificatie
@@ -180,7 +182,7 @@ Swagger v2.0, JSON
         -   \_embedded
         -   \_page
     -   voorbeelden
--   beide `pagingStrategy` waardes (`noCount` en `withCount`) moeten ondersteund worden 
+-   beide `paging-strategy` waardes (`noCount` en `withCount`) moeten ondersteund worden 
 
 ### Event resources
 
@@ -823,17 +825,17 @@ Paginatie informatie wordt **steeds** terug gegeven bij het ophalen van collecti
 
 Vanuit consumer standpunt is het noodzakelijk dat volgende informatie in de response wordt gegeven om voldoende informatie te bekomen rond de pagina's:
 
-| Info                         |                             | Verplicht                      |
-| ---------------------------- | --------------------------- | ------------------------------ |
-| Link naar de eerste pagina   |                             | Ja                             |
-| Link naar de laatste pagina  |                             | Ja                             |
-| Link naar de vorige pagina   |                             | Ja                             |
-| Link naar de volgende pagina |                             | Ja                             |
-| Extra metadata :             |                             |                                |
-|                              | Huidig paginanummer         | Ja                             |
-|                              | Aantal elementen per pagina | Ja                             |
-|                              | Totaal aantal elementen     | Afhankelijk van pagingStrategy |
-|                              | Totaal aantal pagina's      | Afhankelijk van pagingStrategy |
+| Info                         |                             | Verplicht                       |
+| ---------------------------- | --------------------------- | ------------------------------- |
+| Link naar de eerste pagina   |                             | Ja                              |
+| Link naar de laatste pagina  |                             | Ja                              |
+| Link naar de vorige pagina   |                             | Ja                              |
+| Link naar de volgende pagina |                             | Ja                              |
+| Extra metadata :             |                             |                                 |
+|                              | Huidig paginanummer         | Ja                              |
+|                              | Aantal elementen per pagina | Ja                              |
+|                              | Totaal aantal elementen     | Afhankelijk van paging-strategy |
+|                              | Totaal aantal pagina's      | Afhankelijk van paging-strategy |
 
 
 
@@ -843,11 +845,11 @@ Daarom kiezen we met onze API requirements voor een oplossing die 2 strategieën
 - een snellere opvraging zonder verplichte 'count'
 - een potentieel tragere opvraging tengevolge een impliciet 'count'-mechanisme
 
-De client toepassing kiest welke strategie wordt toegepast dmv van een (optionele) query parameter : **`pagingStrategy`** (zie verder).
+De client toepassing kiest welke strategie wordt toegepast dmv van een (optionele) query parameter : **`paging-strategy`** (zie verder).
 
 ### Paginatie query parameters
 
-Het ophalen van een bepaalde pagina zelf dient te gebeuren door middel van de **`page`** en **`pagesize`** query parameters (behalve voor de `last` link bij `pagingStrategy=noCount`, zie verder).
+Het ophalen van een bepaalde pagina zelf dient te gebeuren door middel van de **`page`** en **`pagesize`** query parameters (behalve voor de `last` link bij `paging-strategy=noCount`, zie verder).
 ``` prettyprint
 /partners?page=1&pagesize=10
 ```
@@ -859,7 +861,7 @@ De paginatie query parameters zijn **optioneel**. Dat maakt dat wanneer deze **n
 -   Een beperkte set van resources wordt teruggegeven bij het bevragen van collections op basis van een default page size die voor elke API wordt bepaald.
 -   Steeds de eerste pagina wordt terug gegeven.
 
-Om de paging strategie mee te geven, gebruikt de consumer de optionele parameter **`pagingStrategy`**. Deze heeft 2 mogelijke waardes : 
+Om de paging strategie mee te geven, gebruikt de consumer de optionele parameter **`paging-strategy`**. Deze heeft 2 mogelijke waardes : 
 - withCount   (default als de query parameter niet wordt meegegeven)
 - noCount
  
@@ -940,9 +942,9 @@ Dit resulteert in volgende structuur.
 ```
 
 Het **\_page** reserved keyword vormt geen onderdeel van de HAL specificatie, maar is extra metadata die in de response message komt om
-een indicatie te krijgen van de huidige paginanummer, aantal elementen per pagina, het totaal aantal pagina's en het totaal aantal elementen en vereenvoudigt de bewerkingen langs consumer kant om deze informatie te bekomen. Bij **`pagingStrategy=noCount`** worden `totalElements` en `totalPages` weg gelaten.  
+een indicatie te krijgen van de huidige paginanummer, aantal elementen per pagina, het totaal aantal pagina's en het totaal aantal elementen en vereenvoudigt de bewerkingen langs consumer kant om deze informatie te bekomen. Bij **`paging-strategy=noCount`** worden `totalElements` en `totalPages` weg gelaten.  
   
-Voorbeeld bij `pagingStrategy=withCount` : 
+Voorbeeld bij `paging-strategy=withCount` : 
 ```json
 {
 "_page": {
@@ -954,7 +956,7 @@ Voorbeeld bij `pagingStrategy=withCount` :
 }
 ``` 
   
-Voorbeeld bij `pagingStrategy=noCount` : 
+Voorbeeld bij `paging-strategy=noCount` : 
 ```json
 {
 "_page": {
@@ -999,14 +1001,14 @@ Alle aspecten van paginatie samenvoegend geeft dit volgende response wrapper mes
 }
 ```
   
-Zoals reeds vermeld vallen `totalElements` en `totalPages` weg bij `pagingStrategy=noCount`.  
+Zoals reeds vermeld vallen `totalElements` en `totalPages` weg bij `paging-strategy=noCount`.  
 
 #### Een voorbeeld
 
 Het ophalen van business parties (withCount)  
 
 ``` prettyprint
-https://api-gateway/digipolis/business-party/v1/business-parties?pagingStrategy=withCount  
+https://api-gateway/digipolis/business-party/v1/business-parties?paging-strategy=withCount  
 ```
 
 Geeft als resultaat
@@ -1044,7 +1046,7 @@ Geeft als resultaat
 Het ophalen van business parties (noCount)  
 
 ``` prettyprint
-https://api-gateway/digipolis/business-party/v1/business-parties?pagingStrategy=noCount  
+https://api-gateway/digipolis/business-party/v1/business-parties?paging-strategy=noCount  
 ```
 
 Geeft als resultaat
@@ -1079,7 +1081,7 @@ Geeft als resultaat
 
 In de **last** link wordt gebruik gemaakt van **page=last** ipv het exacte paginanummer om te vermijden dat een count moet uitgevoerd worden bij het ophalen van de lijst. Dit houdt wel impliciet in **dat de API deze waarde (=last) ook verplicht moet ondersteunen**. Pas wanneer deze wordt gebruikt zal de API een count uitvoeren om op dat moment de laatste pagina te berekenen en terug te geven.  
 
-Een API moet altijd beide `pagingStrategy` methodes ondersteunen.  
+Een API moet altijd beide `paging-strategy` methodes ondersteunen.  
 
 **Bij het ophalen van een collection zonder specificatie van query parameters dient paginatie informatie altijd aanwezig te zijn in de
 response message**, gebruik makend van de `withCount` paginatie strategie.    
