@@ -36,8 +36,8 @@ Laten we een voorbeeld toevoegen:
             "email": "info@studiohyperdrive.be"
         }
     },
-    "host": "{{baseUrl}}",
-    "basePath": "/",
+    "host": "{{host}}",
+    "basePath": "/{{domain}}/{{apiname}}/{{apiversion}}",
     "schemes": ["https"],
     "swagger": "2.0",
     "paths": {
@@ -46,14 +46,20 @@ Laten we een voorbeeld toevoegen:
 
 Uit bovenstaand voorbeeld kan je de volgende richtlijnen destilleren :
 * Voorzie een goed uitgewerkt swagger `info` object (zie ook [Swagger  documentatie tips](swagger-docs.md))
-* Voeg een `host` element toe met `"{{baseurl}}"`. 
+* Voeg een `host` element toe met `"{{host}}"`. Hier kan je dan as variabele waarde in postman de host naar de API gateway geven.
 
     *(Ik heb gemerkt dat je best enkel lowercase karakters gebruikt. Postman gaat bij een Swagger import enkel lowercased variabelen maken)*
-* Voeg een `basePath` toe met waarde `"/"` of `"/myapi"` of ...
+* Voeg een `basePath` toe met waarde `"/{{domain}}/{{apiname}}/{{apiversion}}"`
+
+    *domain*: deze variabele wordt meestal in postman ingesteld op `acpaas` 
+    
+    *apiname*: een variabele waar je de naam van de api instelt `deliverablemgmt`
+
+    *apiversion*: een variabele waar je de versie van de api meegeeft, bv: `v1`
 * Voeg een `schemes` toe met waarde `["https"]` (of andere volgens de swagger spec)
 
 ### 2. variabelen in het path ###
-Goed nieuws. In de recentste versies van Postman hoef je niets meer te doen. In de Swagger 2.0 spec kan je gebruik maken van [Path Templating](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#pathTemplating) voor de opbouw van het path (zie ook [Path Item object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#path-item-object))
+Goed nieuws. In de recentste versies van Postman hoef je niets meer te doen. In de Swagger 2.0 spec en verder kan je gebruik maken van [Path Templating](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#pathTemplating) voor de opbouw van het path (zie ook [Path Item object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#path-item-object))
 
 Het komt erop neer dat je variabele stukken in het pad - gewoonlijk voor een **id** - tussen brackets `{}` zet.
 
@@ -66,6 +72,18 @@ Het komt erop neer dat je variabele stukken in het pad - gewoonlijk voor een **i
         }
     }
 ```
+alternatief kan je ook deze voor een variabele naam een `:` plaatsen om aan te duiden dat het een variabele is.
+
+```js
+    "paths": {
+        "/deliverables/:deliverableid/addons": {
+            "get": {
+                "description": "Get a list of addons from the deliverable"
+            }
+        }
+    }
+```
+
 
 ### 3. query variable ###
 Nog wat verderop in het path heb je het query gedeelte, ofwel alles achter het vraagteken `?`. In een Swagger file gebruik je hiervoor het [Parameters Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject). 
@@ -110,3 +128,50 @@ In hetzelfde [Parameters Object](https://github.com/OAI/OpenAPI-Specification/bl
                 ],
 
 ```
+
+## Standard apikey & tenant
+
+De meeste api's verwachten een variabele voor de apikey en de tenant in de header. Als we deze twee header variabele al toevoegen bij elke operatie, wordt het weeral wat makkelijker:
+
+```js
+    "paths": {
+        "/addons": {
+            "get": {
+                "description": "Get a list of addons that a user can select.",
+                "summary":"Find addons with an optional search query",
+                "parameters": [
+                    {
+                        "name": "apikey",
+                        "description": "from a contract in the api store",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "tenant",
+                        "description": "the name of the tenant you want to use",
+                        "in": "header",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+
+```
+
+
+## Postman environment files
+
+als je de instellingen in de swagger zoals hierboven beschreven maakt, kan je volgende variabele in postman voorzien.
+
+### globale environment variabelen
+
+* definieer de `schema` globale variabele in postman met waarde `https`
+* definieer de `host`globale variabele met waarde `api-gw.antwerpen.be`
+
+### environment variabelen
+
+* definieer de `domain` globale variabele in postman met waarde `acpaas`
+* definieer de `apiname` globale variabele in postman met de naam van de api
+* definieer de `version` globale variabele in postman met de versie van de api
+* definieer de `apikey` globale variabele in postman met de uuid van jou api key
+* definieer de `tenant` globale variabele in postman met de tenant die je wil gebruiken (optioneel)
