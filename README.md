@@ -92,6 +92,7 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 5.1.0        | Steven Vanden Broeck   | 03/09/2018 | Verduidelijking extra info in error model.
 5.1.1        | Peter Claes            | 03/10/2018 | Verduidelijking PATCH methode.
 5.2.0        | Steven Vanden Broeck   | 13/02/2019 | Uitbreiding van de paging guidelines.
+5.2.1        | Tom Sluyts             | 29/03/2019 | Wijziging geo locatie standaard naar geospatiale data standaard
 
 ## Cheat sheet
 
@@ -121,8 +122,8 @@ Swagger v2.0, JSON
         -   datum en timestamp : "YYYY-MM-DDThh:mm:ss+01:00" (RFC3339)
         -   duration : "PYYYY-MM-DDThh:mm:ss" (ISO8601)   
             vb. "P0003-04-06T12:00:00" (3 jaar, 4 maanden, 6 dagen, 12 uur)
-        -   geolocation : lengte en breedte coördinaten (ISO6709)  
-            vb. "+51.53215,+004.89451"
+        -   geospatiale data : bijvoorbeel lengte en breedte coördinaten (rfc7946)  
+            vb. {"type": "Point", "coordinates": [100.0, 0.0]}
         -   Arrays worden altijd geëncapsuleerd in een object
     -   Hiërarchische structuur (objecten)
 
@@ -400,11 +401,41 @@ Durations worden geformatteerd volgens ISO8601.
 "duration" : "P0003-04-06T12:00:00" (3 jaar, 4 maanden, 6 dagen, 12 uur)
 ```
 
-### Geolocaties
+### Geospatiale data
 
-Lengte en breedte coördinaten worden steeds geformatteerd volgens [ISO6709](https://en.wikipedia.org/wiki/ISO_6709)
+Alle geospatiale data wordt steeds geformatteerd volgens [RFC 7946](https://tools.ietf.org/html/rfc7946)
+
+Deze standaard laat toe om van eenvoudige locatie objecten...
+
 ``` prettyprint
-"location" : "+51.53215,+004.89451"
+     {
+         "type": "Point",
+         "coordinates": [100.0, 0.0]
+     }
+```
+
+tot bijvoorbeeld meer complexe geospatiale objecten zoals een polygoon (en nog veel meer) te defiëren.
+
+``` prettyprint
+     {
+         "type": "Polygon",
+         "coordinates": [
+             [
+                 [100.0, 0.0],
+                 [101.0, 0.0],
+                 [101.0, 1.0],
+                 [100.0, 1.0],
+                 [100.0, 0.0]
+             ],
+             [
+                 [100.8, 0.8],
+                 [100.8, 0.2],
+                 [100.2, 0.2],
+                 [100.2, 0.8],
+                 [100.8, 0.8]
+             ]
+         ]
+     }
 ```
 
 ### Hiërarchie
