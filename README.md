@@ -1,4 +1,4 @@
-# Digipolis API design & style requirements v5.2.0
+# Digipolis API design & style requirements v5.2.1
 
 geldig vanaf 01 mei 2019
 
