@@ -1,4 +1,4 @@
-# Digipolis API design & style requirements v5.2.1
+# Digipolis API design & style requirements v6.0.0
 
 geldig vanaf 01 mei 2019
 
@@ -93,7 +93,7 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 5.1.0        | Steven Vanden Broeck   | 03/09/2018 | Verduidelijking extra info in error model.
 5.1.1        | Peter Claes            | 03/10/2018 | Verduidelijking PATCH methode.
 5.2.0        | Steven Vanden Broeck   | 13/02/2019 | Uitbreiding van de paging guidelines.
-5.2.1        | Tom Sluyts             | 29/03/2019 | Wijziging geo locatie standaard naar geospatiale data standaard
+6.0.0        | Tom Sluyts             | 29/03/2019 | Wijziging geo locatie standaard naar geospatiale data standaard
 
 ## Cheat sheet
 
