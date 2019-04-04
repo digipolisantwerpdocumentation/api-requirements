@@ -415,7 +415,7 @@ Deze standaard laat toe om van eenvoudige locatie objecten in een longitude, lat
      }
 ```
 
-tot meer complexe geospatiale objecten zoals bijvoorbeeld een polygoon (en nog veel meer) te defiëren.
+tot meer complexe geospatiale objecten zoals bijvoorbeeld een polygoon (en nog veel meer) te definiëren.
 
 ``` prettyprint
      {
