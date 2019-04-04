@@ -406,7 +406,7 @@ Durations worden geformatteerd volgens ISO8601.
 
 Alle geospatiale data wordt steeds geformatteerd volgens [RFC 7946](https://tools.ietf.org/html/rfc7946)
 
-Deze standaard laat toe om van eenvoudige locatie objecten in een latitude, longitude array...
+Deze standaard laat toe om van eenvoudige locatie objecten in een longitude, latitude array...
 
 ``` prettyprint
      {
