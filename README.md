@@ -43,6 +43,7 @@ geldig vanaf 01 mei 2019
   - [HTTP verbs](#http-verbs-1)
   - [Voorbeelden](#voorbeelden)
     - [GET](#get)
+    - [HEAD](#head)
     - [PUT](#put)
     - [POST](#post)
     - [PATCH](#patch)
@@ -92,6 +93,7 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 5.1.0        | Steven Vanden Broeck   | 03/09/2018 | Verduidelijking extra info in error model.
 5.1.1        | Peter Claes            | 03/10/2018 | Verduidelijking PATCH methode.
 5.2.0        | Steven Vanden Broeck   | 13/02/2019 | Uitbreiding van de paging guidelines.
+5.3.0        | Peter Claes            | 05/04/2019 | HTTP methode HEAD.
 
 ## Cheat sheet
 
@@ -239,6 +241,7 @@ POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoo
 Verb   | Usage                                                                                                        | Request body                              | Response body   
 ----   | -----                                                                                                        | ------------                              | -------------
 GET    | opvragen van de representatie van een resource                                                               | leeg                                      | (gedeeltelijke) resource representatie
+HEAD   | opvragen van de headers van een resource                                                                     | leeg                                      | leeg
 PUT    | vervangen van  een bestaande resource (of creatie indien die nog niet bestaat, op basis van de opgegeven id) | representatie  van te vervangen resource  | optioneel       
 POST   | creëren van een nieuwe resource                                                                              | representatie van te creëren resource    | **Location** header met URI,<br/>body optioneel
 POST   | voor het uitvoeren(=creëren) van een controller(=command) (werkwoord, vb. search)                            | representatie van info voor controller   | optioneel   
@@ -249,21 +252,21 @@ DELETE | verwijderen van een resource                                           
 
 **Altijd moet de meest specifieke responsecode worden gebruikt; vb. 401 bij security ipv 400, 404 bij not found ipv 400.**
 
-Code                         | GET | PUT | POST                | PATCH | DELETE | Error object 
-----                         | --- | --- | ----                | ----- | ------ | ------------ 
-200 : OK (sync)              | X   | X   |                     | X     | X      |              
-201 : Created (sync)         |     |     | X                   |       |        |              
-202 : Accepted (async)       |     | X   | X                   | X     | X      |              
-204 : No content             |     | X   | X                   | X     | X      |              
-303 : See other (async)      |     |     | X                   |       |        |              
-400 : Bad request            | X   | X   | X                   | X     | X      | Ja           
-401 : Unauthorized           | X   | X   | X                   | X     | X      | Optioneel    
-403 : Forbidden              | X   | X   | X                   | X     | X      | Optioneel    
-404 : Not Found              | X   | X   | X (parent resource) | X     | X      |              
-405 : Method not allowed     | X   | X   | X                   | X     | X      |              
-415 : Unsupported media type | X   | X   | X                   | X     | X      |              
-429 : Too many requests      | X   | X   | X                   | X     | X      | Optioneel    
-500 : Internal server error  | X   | X   | X                   | X     | X      | Ja           
+Code                         | GET | HEAD | PUT | POST                | PATCH | DELETE | Error object 
+----                         | --- | ---  | --- | ----                | ----- | ------ | ------------ 
+200 : OK (sync)              | X   | X    | X   |                     | X     | X      |              
+201 : Created (sync)         |     |      |     | X                   |       |        |              
+202 : Accepted (async)       |     |      | X   | X                   | X     | X      |              
+204 : No content             |     |      | X   | X                   | X     | X      |              
+303 : See other (async)      |     |      |     | X                   |       |        |              
+400 : Bad request            | X   | X    | X   | X                   | X     | X      | Ja           
+401 : Unauthorized           | X   | X    | X   | X                   | X     | X      | Optioneel    
+403 : Forbidden              | X   | X    | X   | X                   | X     | X      | Optioneel    
+404 : Not Found              | X   | X    | X   | X (parent resource) | X     | X      |              
+405 : Method not allowed     | X   | X    | X   | X                   | X     | X      |              
+415 : Unsupported media type | X   | X    | X   | X                   | X     | X      |              
+429 : Too many requests      | X   | X    | X   | X                   | X     | X      | Optioneel    
+500 : Internal server error  | X   | X    | X   | X                   | X     | X      | Ja           
 
 ## API's
 
@@ -547,6 +550,7 @@ Voor **PATCH** zijn volgende RFC's van toepassing :
 HTTP Verb | Safe | Idempotent | Toepassing                                                                                                                                             | Request
 --------- | ---- | ---------- | ----------                                                                                                                                             | ------- 
 GET       | Ja   | Ja         | Voor het ophalen van de representatie van een resource. Opeenvolgende calls hebben geen invloed op de state van de resource.                           | Is steeds leeg
+HEAD      | Ja   | Ja         | Voor het ophalen van de headers van een resource (om bv de aanwezigheid van een resource te controleren zonder de volledige payload te moeten ontvangen). Opeenvolgende calls hebben geen invloed op de state van de resource.                           | Is steeds leeg
 PUT       | Neen | Ja         | Voor het vervangen van een bestaande resource. Indien de resource niet bestaat, wordt deze aangemaakt.                                                 | Representatie van de te vervangen resource
 POST      | Neen | Neen       | Voor het aanmaken van een nieuwe resource binnen een collection.                                                                                       | Representatie van de aan te maken resource (optionele velden niet)
 POST      | Neen | Neen       | Voor het uitvoeren van een activity of controller (=command) resource.                                                                                 | Representatie van info voor controller
@@ -591,6 +595,15 @@ GET https://api-gateway/digipolis/business-party/v1/business-parties/6532/contra
 GET https://api-gateway/digipolis/business-party/v1/business-parties/6532/contracts/42
 ```
 
+#### HEAD
+
+Voor elk van onderstaande voorbeelden is de request body steeds leeg
+
+-   Controleert het bestaan van business-party met id 6532 (zonder de volledige resource op te halen)
+``` prettyprint
+HEAD https://api-gateway/digipolis/business-party/v1/business-parties/6532
+```
+
 #### PUT
 
 Voor elk van onderstaande voorbeelden bevat de request body steeds de volledige resource representatie
@@ -628,7 +641,6 @@ Voor elk van onderstaande voorbeelden bevat de request body enkel die attributen
 PATCH https://api-gateway/digipolis/business-party/v1/business-parties/6532/contracts/42
 ```
 
-##### Voorbeeld
 Stel dat contract 42 van business party 6532 volgende resource representatie heeft
 ``` json
 {
@@ -688,7 +700,7 @@ Altijd moet de meest specifieke responsecode worden gebruikt; vb. 401 bij securi
 
 HTTP status code           | Betekenis                                                                                                                                                                                                                                                                 | Response Body en headers
 ----------------           | ---------                                                                                                                                                                                                                                                                 | ------------------------
-200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET bij succesvolle response, PUT en PATCH indien de update succesvol was en DELETE indien de resource succesvol werd verwijderd.                                                                | Volledige of partiële resource representatie(s) bij GET. Optioneel bij PUT/PATCH/DELETE.
+200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET en HEAD bij succesvolle response, PUT en PATCH indien de update succesvol was en DELETE indien de resource succesvol werd verwijderd.                                                                | Volledige of partiële resource representatie(s) bij GET. Enkel de headers bij HEAD. Optioneel bij PUT/PATCH/DELETE.
 201 Created                | Indien een nieuwe resource succesvol is aangemaakt bij het uitvoeren van een POST of PUT call, of bij een succesvolle uitvoering van een POST van een controller.                                                                                               | Indien resource aangemaakt :<br/> Location header met uri van aangemaakte resource + optioneel volledige of partiële resource representatie van de aangemaakte resource.
 202 Accepted               | De request is succesvol geaccepteerd voor een PUT, POST, DELETE of PATCH en wordt verder asynchroon verwerkt.                                                                                                                                                             | Neen                 
 303 See Other              | Wordt gebruikt voor het asynchroon afhandelen van langlopende operaties.                                                                                                                                                                                                  | Neen                 
@@ -1225,7 +1237,7 @@ Deze sectie beschrijft welke HTTP status codes vergezeld dienen te worden van ee
 
 HTTP status code           | Betekenis                                                                                                                                   | Error object                  
 ----------------           | ---------                                                                                                                                   | ------------
-200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET bij succesvol response, PUT en PATCH indien de update succesvol was en DELETE indien de resource succesvol werd verwijderd. | Neen                          
+200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET en HEAD bij succesvol response, PUT en PATCH indien de update succesvol was en DELETE indien de resource succesvol werd verwijderd. | Neen                          
 201 Created                | Indien een nieuwe resource succesvol is aangemaakt bij het uitvoeren van een PUT of POST call, of bij een succesvolle uitvoering van een POST van een controller.                                              | Neen                          
 202 Accepted               | De request is succesvol geaccepteerd voor een PUT, POST, DELETE of PATCH en wordt verder asynchroon verwerkt.                               | Neen                          
 303 See Other              | Wordt gebruikt voor het asynchroon afhandelen van langlopende operaties.                                                                    | Neen                          
