@@ -1,4 +1,4 @@
-# Digipolis API design & style requirements v5.3.0
+# Digipolis API design & style requirements v6.0.0
 
 geldig vanaf 01 mei 2019
 
@@ -32,7 +32,7 @@ geldig vanaf 01 mei 2019
   - [JSON conventies](#json-conventies)
   - [Datums en timestamps](#datums-en-timestamps)
   - [Durations](#durations)
-  - [Geolocaties](#geolocaties)
+  - [Geospatiale data](#geospatiale-data)
   - [Hiërarchie](#hi%C3%ABrarchie)
 - [Resources](#resources)
   - [URI structuur](#uri-structuur)
@@ -94,6 +94,7 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 5.1.1        | Peter Claes            | 03/10/2018 | Verduidelijking PATCH methode.
 5.2.0        | Steven Vanden Broeck   | 13/02/2019 | Uitbreiding van de paging guidelines.
 5.3.0        | Peter Claes            | 05/04/2019 | HTTP methode HEAD.
+6.0.0        | Tom Sluyts             | 11/04/2019 | Wijziging geolocatie standaard naar geospatiale data standaard
 
 ## Cheat sheet
 
@@ -123,8 +124,8 @@ Swagger v2.0, JSON
         -   datum en timestamp : "YYYY-MM-DDThh:mm:ss+01:00" (RFC3339)
         -   duration : "PYYYY-MM-DDThh:mm:ss" (ISO8601)   
             vb. "P0003-04-06T12:00:00" (3 jaar, 4 maanden, 6 dagen, 12 uur)
-        -   geolocation : lengte en breedte coördinaten (ISO6709)  
-            vb. "+51.53215,+004.89451"
+        -   geospatiale data : bijvoorbeeld lengte en breedte coördinaten (rfc7946)  
+            vb. {"type": "Point", "coordinates": [100.0, 0.0]}
         -   Arrays worden altijd geëncapsuleerd in een object
     -   Hiërarchische structuur (objecten)
 
@@ -403,11 +404,41 @@ Durations worden geformatteerd volgens ISO8601.
 "duration" : "P0003-04-06T12:00:00" (3 jaar, 4 maanden, 6 dagen, 12 uur)
 ```
 
-### Geolocaties
+### Geospatiale data
 
-Lengte en breedte coördinaten worden steeds geformatteerd volgens [ISO6709](https://en.wikipedia.org/wiki/ISO_6709)
+Alle geospatiale data wordt steeds geformatteerd volgens [RFC 7946](https://tools.ietf.org/html/rfc7946)
+
+Deze standaard laat toe om van eenvoudige locatie objecten in een longitude, latitude array...
+
 ``` prettyprint
-"location" : "+51.53215,+004.89451"
+     {
+         "type": "Point",
+         "coordinates": [100.0, 0.0]
+     }
+```
+
+tot meer complexe geospatiale objecten zoals bijvoorbeeld een polygoon (en nog veel meer) te definiëren.
+
+``` prettyprint
+     {
+         "type": "Polygon",
+         "coordinates": [
+             [
+                 [100.0, 0.0],
+                 [101.0, 0.0],
+                 [101.0, 1.0],
+                 [100.0, 1.0],
+                 [100.0, 0.0]
+             ],
+             [
+                 [100.8, 0.8],
+                 [100.8, 0.2],
+                 [100.2, 0.2],
+                 [100.2, 0.8],
+                 [100.8, 0.8]
+             ]
+         ]
+     }
 ```
 
 ### Hiërarchie
@@ -641,6 +672,7 @@ Voor elk van onderstaande voorbeelden bevat de request body enkel die attributen
 PATCH https://api-gateway/digipolis/business-party/v1/business-parties/6532/contracts/42
 ```
 
+			   
 Stel dat contract 42 van business party 6532 volgende resource representatie heeft
 ``` json
 {
