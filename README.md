@@ -1,4 +1,4 @@
-# Digipolis API design & style requirements v6.0.0
+# Digipolis API design & style requirements v6.0.1
 
 geldig vanaf 01 mei 2019
 
@@ -95,6 +95,7 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 5.2.0        | Steven Vanden Broeck   | 13/02/2019 | Uitbreiding van de paging guidelines.
 5.3.0        | Peter Claes            | 05/04/2019 | HTTP methode HEAD.
 6.0.0        | Tom Sluyts             | 11/04/2019 | Wijziging geolocatie standaard naar geospatiale data standaard
+6.0.1        | Peter Claes            | 11/04/2019 | Expliciteren 'description'
 
 ## Cheat sheet
 
@@ -230,7 +231,7 @@ POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoo
 
 -   template : <https://drive.google.com/file/d/0B06myaSd5oKUOEduOHdHRl9RZU0/>
 -   template met extra info (opm. geen geldige swagger wegens extrainfo) : <https://drive.google.com/file/d/0B06myaSd5oKUWU1samRrODcwUVk/>
--   steeds alle descriptions invullen (in het engels) : routes, parameters, ...
+-   steeds alle descriptions en summaries invullen (in het engels) : routes, parameters, ... : zie ook <https://github.com/digipolisantwerpdocumentation/api-requirements/blob/master/swagger-docs.md>
 -   semantic version opnemen in swagger file
 
 ### HTTP verbs
