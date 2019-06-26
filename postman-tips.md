@@ -46,7 +46,7 @@ Laten we een voorbeeld toevoegen:
 
 Uit bovenstaand voorbeeld kan je de volgende richtlijnen destilleren :
 * Voorzie een goed uitgewerkt swagger `info` object (zie ook [Swagger  documentatie tips](swagger-docs.md))
-* Voeg een `host` element toe met `"{{host}}"`. Hier kan je dan as variabele waarde in postman de host naar de API gateway geven.
+* Voeg een `host` element toe met `"{{host}}"`. Hier kan je dan als variabele waarde in postman de host naar de API gateway geven.
 
     *(Ik heb gemerkt dat je best enkel lowercase karakters gebruikt. Postman gaat bij een Swagger import enkel lowercased variabelen maken)*
 * Voeg een `basePath` toe met waarde `"/{{domain}}/{{apiname}}/{{apiversion}}"`
@@ -119,7 +119,7 @@ In hetzelfde [Parameters Object](https://github.com/OAI/OpenAPI-Specification/bl
 
 ## Standard apikey & tenant
 
-De meeste api's verwachten een variabele voor de apikey en de tenant in de header. Als we deze twee header variabele al toevoegen bij elke operatie, wordt het weeral wat makkelijker:
+De meeste api's verwachten een variabele voor de apikey en de tenant in de header. Als we deze twee header variabelen al toevoegen bij elke operatie, wordt het weeral wat makkelijker:
 
 ```js
     "paths": {
@@ -193,7 +193,7 @@ als je de instellingen in de swagger zoals hierboven beschreven maakt, kan je vo
 ### globale environment variabelen
 
 * definieer de `schema` globale variabele in postman met waarde `https`
-* definieer de `host`globale variabele met waarde `api-gw.antwerpen.be`
+* definieer de `host`globale variabele met waarde `api-gw.antwerpen.be` (of `api-gw-o.antwerpen.be`, `api-gw-a.antwerpen.be` en `api-gw-p.antwerpen.be`)
 
 ### environment variabelen
 
