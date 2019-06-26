@@ -110,3 +110,10 @@ In hetzelfde [Parameters Object](https://github.com/OAI/OpenAPI-Specification/bl
                 ],
 
 ```
+
+---
+**NOTE**
+
+> if you add default values for the parameters using the ```default``` key, Postman will use this value. Without, Postman will generate a variable for the parameter. So, avoid using default values for parameters. 
+
+---
