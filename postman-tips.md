@@ -202,3 +202,9 @@ als je de instellingen in de swagger zoals hierboven beschreven maakt, kan je vo
 * definieer de `version` globale variabele in postman met de versie van de api
 * definieer de `apikey` globale variabele in postman met de uuid van jou api key
 * definieer de `tenant` globale variabele in postman met de tenant die je wil gebruiken (optioneel)
+
+
+---
+**Opmerking**
+> Als je in de parameter secties gebruik maakt van `default` waardes zal Postman deze overnemen. Het nadeel is dat Postman hiervoor geen variabele aanmaakt. We raden het gebruik van `default` - voor parameters - af.
+---
