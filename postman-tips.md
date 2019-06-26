@@ -72,18 +72,6 @@ Het komt erop neer dat je variabele stukken in het pad - gewoonlijk voor een **i
         }
     }
 ```
-alternatief kan je ook deze voor een variabele naam een `:` plaatsen om aan te duiden dat het een variabele is.
-
-```js
-    "paths": {
-        "/deliverables/:deliverableid/addons": {
-            "get": {
-                "description": "Get a list of addons from the deliverable"
-            }
-        }
-    }
-```
-
 
 ### 3. query variable ###
 Nog wat verderop in het path heb je het query gedeelte, ofwel alles achter het vraagteken `?`. In een Swagger file gebruik je hiervoor het [Parameters Object](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#parameterObject). 
@@ -155,6 +143,45 @@ De meeste api's verwachten een variabele voor de apikey en de tenant in de heade
                         "type": "string"
                     }
                 ],
+
+```
+
+
+Nog makkelijker is om deze 2 parameters globaal te definiëren in jou swagger file en deze bij elke operatie te refereren:
+
+```js
+    "paths": {
+        "/addons": {
+            "get": {
+                "description": "Get a list of addons that a user can select.",
+                "summary":"Find addons with an optional search query",
+                "parameters": [
+                    {
+                        "$ref": "#/parameters/apikeyParam"
+                    },
+                    {
+                        "$ref": "#/parameters/tenantParam"
+                    }
+                ],
+...
+    "parameters": {
+        "apikeyParam": {
+                "name": "apikey",
+                "description": "from a contract in the api store",
+                "in": "header",
+                "required": true,
+                "type": "string"
+            }
+        },
+        "tenantParam": {
+                "name": "tenant",
+                "description": "the name of the tenant you want to use",
+                "in": "header",
+                "required": true,
+                "type": "string"
+            }
+        } 
+    }
 
 ```
 
