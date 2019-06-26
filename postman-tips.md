@@ -131,7 +131,7 @@ In hetzelfde [Parameters Object](https://github.com/OAI/OpenAPI-Specification/bl
 
 ## Standard apikey & tenant
 
-De meeste api's verwachten een variabele voor de apikey en de tenant in de header. Als we deze twee header variabele al toevoegen bij elke operatie, wordt het weeral wat makkelijker:
+De meeste api's verwachten een variabele voor de apikey en de tenant in de header. Als we deze twee header variabelen al toevoegen bij elke operatie, wordt het weeral wat makkelijker:
 
 ```js
     "paths": {
@@ -166,7 +166,7 @@ als je de instellingen in de swagger zoals hierboven beschreven maakt, kan je vo
 ### globale environment variabelen
 
 * definieer de `schema` globale variabele in postman met waarde `https`
-* definieer de `host`globale variabele met waarde `api-gw.antwerpen.be`
+* definieer de `host`globale variabele met waarde `api-gw.antwerpen.be` (of `api-gw-o.antwerpen.be`, `api-gw-a.antwerpen.be` en `api-gw-p.antwerpen.be`)
 
 ### environment variabelen
 
