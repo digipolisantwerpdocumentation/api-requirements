@@ -46,7 +46,7 @@ Laten we een voorbeeld toevoegen:
 
 Uit bovenstaand voorbeeld kan je de volgende richtlijnen destilleren :
 * Voorzie een goed uitgewerkt swagger `info` object (zie ook [Swagger  documentatie tips](swagger-docs.md))
-* Voeg een `host` element toe met `"{{host}}"`. Hier kan je dan as variabele waarde in postman de host naar de API gateway geven.
+* Voeg een `host` element toe met `"{{host}}"`. Hier kan je dan als variabele waarde in postman de host naar de API gateway geven.
 
     *(Ik heb gemerkt dat je best enkel lowercase karakters gebruikt. Postman gaat bij een Swagger import enkel lowercased variabelen maken)*
 * Voeg een `basePath` toe met waarde `"/{{domain}}/{{apiname}}/{{apiversion}}"`
