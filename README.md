@@ -1,6 +1,6 @@
-# Digipolis API design & style requirements v5.1.1
+# Digipolis API design & style requirements v6.0.1
 
-geldig vanaf 01 oktober 2018
+geldig vanaf 01 mei 2019
 
 ## Inhoudstabel
 <!-- PC : generated with doctoc (https://www.npmjs.com/package/doctoc) with option --notitle -->
@@ -32,7 +32,7 @@ geldig vanaf 01 oktober 2018
   - [JSON conventies](#json-conventies)
   - [Datums en timestamps](#datums-en-timestamps)
   - [Durations](#durations)
-  - [Geolocaties](#geolocaties)
+  - [Geospatiale data](#geospatiale-data)
   - [Hiërarchie](#hi%C3%ABrarchie)
 - [Resources](#resources)
   - [URI structuur](#uri-structuur)
@@ -43,6 +43,7 @@ geldig vanaf 01 oktober 2018
   - [HTTP verbs](#http-verbs-1)
   - [Voorbeelden](#voorbeelden)
     - [GET](#get)
+    - [HEAD](#head)
     - [PUT](#put)
     - [POST](#post)
     - [PATCH](#patch)
@@ -91,6 +92,10 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 5.0.0        | Peter Claes            | 28/08/2018 | Geen HTTP response code 200 meer toegelaten bij POST.
 5.1.0        | Steven Vanden Broeck   | 03/09/2018 | Verduidelijking extra info in error model.
 5.1.1        | Peter Claes            | 03/10/2018 | Verduidelijking PATCH methode.
+5.2.0        | Steven Vanden Broeck   | 13/02/2019 | Uitbreiding van de paging guidelines.
+5.3.0        | Peter Claes            | 05/04/2019 | HTTP methode HEAD.
+6.0.0        | Tom Sluyts             | 11/04/2019 | Wijziging geolocatie standaard naar geospatiale data standaard
+6.0.1        | Peter Claes            | 11/04/2019 | Expliciteren 'description'
 
 ## Cheat sheet
 
@@ -120,8 +125,8 @@ Swagger v2.0, JSON
         -   datum en timestamp : "YYYY-MM-DDThh:mm:ss+01:00" (RFC3339)
         -   duration : "PYYYY-MM-DDThh:mm:ss" (ISO8601)   
             vb. "P0003-04-06T12:00:00" (3 jaar, 4 maanden, 6 dagen, 12 uur)
-        -   geolocation : lengte en breedte coördinaten (ISO6709)  
-            vb. "+51.53215,+004.89451"
+        -   geospatiale data : bijvoorbeeld lengte en breedte coördinaten (rfc7946)  
+            vb. {"type": "Point", "coordinates": [100.0, 0.0]}
         -   Arrays worden altijd geëncapsuleerd in een object
     -   Hiërarchische structuur (objecten)
 
@@ -143,31 +148,36 @@ Swagger v2.0, JSON
 ### Request
 
 -   filtering op id : steeds mee als node in URI (niet via query parameter)
--   query parameters, enkel voor
-    -   filtering
-        -   op resource
-            -   unieke query parameter per veld
-            -   indien meerdere waarden voor een veld filter :
-             
-            **resource?parameter=waarde1,waarde2,waarde3**
-            -   GEEN query parameter voor id's !
-        -   op resource representatie
-               -   reserved : **fields**= (comma separated)
-    -   sortering
-        -   reserved : **sort**= (comma separated)
-        -   default : ascending
-        -   **-**\<parameter\> : descending
-    -   paginatie
-        -   reserved : **page**= (optional parameter, default value=1)
-        -   reserved : **pagesize**=(optional parameter, default=bepaald door API)
-    -   resource representation
-        -   altijd via body, nooit via query parameters
+- query parameters, enkel voor
+  - filtering
+    - op resource
+      -   unieke query parameter per veld
+      -   indien meerdere waarden voor een veld filter :
+
+      **resource?parameter=waarde1,waarde2,waarde3**
+
+      -   GEEN query parameter voor id's !
+    - op resource representatie
+
+         -   reserved : **fields**= (comma separated)
+  -   sortering
+      -   reserved : **sort**= (comma separated)
+      -   default : ascending
+      -   **-**\<parameter\> : descending
+  -   paginatie
+      -   reserved : **page**= (optional parameter, default value=1)
+      -   reserved : **pagesize**=(optional parameter, default=bepaald door API)
+      -	  reserved : **paging-strategy**=(optional parameter, default=withCount)
+      
+  - resource representation
+
+    -   altijd via body, nooit via query parameters
 
 ### Paginatie
 
 -   altijd gebruiken bij ophalen van collecties
--   query parameters : **page**= en **pagesize**=
-    -   optioneel mee te geven door clients (default wordt dan gebruikt)
+-   query parameters : **page**= en **pagesize**= en **paging-strategy**= 
+    -   optioneel mee te geven door clients (bij ontbreken worden de  default waardes gebruikt)
 -   1-based (1e pagina is pagina 1)
 -   Response volgens HAL specificatie
     -   media type : **application/hal+json**
@@ -175,39 +185,9 @@ Swagger v2.0, JSON
         -   \_links
         -   \_embedded
         -   \_page
-    -   voorbeeld
-```json
-{
-	"_links": {
-		"self": {
-			"href": "https://api-gateway/digipolis/business-party/v1/business-parties"
-		},
-		"first": {
-			"href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=1&pagesize=10"
-		},
-		"last": {
-			"href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=7386&pagesize=10"
-		},
-		"next": {
-			"href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=2&pagesize=10"
-		}
-	},
-	"_embedded": {
-		"business-parties": [{
-			
-		},
-		{
-			
-		}]
-	},
-	"_page": {
-		"size": 10,
-		"totalElements": 73853,
-		"totalPages": 7386,
-		"number": 1
-	}
-}
-```
+    -   voorbeelden
+-   beide `paging-strategy` waardes (`noCount` en `withCount`) moeten ondersteund worden 
+
 ### Event resources
 
 POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoord
@@ -251,7 +231,7 @@ POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoo
 
 -   template : <https://drive.google.com/file/d/0B06myaSd5oKUOEduOHdHRl9RZU0/>
 -   template met extra info (opm. geen geldige swagger wegens extrainfo) : <https://drive.google.com/file/d/0B06myaSd5oKUWU1samRrODcwUVk/>
--   steeds alle descriptions invullen (in het engels) : routes, parameters, ...
+-   steeds alle descriptions en summaries invullen (in het engels) : routes, parameters, ... : zie ook <https://github.com/digipolisantwerpdocumentation/api-requirements/blob/master/swagger-docs.md>
 -   semantic version opnemen in swagger file
 
 ### HTTP verbs
@@ -263,6 +243,7 @@ POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoo
 Verb   | Usage                                                                                                        | Request body                              | Response body   
 ----   | -----                                                                                                        | ------------                              | -------------
 GET    | opvragen van de representatie van een resource                                                               | leeg                                      | (gedeeltelijke) resource representatie
+HEAD   | opvragen van de headers van een resource                                                                     | leeg                                      | leeg
 PUT    | vervangen van  een bestaande resource (of creatie indien die nog niet bestaat, op basis van de opgegeven id) | representatie  van te vervangen resource  | optioneel       
 POST   | creëren van een nieuwe resource                                                                              | representatie van te creëren resource    | **Location** header met URI,<br/>body optioneel
 POST   | voor het uitvoeren(=creëren) van een controller(=command) (werkwoord, vb. search)                            | representatie van info voor controller   | optioneel   
@@ -273,21 +254,21 @@ DELETE | verwijderen van een resource                                           
 
 **Altijd moet de meest specifieke responsecode worden gebruikt; vb. 401 bij security ipv 400, 404 bij not found ipv 400.**
 
-Code                         | GET | PUT | POST                | PATCH | DELETE | Error object 
-----                         | --- | --- | ----                | ----- | ------ | ------------ 
-200 : OK (sync)              | X   | X   |                     | X     | X      |              
-201 : Created (sync)         |     |     | X                   |       |        |              
-202 : Accepted (async)       |     | X   | X                   | X     | X      |              
-204 : No content             |     | X   | X                   | X     | X      |              
-303 : See other (async)      |     |     | X                   |       |        |              
-400 : Bad request            | X   | X   | X                   | X     | X      | Ja           
-401 : Unauthorized           | X   | X   | X                   | X     | X      | Optioneel    
-403 : Forbidden              | X   | X   | X                   | X     | X      | Optioneel    
-404 : Not Found              | X   | X   | X (parent resource) | X     | X      |              
-405 : Method not allowed     | X   | X   | X                   | X     | X      |              
-415 : Unsupported media type | X   | X   | X                   | X     | X      |              
-429 : Too many requests      | X   | X   | X                   | X     | X      | Optioneel    
-500 : Internal server error  | X   | X   | X                   | X     | X      | Ja           
+Code                         | GET | HEAD | PUT | POST                | PATCH | DELETE | Error object 
+----                         | --- | ---  | --- | ----                | ----- | ------ | ------------ 
+200 : OK (sync)              | X   | X    | X   |                     | X     | X      |              
+201 : Created (sync)         |     |      |     | X                   |       |        |              
+202 : Accepted (async)       |     |      | X   | X                   | X     | X      |              
+204 : No content             |     |      | X   | X                   | X     | X      |              
+303 : See other (async)      |     |      |     | X                   |       |        |              
+400 : Bad request            | X   | X    | X   | X                   | X     | X      | Ja           
+401 : Unauthorized           | X   | X    | X   | X                   | X     | X      | Optioneel    
+403 : Forbidden              | X   | X    | X   | X                   | X     | X      | Optioneel    
+404 : Not Found              | X   | X    | X   | X (parent resource) | X     | X      |              
+405 : Method not allowed     | X   | X    | X   | X                   | X     | X      |              
+415 : Unsupported media type | X   | X    | X   | X                   | X     | X      |              
+429 : Too many requests      | X   | X    | X   | X                   | X     | X      | Optioneel    
+500 : Internal server error  | X   | X    | X   | X                   | X     | X      | Ja           
 
 ## API's
 
@@ -424,11 +405,41 @@ Durations worden geformatteerd volgens ISO8601.
 "duration" : "P0003-04-06T12:00:00" (3 jaar, 4 maanden, 6 dagen, 12 uur)
 ```
 
-### Geolocaties
+### Geospatiale data
 
-Lengte en breedte coördinaten worden steeds geformatteerd volgens [ISO6709](https://en.wikipedia.org/wiki/ISO_6709)
+Alle geospatiale data wordt steeds geformatteerd volgens [RFC 7946](https://tools.ietf.org/html/rfc7946)
+
+Deze standaard laat toe om van eenvoudige locatie objecten in een longitude, latitude array...
+
 ``` prettyprint
-"location" : "+51.53215,+004.89451"
+     {
+         "type": "Point",
+         "coordinates": [100.0, 0.0]
+     }
+```
+
+tot meer complexe geospatiale objecten zoals bijvoorbeeld een polygoon (en nog veel meer) te definiëren.
+
+``` prettyprint
+     {
+         "type": "Polygon",
+         "coordinates": [
+             [
+                 [100.0, 0.0],
+                 [101.0, 0.0],
+                 [101.0, 1.0],
+                 [100.0, 1.0],
+                 [100.0, 0.0]
+             ],
+             [
+                 [100.8, 0.8],
+                 [100.8, 0.2],
+                 [100.2, 0.2],
+                 [100.2, 0.8],
+                 [100.8, 0.8]
+             ]
+         ]
+     }
 ```
 
 ### Hiërarchie
@@ -571,6 +582,7 @@ Voor **PATCH** zijn volgende RFC's van toepassing :
 HTTP Verb | Safe | Idempotent | Toepassing                                                                                                                                             | Request
 --------- | ---- | ---------- | ----------                                                                                                                                             | ------- 
 GET       | Ja   | Ja         | Voor het ophalen van de representatie van een resource. Opeenvolgende calls hebben geen invloed op de state van de resource.                           | Is steeds leeg
+HEAD      | Ja   | Ja         | Voor het ophalen van de headers van een resource (om bv de aanwezigheid van een resource te controleren zonder de volledige payload te moeten ontvangen). Opeenvolgende calls hebben geen invloed op de state van de resource.                           | Is steeds leeg
 PUT       | Neen | Ja         | Voor het vervangen van een bestaande resource. Indien de resource niet bestaat, wordt deze aangemaakt.                                                 | Representatie van de te vervangen resource
 POST      | Neen | Neen       | Voor het aanmaken van een nieuwe resource binnen een collection.                                                                                       | Representatie van de aan te maken resource (optionele velden niet)
 POST      | Neen | Neen       | Voor het uitvoeren van een activity of controller (=command) resource.                                                                                 | Representatie van info voor controller
@@ -615,6 +627,15 @@ GET https://api-gateway/digipolis/business-party/v1/business-parties/6532/contra
 GET https://api-gateway/digipolis/business-party/v1/business-parties/6532/contracts/42
 ```
 
+#### HEAD
+
+Voor elk van onderstaande voorbeelden is de request body steeds leeg
+
+-   Controleert het bestaan van business-party met id 6532 (zonder de volledige resource op te halen)
+``` prettyprint
+HEAD https://api-gateway/digipolis/business-party/v1/business-parties/6532
+```
+
 #### PUT
 
 Voor elk van onderstaande voorbeelden bevat de request body steeds de volledige resource representatie
@@ -652,7 +673,7 @@ Voor elk van onderstaande voorbeelden bevat de request body enkel die attributen
 PATCH https://api-gateway/digipolis/business-party/v1/business-parties/6532/contracts/42
 ```
 
-##### Voorbeeld
+			   
 Stel dat contract 42 van business party 6532 volgende resource representatie heeft
 ``` json
 {
@@ -669,7 +690,7 @@ Stel dat contract 42 van business party 6532 volgende resource representatie hee
 		"value": 850
 	}
 }
-``` 
+```
 en je wil de prijs veranderen naar 950 Euro,<br/>
 dan kan je dit als volgt doen
 
@@ -684,7 +705,7 @@ met als request body
 		"value": 950
 	}
 }
-``` 
+```
 
 
 #### DELETE
@@ -712,7 +733,7 @@ Altijd moet de meest specifieke responsecode worden gebruikt; vb. 401 bij securi
 
 HTTP status code           | Betekenis                                                                                                                                                                                                                                                                 | Response Body en headers
 ----------------           | ---------                                                                                                                                                                                                                                                                 | ------------------------
-200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET bij succesvolle response, PUT en PATCH indien de update succesvol was en DELETE indien de resource succesvol werd verwijderd.                                                                | Volledige of partiële resource representatie(s) bij GET. Optioneel bij PUT/PATCH/DELETE.
+200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET en HEAD bij succesvolle response, PUT en PATCH indien de update succesvol was en DELETE indien de resource succesvol werd verwijderd.                                                                | Volledige of partiële resource representatie(s) bij GET. Enkel de headers bij HEAD. Optioneel bij PUT/PATCH/DELETE.
 201 Created                | Indien een nieuwe resource succesvol is aangemaakt bij het uitvoeren van een POST of PUT call, of bij een succesvolle uitvoering van een POST van een controller.                                                                                               | Indien resource aangemaakt :<br/> Location header met uri van aangemaakte resource + optioneel volledige of partiële resource representatie van de aangemaakte resource.
 202 Accepted               | De request is succesvol geaccepteerd voor een PUT, POST, DELETE of PATCH en wordt verder asynchroon verwerkt.                                                                                                                                                             | Neen                 
 303 See Other              | Wordt gebruikt voor het asynchroon afhandelen van langlopende operaties.                                                                                                                                                                                                  | Neen                 
@@ -847,35 +868,50 @@ Dit geeft als resultaat een lijst van business parties aflopend volgens zip code
 
 Paginatie informatie wordt **steeds** terug gegeven bij het ophalen van collections. Dit om er voor te zorgen dat collections die in eerste instantie een beperkt aantal entiteiten bevatten op termijn te groot kunnen worden om de vooropgestelde performantie te kunnen blijven garanderen.
 
-Vanuit consumer standpunt is het noodzakelijk dat deze volgende informatie in de response terugkrijgt om voldoende informatie te bekomen rond de pagina's:
+Vanuit consumer standpunt is het noodzakelijk dat volgende informatie in de response wordt gegeven om voldoende informatie te bekomen rond de pagina's:
 
--   Link naar de eerste pagina
--   Link naar de laatste pagina
--   Link naar de vorige pagina
--   Link naar de volgende pagina
--   Extra metadata:
-    -   Huidig paginanummer
-    -   Aantal resources per pagina
-    -   Totaal aantal resources
-    -   Totaal aantal pagina's
+| Info                         |                             | Verplicht                       |
+| ---------------------------- | --------------------------- | ------------------------------- |
+| Link naar de eerste pagina   |                             | Ja                              |
+| Link naar de laatste pagina  |                             | Ja                              |
+| Link naar de vorige pagina   |                             | Ja                              |
+| Link naar de volgende pagina |                             | Ja                              |
+| Extra metadata :             |                             |                                 |
+|                              | Huidig paginanummer         | Ja                              |
+|                              | Aantal elementen per pagina | Ja                              |
+|                              | Totaal aantal elementen     | Afhankelijk van paging-strategy |
+|                              | Totaal aantal pagina's      | Afhankelijk van paging-strategy |
 
-De informatie kan eenvoudig en efficiënt worden berekend in de back-end systemen en verlicht de verwerking langs consumer kant.
+
+
+In veel paginatierichtlijnen wordt gevraagd om het totaal aantal pagina's en/of elementen altijd terug te geven zodat de gebruiker exact kan geïnformeerd worden over de lengte van de opgevraagde lijst. Dit houdt in dat er impliciet altijd een 'count' mechanisme moet geïmplementeerd worden wat bij lijsten van grote aantallen tot een merkbare vertraging kan leiden in het opvragen van de lijst.
+
+Daarom kiezen we met onze API requirements voor een oplossing die 2 strategieën implementeert :
+- een snellere opvraging zonder verplichte 'count'
+- een potentieel tragere opvraging tengevolge een impliciet 'count'-mechanisme
+
+De client toepassing kiest welke strategie wordt toegepast dmv van een (optionele) query parameter : **`paging-strategy`** (zie verder).
 
 ### Paginatie query parameters
 
-Het ophalen van een bepaalde pagina zelf dient te gebeuren door middel van de **`page`** en **`pagesize`** query parameters.
+Het ophalen van een bepaalde pagina zelf dient te gebeuren door middel van de **`page`** en **`pagesize`** query parameters (behalve voor de `last` link bij `paging-strategy=noCount`, zie verder).
 ``` prettyprint
 /partners?page=1&pagesize=10
 ```
 
-Paginatie queries starten steeds met *page=1*
+Paginatie queries starten steeds met *page=1*, niet 0. De keuze hiervoor is gemaakt op basis van gebruiksvriendelijkheid naar de API consumer en gebruiker toe.
 
-De keuze hiervoor is gemaakt op basis van gebruiksvriendelijkheid naar de API consumer toe.
-
-De paginatie query parameters zijn **optioneel**. Dat maakt dat indien deze niet zijn opgegeven:
+De paginatie query parameters zijn **optioneel**. Dat maakt dat wanneer deze **niet** zijn opgegeven:
 
 -   Een beperkte set van resources wordt teruggegeven bij het bevragen van collections op basis van een default page size die voor elke API wordt bepaald.
 -   Steeds de eerste pagina wordt terug gegeven.
+
+Om de paging strategie mee te geven, gebruikt de consumer de optionele parameter **`paging-strategy`**. Deze heeft 2 mogelijke waardes : 
+- withCount   (default als de query parameter niet wordt meegegeven)
+- noCount
+ 
+ Bij **`withCount`** worden __`Totaal aantal elementen`__ en __`Totaal aantal pagina's`__ altijd verplicht terug gegeven. Bovendien bevat de __`link naar de laatste pagina`__ het paginanummer (zie verder voor een voorbeeld). 
+Bij **`noCount`** worden de beide totalen niet terug gegeven en is de link naar de laatste pagina een link zonder paginanummer met de vermelding **`last`** (zie verder voor een voorbeeld).
 
 ### Paginatie response bericht
 
@@ -951,7 +987,9 @@ Dit resulteert in volgende structuur.
 ```
 
 Het **\_page** reserved keyword vormt geen onderdeel van de HAL specificatie, maar is extra metadata die in de response message komt om
-een indicatie te krijgen van de huidige paginanummer, aantal elementen per pagina, het totaal aantal pagina's en het totaal aantal elementen en vereenvoudigt de bewerkingen langs consumer kant om deze informatie te bekomen.
+een indicatie te krijgen van de huidige paginanummer, aantal elementen per pagina, het totaal aantal pagina's en het totaal aantal elementen en vereenvoudigt de bewerkingen langs consumer kant om deze informatie te bekomen. Bij **`paging-strategy=noCount`** worden `totalElements` en `totalPages` weg gelaten.  
+  
+Voorbeeld bij `paging-strategy=withCount` : 
 ```json
 {
 "_page": {
@@ -959,9 +997,19 @@ een indicatie te krijgen van de huidige paginanummer, aantal elementen per pagin
     "totalElements": 73853,
     "totalPages": 7386,
     "number": 1
+  }
 }
+``` 
+  
+Voorbeeld bij `paging-strategy=noCount` : 
+```json
+{
+"_page": {
+    "size": 10,
+    "number": 1
+  }
 }
-```
+``` 
 
 Alle aspecten van paginatie samenvoegend geeft dit volgende response wrapper message voor paginatie:
 ```json
@@ -997,13 +1045,15 @@ Alle aspecten van paginatie samenvoegend geeft dit volgende response wrapper mes
    }
 }
 ```
+  
+Zoals reeds vermeld vallen `totalElements` en `totalPages` weg bij `paging-strategy=noCount`.  
 
 #### Een voorbeeld
 
-Het ophalen van business parties
+Het ophalen van business parties (withCount)  
 
 ``` prettyprint
-https://api-gateway/digipolis/business-party/v1/business-parties
+https://api-gateway/digipolis/business-party/v1/business-parties?paging-strategy=withCount  
 ```
 
 Geeft als resultaat
@@ -1038,8 +1088,48 @@ Geeft als resultaat
 }
 ```
 
+Het ophalen van business parties (noCount)  
+
+``` prettyprint
+https://api-gateway/digipolis/business-party/v1/business-parties?paging-strategy=noCount  
+```
+
+Geeft als resultaat
+```json
+{
+   "_links": {
+     "self": {
+         "href": "https://api-gateway/digipolis/business-party/v1/business-parties"
+     },
+     "first": {
+         "href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=1&pagesize=10"
+     },
+     "last": {
+         "href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=last&pagesize=10"
+     },
+         "next": {
+         "href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=2&pagesize=10"
+     }
+   },
+   "_embedded": {
+     "business-parties": [{
+        },
+    {
+        }]
+   },
+   "_page": {
+     "size": 10,
+     "number": 1
+   }
+}
+```
+
+In de **last** link wordt gebruik gemaakt van **page=last** ipv het exacte paginanummer om te vermijden dat een count moet uitgevoerd worden bij het ophalen van de lijst. Dit houdt wel impliciet in **dat de API deze waarde (=last) ook verplicht moet ondersteunen**. Pas wanneer deze wordt gebruikt zal de API een count uitvoeren om op dat moment de laatste pagina te berekenen en terug te geven.  
+
+Een API moet altijd beide `paging-strategy` methodes ondersteunen.  
+
 **Bij het ophalen van een collection zonder specificatie van query parameters dient paginatie informatie altijd aanwezig te zijn in de
-response message**.  
+response message**, gebruik makend van de `withCount` paginatie strategie.    
 Het aantal elementen dat in zulk geval wordt teruggegeven (page size) is API specifiek en dient te worden bepaald tijdens de API design fase.
 
 ## Event resources
@@ -1172,7 +1262,7 @@ In sommige gevallen kan het nuttig zijn om **extra info** mee te geven zodat de 
                  ]
              }
 }
-```  
+```
 
 ### HTTP status codes en error model
 
@@ -1180,7 +1270,7 @@ Deze sectie beschrijft welke HTTP status codes vergezeld dienen te worden van ee
 
 HTTP status code           | Betekenis                                                                                                                                   | Error object                  
 ----------------           | ---------                                                                                                                                   | ------------
-200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET bij succesvol response, PUT en PATCH indien de update succesvol was en DELETE indien de resource succesvol werd verwijderd. | Neen                          
+200 OK                     | De request is succesvol en synchroon uitgevoerd. Van toepassing op GET en HEAD bij succesvol response, PUT en PATCH indien de update succesvol was en DELETE indien de resource succesvol werd verwijderd. | Neen                          
 201 Created                | Indien een nieuwe resource succesvol is aangemaakt bij het uitvoeren van een PUT of POST call, of bij een succesvolle uitvoering van een POST van een controller.                                              | Neen                          
 202 Accepted               | De request is succesvol geaccepteerd voor een PUT, POST, DELETE of PATCH en wordt verder asynchroon verwerkt.                               | Neen                          
 303 See Other              | Wordt gebruikt voor het asynchroon afhandelen van langlopende operaties.                                                                    | Neen                          
