@@ -393,10 +393,26 @@ Hanteer onderstaande conventies voor berichten die JSON als payload formaat hebb
 ### Datums en timestamps
 
 Formatteer datums en timestamps steeds volgens [RFC3339](https://www.ietf.org/rfc/rfc3339.txt). JSON definieert immers geen standaard formaat voor datums en timestamps.
+
+> RFC3339 volgt de ISO 8601 standaard maar heeft enkele optimamisaties voor het internet en machine to machine communicatie. Bijgevolg is deze ideaal voor REST API's)
+
 ```prettyprint
 "finishedAt" : "2012-01-01T01:00:00+01:00"
 ```
-Het is aangewezen om de timezone "+01:00" te gebruiken maar "2012-01-01T00:00:00Z" is ook mogelijk.
+
+Hier enkele basis regels voor het gebruik van datum en/of tijd in jouw API:
+
+1. **Aanvaard eender welke tijdzone:** Gebruikers kunnen overal ter wereld zitten of zelfs in een buurland met een andere tijdzone. Je kan moeilijk als API bouwer gokken in welke tijdzone ze zitten
+
+2. **Werk met UTC:** Dit wil zeggen:
+    * Converteer de ontvangen tijdzone naar UTC en
+    * Bewaar in jou data storage gegevens in UTC. Dit maakt het ook makkelijker om te queryen. (Stel dat je data met een lokale tijzone bewaart en er wordt een query uitgevoerd met input vanuit een andere tijdzone, dan moet je zelf in uw query deze verschillen afhandelen.
+    * Gebruik de zulu tijdsnotatie om UTC weer te geven "2012-01-01T00:00:00Z". Door die "Z" weten we dat we UTC tijd bedoelen. "2012-01-01T00:00:00" kan evengoed een tijd zijn zonder een UTC offset.
+
+3. **Geef UTC terug:** Zo kunnen afnemers zelf bepalen hoe zij de data weergeven. Vergeet niet in de API docs dit te vermelden.
+
+4. **Gebruik enkel time indien nodig:** Je kan je snel vergissen met dagen als tijd mee genoteerd wordt. Stel dat 2019-02-04T23:59:59Z als deadline voor een project is genoteerd. Een vergissing met vertaling naar een andere tijdzone levert snel 5 februrari op, in plaats van 4 februari. Gebruik met andere woorden ```date``` als je een dag wil noteren en ```datetime```als je een tijdstip wil noteren.
+
 
 ### Durations
 
