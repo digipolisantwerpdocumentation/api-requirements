@@ -407,7 +407,7 @@ Hier enkele basis regels voor het gebruik van datum en/of tijd in jouw API:
 2. **Werk met UTC:** Dit wil zeggen:
     * Converteer de ontvangen tijdzone naar UTC en
     * Bewaar in jou data storage gegevens in UTC. Dit maakt het ook makkelijker om te queryen. (Stel dat je data met een lokale tijzone bewaart en er wordt een query uitgevoerd met input vanuit een andere tijdzone, dan moet je zelf in uw query deze verschillen afhandelen.
-    * Maak gebruik van de tijdzone notatie "2012-01-01T00:00:00+01:00". De Zulu notatie 2019-02-04T23:20:11Z mag anderzijds ook gebruikt worden.
+    * Maak gebruik van de tijdzone notatie "2012-01-01T00:00:00+01:00" (de tijd is gespecifieerd in de lokale tijd van de aanbieder). De Zulu notatie 2019-02-04T23:20:11Z mag anderzijds ook gebruikt worden.
 
 3. **Geef UTC terug:** Zo kunnen afnemers zelf bepalen hoe zij de data weergeven. Vergeet niet in de API docs dit te vermelden.
 
