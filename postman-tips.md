@@ -136,8 +136,8 @@ De meeste api's verwachten een variabele voor de apikey en de tenant in de heade
                         "type": "string"
                     },
                     {
-                        "name": "tenant",
-                        "description": "the name of the tenant you want to use",
+                        "name": "dgp-tenant-id",
+                        "description": "the identification of the tenant you want to use",
                         "in": "header",
                         "required": true,
                         "type": "string"
@@ -174,8 +174,8 @@ Nog makkelijker is om deze 2 parameters globaal te definiëren in jou swagger fi
             }
         },
         "tenantParam": {
-                "name": "tenant",
-                "description": "the name of the tenant you want to use",
+                "name": "dgp-tenant-id",
+                "description": "the identification of the tenant you want to use",
                 "in": "header",
                 "required": true,
                 "type": "string"
@@ -201,4 +201,4 @@ als je de instellingen in de swagger zoals hierboven beschreven maakt, kan je vo
 * definieer de `apiname` globale variabele in postman met de naam van de api
 * definieer de `version` globale variabele in postman met de versie van de api
 * definieer de `apikey` globale variabele in postman met de uuid van jou api key
-* definieer de `tenant` globale variabele in postman met de tenant die je wil gebruiken (optioneel)
+* definieer de `dgp-tenant-id` globale variabele in postman met de tenant die je wil gebruiken (optioneel)
