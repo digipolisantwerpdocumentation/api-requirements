@@ -94,8 +94,9 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 5.1.1        | Peter Claes            | 03/10/2018 | Verduidelijking PATCH methode.
 5.2.0        | Steven Vanden Broeck   | 13/02/2019 | Uitbreiding van de paging guidelines.
 5.3.0        | Peter Claes            | 05/04/2019 | HTTP methode HEAD.
-6.0.0        | Tom Sluyts             | 11/04/2019 | Wijziging geolocatie standaard naar geospatiale data standaard
-6.0.1        | Peter Claes            | 11/04/2019 | Expliciteren 'description'
+6.0.0        | Tom Sluyts             | 11/04/2019 | Wijziging geolocatie standaard naar geospatiale data standaard.
+6.0.1        | Peter Claes            | 11/04/2019 | Expliciteren 'description'.
+6.0.2        | Peter Claes            | 28/10/2019 | Verduidelijking paginatie.
 
 ## Cheat sheet
 
@@ -890,8 +891,8 @@ Vanuit consumer standpunt is het noodzakelijk dat volgende informatie in de resp
 | ---------------------------- | --------------------------- | ------------------------------- |
 | Link naar de eerste pagina   |                             | Ja                              |
 | Link naar de laatste pagina  |                             | Ja                              |
-| Link naar de vorige pagina   |                             | Ja                              |
-| Link naar de volgende pagina |                             | Ja                              |
+| Link naar de vorige pagina   |                             | Ja, behalve voor eerste pagina  |
+| Link naar de volgende pagina |                             | Ja, behalve voor laatste pagina |
 | Extra metadata :             |                             |                                 |
 |                              | Huidig paginanummer         | Ja                              |
 |                              | Aantal elementen per pagina | Ja                              |
@@ -923,7 +924,7 @@ De paginatie query parameters zijn **optioneel**. Dat maakt dat wanneer deze **n
 -   Steeds de eerste pagina wordt terug gegeven.
 
 Om de paging strategie mee te geven, gebruikt de consumer de optionele parameter **`paging-strategy`**. Deze heeft 2 mogelijke waardes : 
-- withCount   (default als de query parameter niet wordt meegegeven)
+- withCount (default als de query parameter niet wordt meegegeven)
 - noCount
  
  Bij **`withCount`** worden __`Totaal aantal elementen`__ en __`Totaal aantal pagina's`__ altijd verplicht terug gegeven. Bovendien bevat de __`link naar de laatste pagina`__ het paginanummer (zie verder voor een voorbeeld). 
@@ -952,13 +953,13 @@ Het reserved keyword **\_links** wordt gebruikt om links naar andere pagina's te
 In de toekomst kan dit worden uitgebreid om links naar andere objecten aan te duiden indien hypermedia APIs worden gedefinieerd. Binnen
 Digipolis wordt gekozen om volgende link objecten te gebruiken voor paginatie:
 
--   self: bevat een link naar de pagina zelf,
--   first: bevat een link naar de eerste pagina binnen de collection,
--   last: bevat een link naar de laatste pagina binnen de collection
--   prev: bevat een link naar de vorige pagina binnen de collection.  
-    Wordt weggelaten indien er geen vorige pagina is.
--   next: bevat een link naar de volgende pagina binnen de collection.  
-    Wordt weggelaten indien er geen volgende pagina is.
+| link object | omschrijving                                                | opmerking |
+| ----------- | ----------------------------------------------------------- | --------- |
+| self        | bevat een link naar de pagina zelf                          |                                                                     |
+| first       | bevat een link naar de eerste pagina binnen de collection   | page=1                                                              |
+| last        | bevat een link naar de laatste pagina binnen de collection  | bij **`noCount`** paging strategie : page=last                                   | 
+| prev        | bevat een link naar de vorige pagina binnen de collection   | wordt weggelaten indien er geen vorige pagina is (eerste pagina)<br />page=huidige pagina - 1    |
+| next        | bevat een link naar de volgende pagina binnen de collection | wordt weggelaten indien er geen volgende pagina is (laatste pagina)<br />page=huidige pagina + 1<br />bij **`noCount`** paging strategie kan dit naar een lege pagina verwijzen |
 
 Het voorziene media type is steeds **`application/hal+json`**
 
@@ -1085,7 +1086,7 @@ Geeft als resultaat
      "last": {
          "href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=7386&pagesize=10"
      },
-         "next": {
+     "next": {
          "href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=2&pagesize=10"
      }
    },
@@ -1123,7 +1124,7 @@ Geeft als resultaat
      "last": {
          "href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=last&pagesize=10"
      },
-         "next": {
+     "next": {
          "href": "https://api-gateway/digipolis/business-party/v1/business-parties?page=2&pagesize=10"
      }
    },
