@@ -257,7 +257,7 @@ DELETE | verwijderen van een resource                                           
 
 Code                         | GET | HEAD | PUT | POST                | PATCH | DELETE | Error object 
 ----                         | --- | ---  | --- | ----                | ----- | ------ | ------------ 
-200 : OK (sync)              | X   | X    | X   |                     | X     | X      |              
+200 : OK (sync)              | X   | X    | X   | X                   | X     | X      |              
 201 : Created (sync)         |     |      |     | X                   |       |        |              
 202 : Accepted (async)       |     |      | X   | X                   | X     | X      |              
 204 : No content             |     |      | X   | X                   | X     | X      |              
