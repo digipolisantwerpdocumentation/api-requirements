@@ -1,4 +1,4 @@
-# Digipolis API design & style requirements v6.0.1
+# Digipolis API design & style requirements v6.0.3
 
 geldig vanaf 01 mei 2019
 
@@ -96,7 +96,8 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 5.3.0        | Peter Claes            | 05/04/2019 | HTTP methode HEAD.
 6.0.0        | Tom Sluyts             | 11/04/2019 | Wijziging geolocatie standaard naar geospatiale data standaard.
 6.0.1        | Peter Claes            | 11/04/2019 | Expliciteren 'description'.
-6.0.2        | Peter Claes            | 28/10/2019 | Verduidelijking paginatie.
+6.0.2        | Erik Lenaerts          | 26/09/2019 | Aanpak datetime notatie en tijdzones
+6.0.3        | Peter Claes            | 28/10/2019 | Verduidelijking paginatie.
 
 ## Cheat sheet
 
