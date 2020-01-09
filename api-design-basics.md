@@ -484,13 +484,9 @@ GET /invoices/20201/invoicelines
 ``` 
 *Reminder: aggregaties zijn entititeiten die kunnen leven op zichzelf, composities zijn er die enkel een bestaansrecht hebben onder een ander.*
  
+# TODO: nog verder uitschrijven
 
-
-
-# backlog van deze API Designguide
-- bij een post sturen we enkel de location header 
-- multilingual
-- hoe een API lifecycle opzetten tussen design en dev? 
+Werk het voorbeeld van de analyse stap hierboven helemaal uit zodat er hiervoor een OAS 3 document bestaat.
 
 ---
 1. <a class="anchor" id="footnote-1"></a>We gebruiken de term RESTful API ook al zijn we hier niet 100% compatible met [level 3 van het Richardson Maturity Model](https://martinfowler.com/articles/richardsonMaturityModel.htm). Onze API Requirements zorgen wel dat er de HAL standard wordt gevolgd voor het [Paged Responses](https://github.com/digipolisantwerpdocumentation/api-requirements#paginatie-response-bericht)   
