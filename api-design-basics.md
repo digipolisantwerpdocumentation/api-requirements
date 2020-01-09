@@ -26,7 +26,6 @@
     - [Structuur van een OAS 3 document](#structuur-van-een-oas-3-document)
     - [YAML](#yaml)
     - [Info](#info)
-        - [Uitbreiding](#uitbreiding)
     - [Servers](#servers)
     - [Security](#security)
     - [Paths](#paths)
@@ -49,14 +48,18 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 
 # 1. Introductie
 
-In dit document beschrijven we best practices voor het ontwerpen van RESTful API's <sup>[[1]](#footnote-1)</sup> met een JSON payload. Bedoeling is dat iedereen functionele requirements kan omzetten in een RESTful API ontwerp. We noteren dit ontwerp in [Open API Specification v3.0.2](https://swagger.io/specification), zeg maar de opvolger van swagger. 
+In dit document beschrijven we best practices voor het ontwerpen van RESTful API's <sup>[[1]](#footnote-1)</sup> met een JSON payload. Bedoeling is dat iedereen functionele requirements kan omzetten in een RESTful API ontwerp. We noteren dit ontwerp in [Open API Specification v3.0.2](https://swagger.io/specification). 
 
 ## Enkele definities
 Voor de eenvoud van het lezen van dit document hanteren we volgende afkortingen:
 - **API:** als kortere notatie voor "RESTful API met JSON payloads". Ingeval we iets anders bedoelen (e.g. SOAP API), zullen we dat expliciet vermelden 
-- **Swagger:** Deze term wordt nog regelmatig gehanteerd en is net zoals OAS een notatievorm om RESTFul API's uit te drukken.
-- **Swagger file:** "Kan je een swagger file bezorgen" hoor je nogal eens vaak bij Digipolis. Dit is een bestand in ofwel [YAML](http://yaml.org/spec/1.2/spec.html#id2802346) of [JSON](http://www.yaml.org/spec/1.2/spec.html#id2803231) formaat met hierin het ontwerp van de API.
+- **Swagger:** Deze term wordt nog regelmatig gehanteerd voor de taal waarmee we API's uitdrukken. Ondertussen is *"swagger"* omgedoopt tot OAS 2 ofwel [Open API Specififcation 2](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#openapi-specification).
+- **Swagger file:** "Kan je een swagger file bezorgen" hoor je nogal eens vaak bij Digipolis. Dit is een bestand in meestal [JSON](http://www.yaml.org/spec/1.2/spec.html#id2803231) of het [YAML](http://yaml.org/spec/1.2/spec.html#id2802346) formaat met hierin het ontwerp van de API volgens de OAS 2 specificatie.
 - **OAS:** Ofwel [Open API Specification](https://swagger.io/specification), de opvolger van de swagger notatie. Zonder meer refereren we hier naar v3.
+
+> #### Tip voor terminologie
+>
+> We stellen voor om vanaf nu de term *"swagger"* niet meer te gebruiken maar eerder *"OAS"*. 
 
 ## Requirements vs Design
 
@@ -73,12 +76,12 @@ De meeste ontwikkelaars zijn bezig met de interne kant van een API. We zien vaak
 </p>
 
 > #### Intuïtieve API's
-> *...leggen zichzelf uit door de eenvoud en elegantie van hun ontwerp. Deze API's zijn ontworpen met een outside-in-business perspectief waardoor ze bijdragen aan een fluent Developer eXperience (DX) voor haar afnemers.*
+> *...leggen zichzelf uit door de eenvoud en elegantie van hun ontwerp. Deze API's zijn ontworpen met een outside-in-business perspectief waardoor ze bijdragen aan een fluent [Developer eXperience (DX)](https://hackernoon.com/the-best-practices-for-a-great-developer-experience-dx-9036834382b0).*
 
 # 2. Enkele basis begrippen
 
 > #### >> Fast Forward
-> Ken je reeds hoe basis REST API's werken, ga dan ineens verder naar het [API ontwerp](#api-design) of toch nog eerst even nalezen hoe je een voorbereidende [functionele analyse](#analyse-prep) maakt.
+> Ken je reeds hoe basis REST API's werken? Ga dan ineens verder naar het [API ontwerp](#api-design) anders, toch nog even nalezen hieronder hoe je een voorbereidende [functionele analyse](#analyse-prep) doet.
 
 ## Request en Response
 
@@ -179,6 +182,7 @@ Stel, je komt volgende vraag tegen van een klant:
 
 > #### Situatie schets
 > *Ik wil graag een systeem om verkoop `facturen` mee te kunnen maken. Een factuur bevat een logo, een uniek nummer, is steeds voor één specifieke `klant` op een gegeven factuurdatum en bevat één of meerdere `factuurlijnen`. Als ik 2 verschillende `producten` verkoop aan de klant, staan deze elks apart vermeld in 2 verschillende factuurlijnen. Elke factuurlijn toont de product code, een omschrijving, het aantal dat er van verkocht is, de eenheidsprijs van het product en de totaalprijs (aantal x product prijs). Op het einde van het factuur staat het bedrag exclusief BTW, de BTW toelage de totaalprijs inclusief BTW.* 
+
 
 In bovenstaande tekst, vinden we volgende entiteiten terug:
 
@@ -377,11 +381,6 @@ info:
   title: 'Sales Invoice API'
   description: 'Create and manage Sales Invoices.....'
 ```
-
-### Uitbreiding
-
-> TBD: info/x-audience https://opensource.zalando.com/restful-api-guidelines/#219
-
 
 ## Servers
 
