@@ -10,7 +10,6 @@
     - [Enkele definities](#enkele-definities)
     - [Requirements vs Design](#requirements-vs-design)
 - [2. Enkele basis begrippen](#2-enkele-basis-begrippen)
-    - [Request en Response](#request-en-response)
     - [Think Resources](#think-resources)
     - [Stateless](#stateless)
     - [Resuest Body, Path en methods](#resuest-body-path-en-methods)
@@ -34,7 +33,7 @@
         - [Naming conventions](#naming-conventions)
         - [Request query parameters](#request-query-parameters)
         - [Root of sub-collectie](#root-of-sub-collectie)
-- [backlog van deze API Designguide](#backlog-van-deze-api-designguide)
+- [TODO: nog verder uitschrijven](#todo-nog-verder-uitschrijven)
 
 <!-- /TOC -->
 
@@ -82,14 +81,6 @@ De meeste ontwikkelaars zijn bezig met de interne kant van een API. We zien vaak
 
 > #### >> Fast Forward
 > Ken je reeds hoe basis REST API's werken? Ga dan ineens verder naar het [API ontwerp](#api-design) anders, toch nog even nalezen hieronder hoe je een voorbereidende [functionele analyse](#analyse-prep) doet.
-
-## Request en Response
-
-Misschien triviaal, maar HTTP, de basis waarop onze REST API's zijn gebaseerd is in essentie een [Request/Response](https://en.wikipedia.org/wiki/Request%E2%80%93response) model.
-
-Tussen 2 partijen is er een eerste die iets vraagt en een tweede die iets antwoord. Soms zeggen we wel dat een consumer iets vraagt aan een provider of ook wel eens een client die aan een server iets vraagt en een antwoord terugkrijgt.
-
-Straks gaat dit terugkomen
 
 ## Think Resources
 
