@@ -11,6 +11,7 @@
     - [Requirements vs Design](#requirements-vs-design)
 - [2. Enkele basis begrippen](#2-enkele-basis-begrippen)
     - [Think Resources](#think-resources)
+    - [Methods](#methods)
     - [Stateless](#stateless)
     - [Resuest Body, Path en methods](#resuest-body-path-en-methods)
     - [Andere basics](#andere-basics)
@@ -80,11 +81,24 @@ De meeste ontwikkelaars zijn bezig met de interne kant van een API. We zien vaak
 # 2. Enkele basis begrippen
 
 > #### >> Fast Forward
-> Ken je reeds hoe basis REST API's werken? Ga dan ineens verder naar het [API ontwerp](#api-design) anders, toch nog even nalezen hieronder hoe je een voorbereidende [functionele analyse](#analyse-prep) doet.
+> Ken je reeds hoe basis REST API's werken? Ga dan ineens verder naar het [API ontwerp](#api-design) anders, toch nog even nalezen hieronder hoe je een voorbereidende [functionele analyse](#analyse-prep) best aanpakt.
 
 ## Think Resources
 
 De basis van API's zijn [Resources](https://github.com/digipolisantwerpdocumentation/api-requirements#rest-introductie). Dit is een abstract concept en is in essentie eender wat je kan benaderen voor een gegeven URL. Denk aan de entiteiten in je functioneel domein zoals, facturen, bestellingen, dossiers, meldingen, users, etc. 
+
+## Methods
+
+Resources kan je opvragen, aanmaken, aanpassen, verwijderen, etc. Bewerkingen uitvoeren op resources doe je via `Methods`. In een REST API ga je deze methods realiseren via `HTTP Verbs`. De meest gebruikte HTTP Verbs zijn `GET`, `POST`, `PUT`, `PATCH` en `DELETE`. Enkele voorbeelden:
+
+``` HTTP
+GET /invoices          Haal een lijst van invoices op
+GET /invoices/20037    Haal invoice 20037 op
+POST /invoices         Voeg een nieuwe invoice resource toe aan de invoices collection
+PUT /invoices/20037    Update de data van invoice 20037
+PATCH /invoices/20037  Pas enkele gegevens van invoice 20037 aan
+DELETE /invoices/20037 Verwijder invoice 20037 van de collection
+```
 
 ## Stateless
 
