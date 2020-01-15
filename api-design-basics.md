@@ -176,7 +176,7 @@ De vraag is, hoe begin je nu aan een API? Wel, eerst en vooral moet je het funct
 > #### >> Fast Forward
 > Ben je al gewoon om functionele analyses te maken, sla dan dit hoofdstuk over en ga meteen aan de slag met het [ontwerpen van API's](#api-design).
 
-De analyse gaan we doen aan de hand van een voorbeeld. We maken hierbij gebruik van [UML Class diagrams](https://en.wikipedia.org/wiki/Class_diagram) als notatievorm, in c maakt het niet uit wat je hier voor gebruikt, al waren het bierkaartjes ;).
+De analyse gaan we doen aan de hand van een voorbeeld. We maken hierbij gebruik van [UML Class diagrams](https://en.wikipedia.org/wiki/Class_diagram) als notatievorm, eigenlijk maakt het niet uit wat je hier voor gebruikt, al waren het bierkaartjes ;).
 
 ## Zoek de entiteiten
 
@@ -331,7 +331,7 @@ tags:
 > #### YAML 101
 > YAML formaat werkt via `key-value` pairs. Je geeft de naam van een key en vervolgens de waarde erachter. 
 >
-> Key-value pairs die behoren tot een collectie worden samen gevormd doordat ze geïendeerd zijn (lees, door 2 of meerdere spaties vooraan de regel toe te voegen). Zo zie je dat version, title en description behoren tot de info collection.
+> Key-value pairs die behoren tot een collectie worden samen gevormd doordat ze geïndenteerd zijn (lees, door 2 of meerdere spaties vooraan de regel toe te voegen). Zo zie je dat version, title en description behoren tot de info collection.
 >
 > Tot slot zijn er lijsten, deze kan je herkennen door het `-` teken vooraan elke lijn
 
