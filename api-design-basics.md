@@ -1,9 +1,9 @@
-# API Design practices
+# API Design practices v0.0.2
 
 ## Index
 <!-- TOC -->
 
-- [API Design practices](#api-design-practices)
+- [API Design practices v0.0.2](#api-design-practices-v002)
     - [Index](#index)
     - [Document historiek](#document-historiek)
 - [1. Introductie](#1-introductie)
@@ -30,11 +30,14 @@
     - [Security](#security)
     - [Paths](#paths)
         - [URI structuur](#uri-structuur)
-    - [Resources](#resources)
+        - [Resources](#resources)
         - [Naming conventions](#naming-conventions)
-        - [Request query parameters](#request-query-parameters)
-        - [Root of sub-collectie](#root-of-sub-collectie)
-- [TODO: nog verder uitschrijven](#todo-nog-verder-uitschrijven)
+            - [Request query parameters](#request-query-parameters)
+            - [Root of sub-collectie](#root-of-sub-collectie)
+        - [Uitgewerkt voorbeeld](#uitgewerkt-voorbeeld)
+    - [Components](#components)
+        - [Paging parameters](#paging-parameters)
+- [Alles bij elkaar](#alles-bij-elkaar)
 
 <!-- /TOC -->
 
@@ -43,6 +46,7 @@
 Versie       | Auteur                 | Datum      | Opmerkingen
 ------       | -------                | -----      | ------------
 0.0.1        | Erik Lenaerts          | 09/01/2020 | Initial draft.
+0.0.2        | Erik Lenaerts          | 22/01/2020 | Verdere afwerking van het analyse voorbeeld.
 
 
 
@@ -414,7 +418,7 @@ Dit resulteert in onderstaand totaal voorbeeld :
 https://api-gateway/digipolis/sales-invoice/v1/...
 ```
 
-## Resources
+### Resources
 
 Data dat we opsturen of ontvangen wordt een `Resource` genoemd. 
 
@@ -463,7 +467,9 @@ GET /partners#name/
 gebruik je dus NIET
 ```
 
-### Request query parameters
+
+
+#### Request query parameters
 
 Query parameters worden steeds gebruikt om bepaalde functionaliteiten zoals paginatie, filtering, sortering, etc aan te spreken. Ze worden NIET gebruikt om resource representaties mee te geven.
 
@@ -475,7 +481,7 @@ POST /business-parties?company=Google&website=http://www.google.com/&addressLine
 gebruik je dus NIET
 ```
 
-### Root of sub-collectie
+#### Root of sub-collectie
 
 Wanneer kies je nu voor een collection of een sub-collection? Herinner je het [Aggregatie en compositie](#aggregatie-en-compositie) verhaal in de analyse voorbereiding?
 
@@ -485,13 +491,603 @@ GET /invoices
 ``` 
 **Compositie:** je maakt een sub-collectie aan
 ``` HTTP
-GET /invoices/20201/invoicelines
+GET /invoices/20201/lines
 ``` 
 *Reminder: aggregaties zijn entititeiten die kunnen leven op zichzelf, composities zijn er die enkel een bestaansrecht hebben onder een ander.*
- 
-# TODO: nog verder uitschrijven
 
-Werk het voorbeeld van de analyse stap hierboven helemaal uit zodat er hiervoor een OAS 3 document bestaat.
+### Uitgewerkt voorbeeld
+
+Als we de kennis rond Paths hierboven omzetten naar ons voorbeeld uit de [analyze](#3-analyse-voorbereiding) krijgen we hetvolgende:
+
+``` HTTP
+GET /invoices               Haal een lijst van invoices op
+GET /invoices/20037         Haal invoice 20037 op
+GET /invoices/20037/lines   Haal de lijst invoice lines op van invoice 20037
+POST /invoices              Voeg een nieuwe invoice resource toe aan de collection
+HEAD /invoices/20037        Ga na of invoice 20037 bestaat
+```
+
+In YAML wordt dit:
+
+```YAML
+...
+paths:
+  '/invoices':
+    get:
+      summary: Retrieves the list of invoices
+      description: Get a list of invoices limited to the paging options provided
+      tags:
+        - Invoicing
+    post:
+      summary: Create a new Sales Invoice
+      description: Create a new `Sales Invoice` and store it in the database. If all...
+      tags:
+        - Invoicing
+  '/invoice/{number}':
+    get:
+      summary: Retrieve a Sales Invoice
+      description: Retrieve exactly one `Sales Invoice` for the given `number` in the...
+      tags:
+        - Invoicing
+    head:
+      summary: Checks if a Sales Invoice exists
+      description: Find out if `Sales Invoice` for the given `number` exists. 
+      tags:
+        - Invoicing
+  '/invoice/{number}/lines':
+    get:
+      summary: Retrieve the list of invoice lines
+      description: Get a paged list of invoices lines for the given invoice
+      tags:
+        - Invoicing
+...
+```
+
+
+## Components
+
+Components is de plek bij een OAS 3 document waar je herbruikbare onderdelen zet. Je zal zien dat je na verloop van tijd, hier gretig gebruik van zal maken (zie ook het [DRY pattern](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)).
+
+### Paging parameters
+
+In ons voorbeeld hebben we `GET invoices` en `GET invoicelines` die beide een collection van die responses opleveren. in de [API Requiremenrts - Paging Query Parameters](https://github.com/digipolisantwerpdocumentation/api-requirements#paginatie-query-parameters), staat dat je volgende parameters hoort te hanteren:
+
+* page
+* pagesize
+* paging-strategy
+
+bijvoorbeeld, haal de eerste 10 invoices op:
+
+```HTTP
+GET /invoices?page=1&pagesize=10
+```
+
+Als je tijdens het schrijven van je swagger file, voor invoices je paging query parameters hebt opgegeven, dan moet je dan opnieuw doen voor invoicelines. Vandaar dat we parameters gaan opnemen in het `components` luik van onze swagger file.
+
+```YAML
+components:
+  parameters:
+    pagesize:
+      name: pagesize
+      in: query
+      description: Max number of items for each page
+      required: true
+      schema:
+        type: integer
+    pagingStrategy:
+      name: paging-strategy
+      in: query
+      description: >-
+        Specify the paging strategy, i.e. if totalPages and totalElements should
+        be included in the response output
+      schema:
+        type: string
+        default: noCount
+        enum:
+          - noCount
+          - withCount
+    page:
+      name: page
+      in: query
+      description: >-
+        Starting offset for the list, this can be either a number or the literal
+        'last'
+      required: true
+      schema:
+        type: string  
+
+```
+
+Deze 3 zijn nagenoeg universeel in elke API voor Digipolis, dus deze zal zeker in je swagger komen. Daarnaast zijn er ook andere parameters die je er in kan zetten zoals bijvoorbeeld het nummer van een factuur:
+
+```YAML
+components:
+  parameters:
+    salesinvoicenumber:
+      name: number
+      in: path
+      description: >-
+        The unique `number` of this `Sales Invoice` in our system.
+      required: true
+      schema:
+        minimum: 1
+        type: string
+        pattern: '^\d{5,10}$'
+        description: The invoice number. This is a unique number issued by this API.
+        example: 20037        
+```
+
+Merk op dat je parameters kan gebruiken op verschillende plekken, als onderdeel van het `path` of als `query` parameters. Bekijk de [OAS spec voor meer info hierover](https://swagger.io/docs/specification/describing-parameters/).
+
+Naast de `parameters` kan je ook andere herbruikbare stukken hier kwijt, waaronder:
+
+```yaml
+openapi: 3.0.0
+...
+components:
+  parameters:     Voor de parameters
+  schemas:        Voor hebruikbare modellen bij requesten en responses
+  headers:        Herbruikbare request of response headers
+  ...
+```
+Bekijk de [online OAS spec](https://swagger.io/docs/specification/components/) voor uitgebreide info.
+
+ 
+# Alles bij elkaar
+
+Als we het voorbeeld van de analyse uitwerken, bekomen we volgende file
+
+```yaml
+openapi: 3.0.0
+info:
+  version: 'v1.0.1'
+  title: 'Sales Invoice API'
+  description: 'Create and manage Sales Invoices. Note that this API is typically used in conjuction with a Product API where products and/or services are managed. Additionally it works with a Customer API to indicate for whom the sales invoice is intended.'
+servers:
+  - url: https://{environment}.antwerpen.be/digipolis/salesinvoices:{port}/{version}
+    description: OTAP servers
+    variables:
+      environment:
+        default: api-gw   #production
+        description: choice between production, acceptance or the development environment
+        enum:
+        - 'api-gw'        #production
+        - 'api-gw-a'      #acceptance
+        - 'api-gw-o'      #development
+      port:
+        description: select the port for the secure HTTP connection
+        enum:
+          - '443'
+          - '8443'
+        default: '443'   
+      version:
+        default: v1
+        description: specify the major version of this api
+paths:
+  '/invoices':
+    get:
+      summary: Retrieves the list of invoices
+      description: Get a list of invoices limited to the paging options provided
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/pagesize'
+        - $ref: '#/components/parameters/pagingStrategy'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Language:
+              $ref: "#/components/headers/contentLanguage"
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/invoices'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+        'default':
+          $ref: '#/components/responses/Unexpected'
+      tags:
+        - Invoicing
+    post:
+      summary: Create a new Sales Invoice
+      description: Create a new `Sales Invoice` and store it in the database. If all goes well, you'll receive the invoice number as a response. 
+      requestBody:
+        description: >
+          Provide the following data in the payload of this Request. 
+        required: true
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/invoice'
+      responses:
+        '201':
+          description: Sales invoice succesfully added 
+          headers:
+            Content-Language:
+              $ref: "#/components/headers/contentLanguage"
+            Location: 
+              description: returns the location of the newly created Sales Invoice
+              schema: 
+                type: string
+                example: '/invoices/20037'
+            
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+        'default':
+          $ref: '#/components/responses/Unexpected'
+      tags:
+        - Invoicing
+  '/invoice/{number}':
+    get:
+      summary: Retrieve a Sales Invoice
+      description: Retrieve exactly one `Sales Invoice` for the given `number` in the path. If no Sales Invoice exists for the given number, a 404 is returned.
+      parameters:
+        - $ref: '#/components/parameters/salesinvoicenumber'
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/pagesize'
+        - $ref: '#/components/parameters/pagingStrategy'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Language:
+              $ref: "#/components/headers/contentLanguage"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invoice'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+        'default':
+          $ref: '#/components/responses/Unexpected'
+      tags:
+        - Invoicing
+    head:
+      summary: Checks if a Sales Invoice exists
+      description: Find out if `Sales Invoice` for the given `number` exists. 
+      parameters:
+        - $ref: '#/components/parameters/salesinvoicenumber'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Language:
+              $ref: "#/components/headers/contentLanguage"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+        'default':
+          $ref: '#/components/responses/Unexpected'
+      tags:
+        - Invoicing
+  '/invoice/{number}/lines':
+    get:
+      summary: Retrieve the list of invoice lines
+      description: Get a paged list of invoice lines for the given invoice number
+      parameters:
+        - $ref: '#/components/parameters/salesinvoicenumber'
+      responses:
+        '200':
+          description: OK
+          headers:
+            Content-Language:
+              $ref: "#/components/headers/contentLanguage"
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/invoicelines'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServer'
+        'default':
+          $ref: '#/components/responses/Unexpected'
+      tags:
+        - Invoicing
+components:
+  schemas:
+    error:
+      type: object
+      properties:
+        type:
+          type: string
+          description: >-
+            A URI identifying this error. The URI can lead to humane readable
+            information about this error
+        title:
+          type: string
+          description: a short description about the error occurred
+        status:
+          type: string
+          description: the corresponding HTTP result code
+        identifier:
+          type: string
+          description: a unique identifier of the given error
+        code:
+          type: string
+          description: the code of the given error
+      description: >-
+        a generic model used to describe errors as a result of incorrect or
+        failed HTTP requests .
+    pages:
+      description: >-
+        a generic model used to describe paging information when requesting a
+        list of resources
+      required:
+        - number
+        - size
+      type: object
+      properties:
+        size:
+          type: integer
+          description: >-
+            returns the size of a page provided in the pagesize query parameter
+            of the request
+          example: 10
+        totalElements:
+          type: integer
+          description: the total number of items in the resulting collection
+          example: 34
+        totalPages:
+          type: integer
+          description: >-
+            the total number of pages in the resulting array. This is calculated
+            with the given size value
+          example: 4
+        number:
+          type: integer
+          description: >-
+            return the page number provided in the page query parameter of the
+            resuest
+          example: 0
+    links:
+      type: object
+      description: provides navigational uri's to other pages of the collection
+      properties:
+        self:
+          type: object
+          description: contains a link to this page of this collection
+          properties:
+            href:
+              type: string
+              format: uri
+              example: 'https://api-gw-a.antwerpen.be/digipolis/salesinvoices:443/v1/?pagesize=5&page=5'
+        first:
+          type: object
+          description: contains a link to the first page of this collection
+          properties:
+            href:
+              type: string
+              format: uri
+              example: 'https://api-gw-a.antwerpen.be/digipolis/salesinvoices:443/v1?pagesize=5&page=0'
+        last:
+          type: object
+          description: contains a link to the last page of this collection
+          properties:
+            href:
+              type: string
+              format: uri
+              example: 'https://api-gw-a.antwerpen.be/digipolis/salesinvoices:443/v1?pagesize=5&page=17'
+        prev:
+          type: object
+          description: contains a link to the previous page of this collection
+          properties:
+            href:
+              type: string
+              format: uri
+              example: 'https://api-gw-a.antwerpen.be/digipolis/salesinvoices:443/v1?pagesize=5&page=0'
+        next:
+          type: object
+          description: contains a link to the next page of this collection
+          properties:
+            href:
+              type: string
+              format: uri
+              example: 'https://api-gw-a.antwerpen.be/digipolis/salesinvoices:443/v1?pagesize=5&page=10'
+    customer:
+      type: object
+      description: Represents a single customer resource originating from the Customer API.
+      properties: 
+        id:
+          type: string
+          format: uuid
+          description: the unique identifier of this customer
+          example: 3d9b5d39-17c2-4b1c-9edf-328479c08d15
+        name:
+          type: string
+          description: the business name of this customer
+    product:
+      type: object
+      description: Represents a single product resource originating from the Product API.
+      properties: 
+        id:
+          type: string
+          format: uuid
+          description: the unique identifier of this product
+          example: 87c5e4d2-d6ad-4c6e-a260-a5aeef33559f
+        name:
+          type: string
+          description: the name of this product
+          example: Mouse XF01
+        description:
+          type: string
+          description: a short description of this product
+          example: Super sonic high fidelity computer mouse
+        unitprice:
+          type: number
+          format: currency
+          description: the unit price for this product
+          example: € 20.5
+    invoice:
+      description: Represents a single `Sales Invoice` resource.
+      type: object
+      properties:
+        number:
+          type: string
+          pattern: '^\d{5,10}$'
+          description: The invoice number. This is a unique number issued by this API.
+          example: 20037
+        date:
+          type: string
+          format: date-time
+          description: the date on which this Sales Invoice was created
+          example: '2019-01-21T02:37:00+01:00'
+        logo:
+          type: string
+          format: uri
+          description: the logo used on this Sales Invoice, typically the logo of your commpany
+          example: 'https://dams.antwerpen.be/companies/mycomponay/small-logo.png'
+        customer:
+          $ref: '#/components/schemas/customer'
+    invoiceline:
+      description: Represents a single `Sales Invoiceline` resource.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The invoiceline id. This is a unique id issued by this API.
+          example: 4df8447d-f114-44dd-816d-e293d1428f8b
+        number:
+          type: number
+          description: the sorting number of the line on an invoice
+          example: 1
+        quantity:
+          type: number
+          description: the quantity indicates how many items of the `product` are charged on this invoice
+          example: 5
+        product:
+          $ref: '#/components/schemas/product'
+    invoices:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/links'
+        _embedded:
+          type: object
+          properties:
+            invoices:
+              type: array
+              items:
+                $ref: '#/components/schemas/invoice'
+          description: Returns a list of `Invoice` resources
+        _page:
+          $ref: '#/components/schemas/pages'
+    invoicelines:
+      type: object
+      properties:
+        _links:
+          $ref: '#/components/schemas/links'
+        _embedded:
+          type: object
+          properties:
+            invoicelines:
+              type: array
+              items:
+                $ref: '#/components/schemas/invoiceline'
+          description: Returns a list of `Invoiceline` resources
+        _page:
+          $ref: '#/components/schemas/pages'
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/error'
+    Unexpected:
+      description: Unexpected error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/error'
+    InternalServer:
+      description: Internal Server Error
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/error'
+    NotFound:
+      description: Not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/error'
+  headers:
+    contentLanguage:
+      description: >
+        Describes the language ([ISO 639](https://www.iso.org/iso-639-language-codes.html)) of the data in the returned payload.
+      schema:
+        type: string
+        default: nl-BE
+        example: nl-BE
+        enum:
+          - nl-BE
+          - en-UK
+  parameters:
+    salesinvoicenumber:
+      name: number
+      in: path
+      description: >-
+        The unique `number` of this `Sales Invoice` in our system.
+      required: true
+      schema:
+        minimum: 1
+        type: string
+        pattern: '^\d{5,10}$'
+        description: The invoice number. This is a unique number issued by this API.
+        example: 20037        
+    pagesize:
+      name: pagesize
+      in: query
+      description: Max number of items for each page
+      required: true
+      schema:
+        type: integer
+    pagingStrategy:
+      name: paging-strategy
+      in: query
+      description: >-
+        Specify the paging strategy, i.e. if totalPages and totalElements should
+        be included in the response output
+      schema:
+        type: string
+        default: noCount
+        enum:
+          - noCount
+          - withCount
+    page:
+      name: page
+      in: query
+      description: >-
+        Starting offset for the list, this can be either a number or the literal
+        'last'
+      required: true
+      schema:
+        type: string  
+tags:
+  - name: Invoicing
+    description: Operations related to Sales Invoices
+  - name: System
+    description: Technical operations for health checks, monitoring, caching, etc
+```
+
+
 
 ---
 1. <a class="anchor" id="footnote-1"></a>We gebruiken de term RESTful API ook al zijn we hier niet 100% compatible met [level 3 van het Richardson Maturity Model](https://martinfowler.com/articles/richardsonMaturityModel.htm). Onze API Requirements zorgen wel dat er de HAL standard wordt gevolgd voor het [Paged Responses](https://github.com/digipolisantwerpdocumentation/api-requirements#paginatie-response-bericht)   
