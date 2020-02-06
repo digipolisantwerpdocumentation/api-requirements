@@ -1,19 +1,19 @@
-# API Design practices v0.0.2
+# API Design practices
 
 ## Index
-<!-- TOC -->
+<!-- TOC depthFrom:1 -->
 
-- [API Design practices v0.0.2](#api-design-practices-v002)
+- [API Design practices](#api-design-practices)
     - [Index](#index)
     - [Document historiek](#document-historiek)
-- [1. Introductie](#1-introductie)
+- [1. Introductie <!-- omit in toc -->](#1-introductie----omit-in-toc---)
     - [Enkele definities](#enkele-definities)
     - [Requirements vs Design](#requirements-vs-design)
 - [2. Enkele basis begrippen](#2-enkele-basis-begrippen)
+    - [Request en Response](#request-en-response)
     - [Think Resources](#think-resources)
-    - [Methods](#methods)
     - [Stateless](#stateless)
-    - [Resuest Body, Path en methods](#resuest-body-path-en-methods)
+    - [Request Body, Path en methods](#request-body-path-en-methods)
     - [Andere basics](#andere-basics)
 - [3. Analyse voorbereiding](#3-analyse-voorbereiding)
     - [Zoek de entiteiten](#zoek-de-entiteiten)
@@ -26,52 +26,45 @@
     - [Structuur van een OAS 3 document](#structuur-van-een-oas-3-document)
     - [YAML](#yaml)
     - [Info](#info)
+        - [Uitbreiding](#uitbreiding)
     - [Servers](#servers)
     - [Security](#security)
     - [Paths](#paths)
         - [URI structuur](#uri-structuur)
-        - [Resources](#resources)
+    - [Resources](#resources)
         - [Naming conventions](#naming-conventions)
-            - [Request query parameters](#request-query-parameters)
-            - [Root of sub-collectie](#root-of-sub-collectie)
-        - [Uitgewerkt voorbeeld](#uitgewerkt-voorbeeld)
-    - [Components](#components)
-        - [Paging parameters](#paging-parameters)
-- [Alles bij elkaar](#alles-bij-elkaar)
+        - [Request query parameters](#request-query-parameters)
+        - [Root of sub-collectie](#root-of-sub-collectie)
+- [Backlog van deze API Design guide](#backlog-van-deze-api-design-guide)
 
 <!-- /TOC -->
 
-## Document historiek
+## Document historiek 
 
 Versie       | Auteur                 | Datum      | Opmerkingen
 ------       | -------                | -----      | ------------
-0.0.1        | Erik Lenaerts          | 09/01/2020 | Initial draft.
-0.0.2        | Erik Lenaerts          | 22/01/2020 | Verdere afwerking van het analyse voorbeeld.
+0.0.1        | Erik Lenaerts          | 14/01/2020 | Initial draft.
+0.0.2        | Erik Lenaerts          | 29/01/2020 | Extra voorbeelden
+0.0.3        | Erik Lenaerts   | 06/02/2020 | Aanpassingen na review van Peter Claes en Nicole Sauvillers
 
+# 1. Introductie <!-- omit in toc -->
 
-
-# 1. Introductie
-
-In dit document beschrijven we best practices voor het ontwerpen van RESTful API's <sup>[[1]](#footnote-1)</sup> met een JSON payload. Bedoeling is dat iedereen functionele requirements kan omzetten in een RESTful API ontwerp. We noteren dit ontwerp in [Open API Specification v3.0.2](https://swagger.io/specification). 
+In dit document beschrijven we best practices voor het ontwerpen van RESTful API's <sup>[[1]](#footnote-1)</sup> met een JSON payload. Bedoeling is dat iedereen functionele requirements kan omzetten in een RESTful API ontwerp. We noteren dit ontwerp in [Open API Specification v3.0.2](https://swagger.io/specification), zeg maar de opvolger van swagger. 
 
 ## Enkele definities
 Voor de eenvoud van het lezen van dit document hanteren we volgende afkortingen:
 - **API:** als kortere notatie voor "RESTful API met JSON payloads". Ingeval we iets anders bedoelen (e.g. SOAP API), zullen we dat expliciet vermelden 
-- **Swagger:** Deze term wordt nog regelmatig gehanteerd voor de taal waarmee we API's uitdrukken. Ondertussen is *"swagger"* omgedoopt tot OAS 2 ofwel [Open API Specififcation 2](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#openapi-specification).
-- **Swagger file:** "Kan je een swagger file bezorgen" hoor je nogal eens vaak bij Digipolis. Dit is een bestand in meestal [JSON](http://www.yaml.org/spec/1.2/spec.html#id2803231) of het [YAML](http://yaml.org/spec/1.2/spec.html#id2802346) formaat met hierin het ontwerp van de API volgens de OAS 2 specificatie.
+- **Swagger:** Deze term wordt nog regelmatig gehanteerd en is net zoals OAS een notatievorm om RESTFul API's uit te drukken.
+- **Swagger file:** "Kan je een swagger file bezorgen" hoor je nogal eens vaak bij Digipolis. Dit is een bestand in ofwel [YAML](http://yaml.org/spec/1.2/spec.html#id2802346) of [JSON](http://www.yaml.org/spec/1.2/spec.html#id2803231) formaat met hierin het ontwerp van de API.
 - **OAS:** Ofwel [Open API Specification](https://swagger.io/specification), de opvolger van de swagger notatie. Zonder meer refereren we hier naar v3.
-
-> #### Tip voor terminologie
->
-> We stellen voor om vanaf nu de term *"swagger"* niet meer te gebruiken maar eerder *"OAS"*. 
 
 ## Requirements vs Design
 
-Digipolis heeft op Github haar [API Requirements](https://github.com/digipolisantwerpdocumentation/api-requirements) gedocumenteerd. Dit zijn een set van regels die we volgen zodat alle API's hetzelfde eruit zien. Het geeft bijvoorbeeld aan [welke parameters moeten gebruikt worden voor paging](https://github.com/digipolisantwerpdocumentation/api-requirements#paginatie-query-parameters) of  welke [HTTP verbs](https://github.com/digipolisantwerpdocumentation/api-requirements#http-verbs-1) we hanteren en hun doel. De API requirements is een document dat vooral is gericht naar ontwikkelaars. 
+Digipolis heeft op Github haar [API Requirements](https://github.com/digipolisantwerpdocumentation/api-requirements) gedocumenteerd. Dit is een set van regels die we volgen zodat we consistente API's bekomen. Het geeft bijvoorbeeld aan [welke parameters moeten gebruikt worden voor paging](https://github.com/digipolisantwerpdocumentation/api-requirements#paginatie-query-parameters) of  welke [HTTP verbs](https://github.com/digipolisantwerpdocumentation/api-requirements#http-verbs-1) we hanteren en hun doel. De API requirements is een document dat vooral is gericht naar ontwikkelaars. 
 
 Het ontwerp van een API, ofwel het "design" ervan beschrijft een set van best practices hoe je een functioneel onderwerp omzet naar een API. Zo wordt er o.a. ingegaan hoe je routes best inricht. 
 
-De meeste ontwikkelaars zijn bezig met de interne kant van een API. We zien vaak dat van daaruit de swagger files worden gegenereerd. Dit resulteert in soms nogal cryptische API's zoals het voorbeeld hieronder. de `GET /basetext` is een niet voor de hand liggende naam. 
+De meeste ontwikkelaars zijn bezig met de interne kant van een API. We zien vaak dat van daaruit de swagger files worden gegenereerd. Dit resulteert in soms nogal cryptische API's zoals het voorbeeld hieronder. De `GET /basetext` is een niet voor de hand liggende naam. 
 
 <a class="anchor" id="figuur-1"></a>
 <p align="center">
@@ -79,34 +72,30 @@ De meeste ontwikkelaars zijn bezig met de interne kant van een API. We zien vaak
   <div align="center"><i>figuur 1 - cryptische api</i></div>
 </p>
 
+
 > #### Intuïtieve API's
-> *...leggen zichzelf uit door de eenvoud en elegantie van hun ontwerp. Deze API's zijn ontworpen met een outside-in-business perspectief waardoor ze bijdragen aan een fluent [Developer eXperience (DX)](https://hackernoon.com/the-best-practices-for-a-great-developer-experience-dx-9036834382b0).*
+> *...leggen zichzelf uit door de eenvoud en elegantie van hun ontwerp. Deze API's zijn ontworpen met een outside-in-business perspectief waardoor ze bijdragen aan een fluent Developer eXperience (DX) voor haar afnemers.*
 
 # 2. Enkele basis begrippen
 
 > #### >> Fast Forward
-> Ken je reeds hoe basis REST API's werken? Ga dan ineens verder naar het [API ontwerp](#api-design) anders, toch nog even nalezen hieronder hoe je een voorbereidende [functionele analyse](#analyse-prep) best aanpakt.
+> Weet je reeds hoe basis REST API's werken, ga dan ineens verder naar het [API ontwerp](#api-design) of toch nog eerst even nalezen hoe je een voorbereidende [functionele analyse](#analyse-prep) maakt.
+
+## Request en Response
+
+Misschien triviaal, maar HTTP, de basis waarop onze REST API's zijn gebaseerd, is in essentie een [Request/Response](https://en.wikipedia.org/wiki/Request%E2%80%93response) model.
+
+Tussen 2 partijen is er een eerste die iets vraagt en een tweede die iets antwoordt. Soms zeggen we wel dat een consumer iets vraagt aan een provider of ook wel eens een client die aan een server iets vraagt en een antwoord terugkrijgt.
+
+Hier komen we verder op terug.
 
 ## Think Resources
 
 De basis van API's zijn [Resources](https://github.com/digipolisantwerpdocumentation/api-requirements#rest-introductie). Dit is een abstract concept en is in essentie eender wat je kan benaderen voor een gegeven URL. Denk aan de entiteiten in je functioneel domein zoals, facturen, bestellingen, dossiers, meldingen, users, etc. 
 
-## Methods
-
-Resources kan je opvragen, aanmaken, aanpassen, verwijderen, etc. Bewerkingen uitvoeren op resources doe je via `Methods`. In een REST API ga je deze methods realiseren via `HTTP Verbs`. De meest gebruikte HTTP Verbs zijn `GET`, `POST`, `PUT`, `PATCH` en `DELETE`. Enkele voorbeelden:
-
-``` HTTP
-GET /invoices          Haal een lijst van invoices op
-GET /invoices/20037    Haal invoice 20037 op
-POST /invoices         Voeg een nieuwe invoice resource toe aan de invoices collection
-PUT /invoices/20037    Update de data van invoice 20037
-PATCH /invoices/20037  Pas enkele gegevens van invoice 20037 aan
-DELETE /invoices/20037 Verwijder invoice 20037 van de collection
-```
-
 ## Stateless
 
-Wanneer afnemers werken met een API's, is elke request onafhankelijk van een vorige of volgende request. De API (aka server) bouwt geen "sessie" of "context" op tussen individuele requesten voor de respectievelijke afnemers (clients).
+Wanneer afnemers werken met een API, is elke request onafhankelijk van een vorige of volgende request. De API (aka server) bouwt geen "sessie" of "context" op tussen individuele requesten voor de respectievelijke afnemers (clients).
 
 Stel dat we een factuur creëren door volgende `HTTP POST` Request: 
 
@@ -120,7 +109,7 @@ Content-Type: application/json
 }
 ```
 
-Vervolgens voegen we een factuurlijn toe, merk op dat we hier nergens het factuurnummer meegeven dat we terug gekregen hebben van de vorige request.
+Vervolgens voegen we een factuurlijn toe; merk op dat we hier nergens het factuurnummer meegeven dat we terug gekregen hebben van de vorige request.
 
 ``` HTTP
 POST /invoices/lines HTTP/1.1
@@ -134,7 +123,7 @@ Content-Type: application/json
 
 Dit gaat dus __*NIET*__ werken. 
 
-De API gaat voor mij - lees mijn client sessie - niet onthouden welk factuur ik net heb gemaakt. Je moet met andere woorden expliciet alle data meegeven dat nodig is om de volledige call af te handelen. In onderstaand voorbeeld geven we het factuurnummer mee in het path `POST /invoices/20037/lines`. 
+De API gaat voor mij - lees mijn client sessie - niet onthouden welke factuur ik net heb gemaakt. Je moet met andere woorden expliciet alle data meegeven die nodig is om de volledige call af te handelen. In onderstaand voorbeeld geven we het factuurnummer mee in het path `POST /invoices/20037/lines`. 
 
 ``` HTTP
 POST /invoices/20037/lines HTTP/1.1
@@ -146,7 +135,7 @@ Content-Type: application/json
 }
 ```
 
-## Resuest Body, Path en methods 
+## Request Body, Path en methods 
 
 Even het voorbeeld herhalen:
 
@@ -161,26 +150,26 @@ Content-Type: application/json
 }
 ```
 
-Bovenstaande lijkt wel wat vreemd, niet? De data van het factuurlijn wordt meegegeven in de body van de HTTP Post Request, terwijl het factuur nummer in het pad staat. Eigenlijk lees je bovenstaand voorbeeld als volgt:
+Bovenstaande lijkt wel wat vreemd, niet? De data van de factuurlijn wordt meegegeven in de body van de HTTP Post Request, terwijl het factuurnummer in het pad staat. Eigenlijk lees je bovenstaand voorbeeld als volgt:
 
-*  **Path:** `/invoices/20037/lines` - er is een collectie van facturen met daarin één factuur met nummer 20037 en voor dat factuur is er een collectie van lines (factuurlijnen)
+*  **Path:** `/invoices/20037/lines` - er is een collectie van facturen met daarin één factuur met nummer 20037 en voor die factuur is er een collectie van lines (factuurlijnen)
 * **Resource Method:** `POST` - en daarvoor wil ik een extra lijn toevoegen, de inhoud ervan staat in de body van de request.
-* **Body**: `{ "productKey": "1TER", "quantity": 2, "..."}`: met deze data maak ik het nieuwe factuurlijn aan.
+* **Body**: `{ "productKey": "1TER", "quantity": 2, "..."}`: met deze data maak ik de nieuwe factuurlijn aan.
 * **Format**: `Content-Type: application/json`: en het formaat van de data die ik meegeef is JSON
 
 ## Andere basics
 
-We stellen voor dat we hier niet teveel meer ingaan op de basis van API's. Bekijk zeker de [Digipolis API requirements](https://github.com/digipolisantwerpdocumentation/api-requirements), hierin beschrijven we uitvoerig de details van de Payload (de body), welke afspraken we maken voor naamgeving, omgang met datum en tijd(zones), structuur van de collections en resources, etc. Zeker de moeite om door te gaan ;).
+In de [Digipolis API requirements](https://github.com/digipolisantwerpdocumentation/api-requirements) beschrijven we uitvoerig de details van de Payload (de body), welke afspraken we maken voor naamgeving, omgang met datum en tijd(zones), structuur van de collections en resources, etc. Zeker de moeite om door te gaan ;).
 
 
 # 3. Analyse voorbereiding
 
-De vraag is, hoe begin je nu aan een API? Wel, eerst en vooral moet je het functioneel domein omzetten in een ontwerp. 
+Hoe begin je nu aan een API? Wel, eerst en vooral moet je het functioneel domein omzetten in een ontwerp. 
 
 > #### >> Fast Forward
 > Ben je al gewoon om functionele analyses te maken, sla dan dit hoofdstuk over en ga meteen aan de slag met het [ontwerpen van API's](#api-design).
 
-De analyse gaan we doen aan de hand van een voorbeeld. We maken hierbij gebruik van [UML Class diagrams](https://en.wikipedia.org/wiki/Class_diagram) als notatievorm, eigenlijk maakt het niet uit wat je hier voor gebruikt, al waren het bierkaartjes ;).
+De analyse gaan we doen aan de hand van een voorbeeld. We maken hierbij gebruik van [UML Class diagrams](https://en.wikipedia.org/wiki/Class_diagram) als notatievorm, in se maakt het niet uit wat je hier voor gebruikt, al waren het bierkaartjes ;).
 
 ## Zoek de entiteiten
 
@@ -190,8 +179,7 @@ Stel, je komt volgende vraag tegen van een klant:
 
 
 > #### Situatie schets
-> *Ik wil graag een systeem om verkoop `facturen` mee te kunnen maken. Een factuur bevat een logo, een uniek nummer, is steeds voor één specifieke `klant` op een gegeven factuurdatum en bevat één of meerdere `factuurlijnen`. Als ik 2 verschillende `producten` verkoop aan de klant, staan deze elks apart vermeld in 2 verschillende factuurlijnen. Elke factuurlijn toont de product code, een omschrijving, het aantal dat er van verkocht is, de eenheidsprijs van het product en de totaalprijs (aantal x product prijs). Op het einde van het factuur staat het bedrag exclusief BTW, de BTW toelage de totaalprijs inclusief BTW.* 
-
+> *Ik wil graag een systeem om `verkoopfacturen` mee te kunnen maken. Een factuur bevat een logo, een uniek nummer, is steeds voor één specifieke `klant` op een gegeven factuurdatum en bevat één of meerdere `factuurlijnen`. Als ik 2 verschillende `producten` verkoop aan de klant, staan deze elk apart vermeld in 2 verschillende factuurlijnen. Elke factuurlijn toont de product code, een omschrijving, het aantal stuks dat er van verkocht is, de eenheidsprijs van het product en de totaalprijs (aantal x productprijs). Op het einde van de factuur staat het bedrag exclusief BTW, de BTW toelage en de totaalprijs inclusief BTW.* 
 
 In bovenstaande tekst, vinden we volgende entiteiten terug:
 
@@ -206,7 +194,7 @@ In bovenstaande tekst, vinden we volgende entiteiten terug:
 
 Neem de zin *"Een factuur bevat een logo, een uniek nummer, is steeds voor één specifieke `klant` op een gegeven factuurdatum en bevat één of meerdere `factuurlijnen`"*. 
 
-Hieruit zien we dat een factuur een klant en factuurlijnen heeft. Er is met andere woorden een relatie tussen beiden. Daarnaast zien we ook dat er een relatie is tussen een factuurlijn en een product. 
+Hieruit lezen we dat een factuur een klant, en factuurlijnen heeft. Er is met andere woorden een relatie tussen beiden. Daarnaast zien we ook dat er een relatie is tussen een factuurlijn en een product. 
 
 <a class="anchor" id="figuur-3"></a>
 <p align="center">
@@ -224,7 +212,7 @@ nul, één of meerdere noemen we ook wel eens [cardinaliteit](https://en.wikiped
 
 ## Aggregatie en compositie
 
-Als we het voorgaande nog verder modeleren, kunnen we volgende stellen:
+Als we het voorgaande nog verder modelleren, kunnen we volgende stellen:
 
 * Een klant, kan bestaan zonder dat deze ooit een factuur heeft
 * Een product kan bestaan in het systeem zonder dat het ooit op een factuur is voorgekomen
@@ -261,13 +249,13 @@ Vanuit de oorspronkelijke vraag komen we dan bij het volgende diagram uit:
   <div align="center"><i>figuur 5 - eigenschappen</i></div>
 </p>
 
-In essentie is dit het soort werk dat we als analist doen. In volgende hoofdstukken gaan we dit analyse ontwerp in detail omzetten in een elegante API's. Maar daarvoor moeten we eerst ons in de juiste mindset krijgen, vandaar de Design Principes
+In essentie is dit het soort werk dat we als analist doen. In volgende hoofdstukken gaan we dit analyse ontwerp in detail omzetten in een elegante API. Maar daarvoor moeten we ons eerst in de juiste mindset krijgen, vandaar de Design Principes.
 
 # 4. Design Principes
 
-1. Als ontwerper van een API beschouw je deze API als een eindproduct en niet als een technisch tussenstuk. Wees als een goed ***Product Owner***, net zoals je dat zou doen bij applicaties voor eindgebruikers. 
+1. Als ontwerper van een API beschouw je deze API als een eindproduct en niet als een technisch tussenstuk. Wees een goed ***Product Owner***, net zoals je dat zou doen bij applicaties voor eindgebruikers. 
 
-2. bij het ontwerp, kijk je door de bril van de afnemers ofwel een ***Outside-In perspective***. 
+2. Bij het ontwerp, kijk je door de bril van de afnemers, ofwel een ***Outside-In perspective***. 
 
 3. Je ***klanten zijn ontwikkelaars/developers***, leer hen kennen, net als klanten voor applicaties. 
 
@@ -275,24 +263,24 @@ In essentie is dit het soort werk dat we als analist doen. In volgende hoofdstuk
 
 5. Hou het ontwerp ***eenvoudig en intuïtief***, hoe minder externe documentatie er moet gelezen worden hoe beter het ontwerp. 
 
-6. Werk in ***iteraties*** en verbeter de consistentie en eenvoud over de tijd heen op basis van afnemer feedback .
+6. Werk in ***iteraties*** en verbeter de consistentie en eenvoud op basis van feedback van de afnemers.
 
-7. ***API Design First:*** Door eerst het ontwerp van de API te maken, voor dat we beginnen met de implementatie ervan, hebben we enkele voordelen:
+7. ***API Design First:*** Door eerst het ontwerp van de API te maken, voor we beginnen met de implementatie ervan, hebben we enkele voordelen:
     * Je kan vroeg in het process feedback verzamelen
-    * Je kan iteratief te werk gaan. Bij elke sprint kan je het API ontwerp verfijnen en zo overmaken aan de ontwikkelaars.
-    * Ontwikkelaars kunnen aan de hand van het preciese ontwerp meteen zien wat er van hen verwacht wordt.
+    * Je kan iteratief te werk gaan. Bij elke sprint kan je het API ontwerp verfijnen en overmaken aan de ontwikkelaars.
+    * Ontwikkelaars kunnen aan de hand van het precieze ontwerp meteen zien wat er van hen verwacht wordt.
     * Swagger files kunnen bezorgd worden aan afnemers, nog voor de API implementatie klaar is. Het werkt zo als een contract tussen beide van wat er gaat komen.
     * Tools kunnen helpen met de kwaliteit van je API ontwerp en zo bijdragen aan een betere analyse in het geheel.
 
 
-Jef Bezos van Amazon zij ooit `if you build it, you run it`, dit gaat hier ook op, toch gedeeltelijk. Na de bouw is er een commerciële en operationele bezigheid. Je brengt de API aan de man en je zorgt ervoor dat deze blijft draaien. Dit laatste laten we weliswaar liever over aan de gespecialiseerde mensen 
+Jeff Bezos van Amazon zei ooit `if you build it, you run it`, dit gaat hier ook op, toch gedeeltelijk. Na de bouw is er een commerciële en operationele bezigheid. Je brengt de API aan de man en je zorgt ervoor dat deze blijft draaien. Dit laatste laten we weliswaar liever over aan de gespecialiseerde mensen.
 
 # 5. Tools
 
 * https://editor.swagger.io/: een eenvoudige online editor.
 * https://swagger.io/tools/swaggerhub/: gaat verder dan de basis editor en laat toe om je werk eveneens te bewaren in de cloud.
 * https://www.getpostman.com/: vooral om API's te testen (ook door middel van API mocking)
-* https://openapi-validator.antwerpen.be/: controleer de kwaliteit van je API ontwerp, volgens de Digipolis API regels. 
+* https://openapi-validator.antwerpen.be/: controleert de kwaliteit van je API ontwerp, volgens de Digipolis API regels. 
 
 # 6. API design
 
@@ -308,10 +296,10 @@ Zoals eerder vermeld, gaan API's uitgeschreven worden volgens de [Open API Speci
   <div align="center"><i>figuur 6 - OAS 3 Onderdelen</i></div>
 </p>
 
-* [info](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#infoObject): hier zit de basis info in over de API, waaronder de naam, omschrijving en contact informatie. 
-* [servers](https://swagger.io/docs/specification/api-host-and-base-path/): Definities van de plaatsen waar je API staat (dev, acc, prod, etc.) 
-* [security](https://swagger.io/docs/specification/authentication/): Beschrijft hoe je je moet authenticeren om deze API te kunnen gebruiken
-* [paths](https://swagger.io/docs/specification/paths-and-operations/): Dit is het hart, hier beschrijf je aan de hand van Paths (aka Routes) wat je precies met je API kan doen.
+* [info](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#infoObject): Bevat de basis info over de API, waaronder de naam, omschrijving en contact informatie. 
+* [servers](https://swagger.io/docs/specification/api-host-and-base-path/): Definities van de plaatsen waar je API staat (dev, acc, prod, etc).
+* [security](https://swagger.io/docs/specification/authentication/): Beschrijft hoe je je moet authenticeren om de API te kunnen gebruiken.
+* [paths](https://swagger.io/docs/specification/paths-and-operations/): Dit is het hart, hier beschrijf je aan de hand van paths (aka Routes) wat je precies met je API kan doen.
 * [components](https://github.com/OAI/OpenAPI-Specification/blob/master/versions/3.0.2.md#components-object): Hierin staan de herbruikbare delen van je API ontwerp zoals schema's, headers, responses, etc.
 
 ## YAML
@@ -335,11 +323,11 @@ tags:
 > #### YAML 101
 > YAML formaat werkt via `key-value` pairs. Je geeft de naam van een key en vervolgens de waarde erachter. 
 >
-> Key-value pairs die behoren tot een collectie worden samen gevormd doordat ze geïndenteerd zijn (lees, door 2 of meerdere spaties vooraan de regel toe te voegen). Zo zie je dat version, title en description behoren tot de info collection.
+> Key-value pairs die behoren tot een collectie worden samen gevormd doordat ze geïendenteerd zijn (lees, door 2 of meerdere spaties vooraan de regel toe te voegen). Zo zie je dat version, title en description behoren tot de info collection.
 >
 > Tot slot zijn er lijsten, deze kan je herkennen door het `-` teken vooraan elke lijn
 
-Een voorbeeld uit de [analyse](#analyse-prep) hierboven ziet er dan als onderstaande uit. 
+Een voorbeeld uit de [analyse](#analyse-prep) hierboven ziet er dan als volgt uit. 
 
 ```yaml
 openapi: 3.0.0
@@ -351,7 +339,7 @@ servers:
   - url: 'https://api-gateway/digipolis/sales-invoice/v1/...'
     description: development
 paths:
-  '/invoice/{number}':
+  '/invoices/{number}':
     get:
       summary: Retrieve a Sales Invoice
       description: Retrieve exactly one `Sales Invoice`...
@@ -373,7 +361,7 @@ paths:
 
 ## Info 
 
-Dit is de header van je API waarin je een goede naam kiest. We stellen voor om steeds zelfstandige naamwoorden te gebruiken en geen werkwoorden zoals
+Dit is de header van je API waarin je een goede naam kiest. We gebruiken steeds zelfstandige naamwoorden en geen werkwoorden, bijvoorbeeld:
 
 ```
 - Sales Invoice API
@@ -381,7 +369,7 @@ Dit is de header van je API waarin je een goede naam kiest. We stellen voor om s
 - Digital Asset Management API
 ```
 
-Naast de naam, geef je een versie op volgens de [Semver 2](https://semver.org/) standard. Tijdens het ontwerpen (nog voor het effectief live gaan dus), stellen we voor om te werken met versie `0.x.y`. Vanaf dat je de API effectief gaat publiceren, kan je gebruik maken van  major `1.x.y`.
+Naast de naam, geef je een versie op volgens de [Semver 2](https://semver.org/) standard. Tijdens het ontwerpen (nog voor het effectief live gaan dus) werk je met versie `0.x.y`. Vanaf dat je de API effectief gaat publiceren, kan je gebruik maken van  major `1.x.y`.
 
 ```yaml
 openapi: 3.0.0
@@ -390,6 +378,11 @@ info:
   title: 'Sales Invoice API'
   description: 'Create and manage Sales Invoices.....'
 ```
+
+### Uitbreiding
+
+> TBD: info/x-audience https://opensource.zalando.com/restful-api-guidelines/#219
+
 
 ## Servers
 
@@ -401,7 +394,7 @@ info:
 
 ## Paths
 
-Dit is de crux van je API, hier zal het meest van je ontwerp werk in tevoorschijn komen. Even een herhaling van in de [API requirements](https://github.com/digipolisantwerpdocumentation/api-requirements)
+Dit is de crux van je API, hier zal het meest van je ontwerp werk in tevoorschijn komen. Even een herhaling van de [API requirements](https://github.com/digipolisantwerpdocumentation/api-requirements)
 
 ### URI structuur
 
@@ -411,69 +404,74 @@ https://{hostname}/{namespace}/{vx}/{resource-URI}
 ```
 
 API URI's dienen steeds te worden geversioneerd (**/vx**). Aangezien wordt gekozen voor het root namespace versioneringsmodel, dient de major versie steeds te worden opgenomen in de URI en dit achter de namespace.  
-De **namespace** is een enkelvoudig zelfstandig naamwoord dat het onderwerp van de API omschrijft, gezien vanuit het standpunt van de API consumer. Dit is best in overeenstemming met de naam van de API dat je opgeeft in het `info.title` element van de swagger.
+De **namespace** is een enkelvoudig zelfstandig naamwoord dat het onderwerp van de API omschrijft, gezien vanuit het standpunt van de API consumer. Dit is best in overeenstemming met de naam van de API die je opgeeft in het `info.title` element van de swagger.
 
 Dit resulteert in onderstaand totaal voorbeeld :
+
 ``` HTTP
 https://api-gateway/digipolis/sales-invoice/v1/...
 ```
 
-### Resources
+## Resources
 
-Data dat we opsturen of ontvangen wordt een `Resource` genoemd. 
+Data die we opsturen of ontvangen, wordt een `Resource` genoemd. 
 
 > *The key abstraction of information in REST is a resource. Any information that can be named can be a resource: a document or image, a temporal service (e.g. “today’s weather in Los Angeles”), a collection of other resources, a non-virtual object (e.g., a person), and so on. In other words, any concept that might be the target of an author’s hypertext reference must fit within the definition of a resource. A resource is a conceptual mapping to a set of entities, not the entity that corresponds to the mapping at any particular point in time.* 
 >
 > [Roy Fielding’s dissertation](https://www.ics.uci.edu/~fielding/pubs/dissertation/rest_arch_style.htm#sec_5_2_1_1)
 
-Een Resource naam is enkelvoudig bijvoorbeeld `customer` en meerdere Resources samen is een **collection** en is in het meervoud `customers`
+Een Resource naam is enkelvoudig bijvoorbeeld `customer`. Meerdere Resources samen vormen een **collection** en is in het meervoud `customers`
 
 ``` HTTP
 GET /customers      (haal de klanten collectie op)
 GET /customers/123  (haal klant met ID 123 op uit de collectie)
 ```
 
-Soms heeft een resource ook een **sub-collecion**, deze worden dan onderdeel van een hierarchie zoals dit bijvoorbeeld:
+Soms heeft een resource ook één of meerdere **sub-collecions**, deze worden dan onderdeel van een hierarchie zoals dit bijvoorbeeld:
+
 ``` HTTP
 GET /invoices/20201/invoicelines
 ``` 
 ### Naming conventions
 
 -   Resources worden steeds in het meervoud gedefinieerd (uitzondering : controllers, status resource)
+
 ``` HTTP
 GET /partners
 ```
 
 -   Gebruik steeds lowercase voor URI en query parameters. Dit vermijdt technologie afhankelijke problemen met casing.
+
 ``` HTTP
 GET /partners?page=10&pagesize=20
 ```
 
 -   Gebruik geen underscores "\_" of dots "." in de URI. Gebruik hyphenation om woorden van elkaar te scheiden. Dit verhoogt de
     leesbaarheid van de URI.
+
 ``` HTTP
 GET /business-parties?page=10&pagesize=20
 ```
 
 -   Gebruik geen trailing slash in de URI. Een trailing slash heeft geen toegevoegde waarde en verlaagt bovendien de leesbaarheid van de URI.
+
 ``` HTTP
 GET /partners/
 gebruik je dus NIET
 ```
 
 -   Gebruik geen fragments (\#) in de URI. Fragments worden gebruikt om te navigeren binnen een web context pagina, maar mogen niet gebruikt worden in een API URI.
+
 ``` HTTP
 GET /partners#name/
 gebruik je dus NIET
 ```
 
-
-
-#### Request query parameters
+### Request query parameters
 
 Query parameters worden steeds gebruikt om bepaalde functionaliteiten zoals paginatie, filtering, sortering, etc aan te spreken. Ze worden NIET gebruikt om resource representaties mee te geven.
 
-Onderstaan voorbeeld is niet enkel onleesbaar, het laat ook niet toe om hiërarchieën op een eenvoudige manier op te nemen in de representatie.
+Onderstaand voorbeeld is niet enkel onleesbaar, het laat ook niet toe om hiërarchieën op een eenvoudige manier op te nemen in de representatie.
 
 ``` HTTP
 POST /business-parties?company=Google&website=http://www.google.com/&addressLine1=111 8th Ave&addressLine2=4th Floor&state=NY&city=New York&zip=10011
@@ -481,616 +479,32 @@ POST /business-parties?company=Google&website=http://www.google.com/&addressLine
 gebruik je dus NIET
 ```
 
-#### Root of sub-collectie
+### Root of sub-collectie
 
 Wanneer kies je nu voor een collection of een sub-collection? Herinner je het [Aggregatie en compositie](#aggregatie-en-compositie) verhaal in de analyse voorbereiding?
 
 **Aggregatie:** je maakt een collectie aan op de root
+
 ``` HTTP
 GET /invoices 
 ``` 
+
 **Compositie:** je maakt een sub-collectie aan
+
 ``` HTTP
-GET /invoices/20201/lines
+GET /invoices/20201/invoicelines
 ``` 
-*Reminder: aggregaties zijn entititeiten die kunnen leven op zichzelf, composities zijn er die enkel een bestaansrecht hebben onder een ander.*
 
-### Uitgewerkt voorbeeld
-
-Als we de kennis rond Paths hierboven omzetten naar ons voorbeeld uit de [analyze](#3-analyse-voorbereiding) krijgen we hetvolgende:
-
-``` HTTP
-GET /invoices               Haal een lijst van invoices op
-GET /invoices/20037         Haal invoice 20037 op
-GET /invoices/20037/lines   Haal de lijst invoice lines op van invoice 20037
-POST /invoices              Voeg een nieuwe invoice resource toe aan de collection
-HEAD /invoices/20037        Ga na of invoice 20037 bestaat
-```
-
-In YAML wordt dit:
-
-```YAML
-...
-paths:
-  '/invoices':
-    get:
-      summary: Retrieves the list of invoices
-      description: Get a list of invoices limited to the paging options provided
-      tags:
-        - Invoicing
-    post:
-      summary: Create a new Sales Invoice
-      description: Create a new `Sales Invoice` and store it in the database. If all...
-      tags:
-        - Invoicing
-  '/invoice/{number}':
-    get:
-      summary: Retrieve a Sales Invoice
-      description: Retrieve exactly one `Sales Invoice` for the given `number` in the...
-      tags:
-        - Invoicing
-    head:
-      summary: Checks if a Sales Invoice exists
-      description: Find out if `Sales Invoice` for the given `number` exists. 
-      tags:
-        - Invoicing
-  '/invoice/{number}/lines':
-    get:
-      summary: Retrieve the list of invoice lines
-      description: Get a paged list of invoices lines for the given invoice
-      tags:
-        - Invoicing
-...
-```
-
-
-## Components
-
-Components is de plek bij een OAS 3 document waar je herbruikbare onderdelen zet. Je zal zien dat je na verloop van tijd, hier gretig gebruik van zal maken (zie ook het [DRY pattern](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself)).
-
-### Paging parameters
-
-In ons voorbeeld hebben we `GET invoices` en `GET invoicelines` die beide een collection van die responses opleveren. in de [API Requiremenrts - Paging Query Parameters](https://github.com/digipolisantwerpdocumentation/api-requirements#paginatie-query-parameters), staat dat je volgende parameters hoort te hanteren:
-
-* page
-* pagesize
-* paging-strategy
-
-bijvoorbeeld, haal de eerste 10 invoices op:
-
-```HTTP
-GET /invoices?page=1&pagesize=10
-```
-
-Als je tijdens het schrijven van je swagger file, voor invoices je paging query parameters hebt opgegeven, dan moet je dan opnieuw doen voor invoicelines. Vandaar dat we parameters gaan opnemen in het `components` luik van onze swagger file.
-
-```YAML
-components:
-  parameters:
-    pagesize:
-      name: pagesize
-      in: query
-      description: Max number of items for each page
-      required: true
-      schema:
-        type: integer
-    pagingStrategy:
-      name: paging-strategy
-      in: query
-      description: >-
-        Specify the paging strategy, i.e. if totalPages and totalElements should
-        be included in the response output
-      schema:
-        type: string
-        default: noCount
-        enum:
-          - noCount
-          - withCount
-    page:
-      name: page
-      in: query
-      description: >-
-        Starting offset for the list, this can be either a number or the literal
-        'last'
-      required: true
-      schema:
-        type: string  
-
-```
-
-Deze 3 zijn nagenoeg universeel in elke API voor Digipolis, dus deze zal zeker in je swagger komen. Daarnaast zijn er ook andere parameters die je er in kan zetten zoals bijvoorbeeld het nummer van een factuur:
-
-```YAML
-components:
-  parameters:
-    salesinvoicenumber:
-      name: number
-      in: path
-      description: >-
-        The unique `number` of this `Sales Invoice` in our system.
-      required: true
-      schema:
-        minimum: 1
-        type: string
-        pattern: '^\d{5,10}$'
-        description: The invoice number. This is a unique number issued by this API.
-        example: 20037        
-```
-
-Merk op dat je parameters kan gebruiken op verschillende plekken, als onderdeel van het `path` of als `query` parameters. Bekijk de [OAS spec voor meer info hierover](https://swagger.io/docs/specification/describing-parameters/).
-
-Naast de `parameters` kan je ook andere herbruikbare stukken hier kwijt, waaronder:
-
-```yaml
-openapi: 3.0.0
-...
-components:
-  parameters:     Voor de parameters
-  schemas:        Voor hebruikbare modellen bij requesten en responses
-  headers:        Herbruikbare request of response headers
-  ...
-```
-Bekijk de [online OAS spec](https://swagger.io/docs/specification/components/) voor uitgebreide info.
-
+*Reminder: aggregaties zijn entiteiten die kunnen leven op zichzelf, composities zijn er die enkel een bestaansrecht hebben onder een ander.*
  
-# Alles bij elkaar
 
-Als we het voorbeeld van de analyse uitwerken, bekomen we volgende file
-
-```yaml
-openapi: 3.0.0
-info:
-  version: 'v1.0.1'
-  title: 'Sales Invoice API'
-  description: 'Create and manage Sales Invoices. Note that this API is typically used in conjuction with a Product API where products and/or services are managed. Additionally it works with a Customer API to indicate for whom the sales invoice is intended.'
-servers:
-  - url: https://{environment}.antwerpen.be/digipolis/salesinvoices:{port}/{version}
-    description: OTAP servers
-    variables:
-      environment:
-        default: api-gw   #production
-        description: choice between production, acceptance or the development environment
-        enum:
-        - 'api-gw'        #production
-        - 'api-gw-a'      #acceptance
-        - 'api-gw-o'      #development
-      port:
-        description: select the port for the secure HTTP connection
-        enum:
-          - '443'
-          - '8443'
-        default: '443'   
-      version:
-        default: v1
-        description: specify the major version of this api
-paths:
-  '/invoices':
-    get:
-      summary: Retrieves the list of invoices
-      description: Get a list of invoices limited to the paging options provided
-      parameters:
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/pagesize'
-        - $ref: '#/components/parameters/pagingStrategy'
-      responses:
-        '200':
-          description: OK
-          headers:
-            Content-Language:
-              $ref: "#/components/headers/contentLanguage"
-          content:
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/invoices'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServer'
-        'default':
-          $ref: '#/components/responses/Unexpected'
-      tags:
-        - Invoicing
-    post:
-      summary: Create a new Sales Invoice
-      description: Create a new `Sales Invoice` and store it in the database. If all goes well, you'll receive the invoice number as a response. 
-      requestBody:
-        description: >
-          Provide the following data in the payload of this Request. 
-        required: true
-        content:
-          'application/json':
-            schema:
-              $ref: '#/components/schemas/invoice'
-      responses:
-        '201':
-          description: Sales invoice succesfully added 
-          headers:
-            Content-Language:
-              $ref: "#/components/headers/contentLanguage"
-            Location: 
-              description: returns the location of the newly created Sales Invoice
-              schema: 
-                type: string
-                example: '/invoices/20037'
-            
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '500':
-          $ref: '#/components/responses/InternalServer'
-        'default':
-          $ref: '#/components/responses/Unexpected'
-      tags:
-        - Invoicing
-  '/invoice/{number}':
-    get:
-      summary: Retrieve a Sales Invoice
-      description: Retrieve exactly one `Sales Invoice` for the given `number` in the path. If no Sales Invoice exists for the given number, a 404 is returned.
-      parameters:
-        - $ref: '#/components/parameters/salesinvoicenumber'
-        - $ref: '#/components/parameters/page'
-        - $ref: '#/components/parameters/pagesize'
-        - $ref: '#/components/parameters/pagingStrategy'
-      responses:
-        '200':
-          description: OK
-          headers:
-            Content-Language:
-              $ref: "#/components/headers/contentLanguage"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/invoice'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServer'
-        'default':
-          $ref: '#/components/responses/Unexpected'
-      tags:
-        - Invoicing
-    head:
-      summary: Checks if a Sales Invoice exists
-      description: Find out if `Sales Invoice` for the given `number` exists. 
-      parameters:
-        - $ref: '#/components/parameters/salesinvoicenumber'
-      responses:
-        '200':
-          description: OK
-          headers:
-            Content-Language:
-              $ref: "#/components/headers/contentLanguage"
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServer'
-        'default':
-          $ref: '#/components/responses/Unexpected'
-      tags:
-        - Invoicing
-  '/invoice/{number}/lines':
-    get:
-      summary: Retrieve the list of invoice lines
-      description: Get a paged list of invoice lines for the given invoice number
-      parameters:
-        - $ref: '#/components/parameters/salesinvoicenumber'
-      responses:
-        '200':
-          description: OK
-          headers:
-            Content-Language:
-              $ref: "#/components/headers/contentLanguage"
-          content:
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/invoicelines'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServer'
-        'default':
-          $ref: '#/components/responses/Unexpected'
-      tags:
-        - Invoicing
-components:
-  schemas:
-    error:
-      type: object
-      properties:
-        type:
-          type: string
-          description: >-
-            A URI identifying this error. The URI can lead to humane readable
-            information about this error
-        title:
-          type: string
-          description: a short description about the error occurred
-        status:
-          type: string
-          description: the corresponding HTTP result code
-        identifier:
-          type: string
-          description: a unique identifier of the given error
-        code:
-          type: string
-          description: the code of the given error
-      description: >-
-        a generic model used to describe errors as a result of incorrect or
-        failed HTTP requests .
-    pages:
-      description: >-
-        a generic model used to describe paging information when requesting a
-        list of resources
-      required:
-        - number
-        - size
-      type: object
-      properties:
-        size:
-          type: integer
-          description: >-
-            returns the size of a page provided in the pagesize query parameter
-            of the request
-          example: 10
-        totalElements:
-          type: integer
-          description: the total number of items in the resulting collection
-          example: 34
-        totalPages:
-          type: integer
-          description: >-
-            the total number of pages in the resulting array. This is calculated
-            with the given size value
-          example: 4
-        number:
-          type: integer
-          description: >-
-            return the page number provided in the page query parameter of the
-            resuest
-          example: 0
-    links:
-      type: object
-      description: provides navigational uri's to other pages of the collection
-      properties:
-        self:
-          type: object
-          description: contains a link to this page of this collection
-          properties:
-            href:
-              type: string
-              format: uri
-              example: 'https://api-gw-a.antwerpen.be/digipolis/salesinvoices:443/v1/?pagesize=5&page=5'
-        first:
-          type: object
-          description: contains a link to the first page of this collection
-          properties:
-            href:
-              type: string
-              format: uri
-              example: 'https://api-gw-a.antwerpen.be/digipolis/salesinvoices:443/v1?pagesize=5&page=0'
-        last:
-          type: object
-          description: contains a link to the last page of this collection
-          properties:
-            href:
-              type: string
-              format: uri
-              example: 'https://api-gw-a.antwerpen.be/digipolis/salesinvoices:443/v1?pagesize=5&page=17'
-        prev:
-          type: object
-          description: contains a link to the previous page of this collection
-          properties:
-            href:
-              type: string
-              format: uri
-              example: 'https://api-gw-a.antwerpen.be/digipolis/salesinvoices:443/v1?pagesize=5&page=0'
-        next:
-          type: object
-          description: contains a link to the next page of this collection
-          properties:
-            href:
-              type: string
-              format: uri
-              example: 'https://api-gw-a.antwerpen.be/digipolis/salesinvoices:443/v1?pagesize=5&page=10'
-    customer:
-      type: object
-      description: Represents a single customer resource originating from the Customer API.
-      properties: 
-        id:
-          type: string
-          format: uuid
-          description: the unique identifier of this customer
-          example: 3d9b5d39-17c2-4b1c-9edf-328479c08d15
-        name:
-          type: string
-          description: the business name of this customer
-    product:
-      type: object
-      description: Represents a single product resource originating from the Product API.
-      properties: 
-        id:
-          type: string
-          format: uuid
-          description: the unique identifier of this product
-          example: 87c5e4d2-d6ad-4c6e-a260-a5aeef33559f
-        name:
-          type: string
-          description: the name of this product
-          example: Mouse XF01
-        description:
-          type: string
-          description: a short description of this product
-          example: Super sonic high fidelity computer mouse
-        unitprice:
-          type: number
-          format: currency
-          description: the unit price for this product
-          example: € 20.5
-    invoice:
-      description: Represents a single `Sales Invoice` resource.
-      type: object
-      properties:
-        number:
-          type: string
-          pattern: '^\d{5,10}$'
-          description: The invoice number. This is a unique number issued by this API.
-          example: 20037
-        date:
-          type: string
-          format: date-time
-          description: the date on which this Sales Invoice was created
-          example: '2019-01-21T02:37:00+01:00'
-        logo:
-          type: string
-          format: uri
-          description: the logo used on this Sales Invoice, typically the logo of your commpany
-          example: 'https://dams.antwerpen.be/companies/mycomponay/small-logo.png'
-        customer:
-          $ref: '#/components/schemas/customer'
-    invoiceline:
-      description: Represents a single `Sales Invoiceline` resource.
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: The invoiceline id. This is a unique id issued by this API.
-          example: 4df8447d-f114-44dd-816d-e293d1428f8b
-        number:
-          type: number
-          description: the sorting number of the line on an invoice
-          example: 1
-        quantity:
-          type: number
-          description: the quantity indicates how many items of the `product` are charged on this invoice
-          example: 5
-        product:
-          $ref: '#/components/schemas/product'
-    invoices:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/links'
-        _embedded:
-          type: object
-          properties:
-            invoices:
-              type: array
-              items:
-                $ref: '#/components/schemas/invoice'
-          description: Returns a list of `Invoice` resources
-        _page:
-          $ref: '#/components/schemas/pages'
-    invoicelines:
-      type: object
-      properties:
-        _links:
-          $ref: '#/components/schemas/links'
-        _embedded:
-          type: object
-          properties:
-            invoicelines:
-              type: array
-              items:
-                $ref: '#/components/schemas/invoiceline'
-          description: Returns a list of `Invoiceline` resources
-        _page:
-          $ref: '#/components/schemas/pages'
-  responses:
-    BadRequest:
-      description: Bad request
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/error'
-    Unexpected:
-      description: Unexpected error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/error'
-    InternalServer:
-      description: Internal Server Error
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/error'
-    NotFound:
-      description: Not found
-      content:
-        application/problem+json:
-          schema:
-            $ref: '#/components/schemas/error'
-  headers:
-    contentLanguage:
-      description: >
-        Describes the language ([ISO 639](https://www.iso.org/iso-639-language-codes.html)) of the data in the returned payload.
-      schema:
-        type: string
-        default: nl-BE
-        example: nl-BE
-        enum:
-          - nl-BE
-          - en-UK
-  parameters:
-    salesinvoicenumber:
-      name: number
-      in: path
-      description: >-
-        The unique `number` of this `Sales Invoice` in our system.
-      required: true
-      schema:
-        minimum: 1
-        type: string
-        pattern: '^\d{5,10}$'
-        description: The invoice number. This is a unique number issued by this API.
-        example: 20037        
-    pagesize:
-      name: pagesize
-      in: query
-      description: Max number of items for each page
-      required: true
-      schema:
-        type: integer
-    pagingStrategy:
-      name: paging-strategy
-      in: query
-      description: >-
-        Specify the paging strategy, i.e. if totalPages and totalElements should
-        be included in the response output
-      schema:
-        type: string
-        default: noCount
-        enum:
-          - noCount
-          - withCount
-    page:
-      name: page
-      in: query
-      description: >-
-        Starting offset for the list, this can be either a number or the literal
-        'last'
-      required: true
-      schema:
-        type: string  
-tags:
-  - name: Invoicing
-    description: Operations related to Sales Invoices
-  - name: System
-    description: Technical operations for health checks, monitoring, caching, etc
-```
-
-
+# Backlog van deze API Design guide
+- bij een post sturen we enkel de location header 
+- multilingual
+- hoe een API lifecycle opzetten tussen design en dev? 
 
 ---
-1. <a class="anchor" id="footnote-1"></a>We gebruiken de term RESTful API ook al zijn we hier niet 100% compatible met [level 3 van het Richardson Maturity Model](https://martinfowler.com/articles/richardsonMaturityModel.htm). Onze API Requirements zorgen wel dat er de HAL standard wordt gevolgd voor het [Paged Responses](https://github.com/digipolisantwerpdocumentation/api-requirements#paginatie-response-bericht)   
+1. <a class="anchor" id="footnote-1"></a>We gebruiken de term RESTful API ook al zijn we hier niet 100% compatible met [level 3 van het Richardson Maturity Model](https://martinfowler.com/articles/richardsonMaturityModel.html). Onze API Requirements zorgen wel dat er de HAL standard wordt gevolgd voor het [Paged Responses](https://github.com/digipolisantwerpdocumentation/api-requirements#paginatie-response-bericht)   
 2. <a class="anchor" id="footnote-2"></a>We geven de voorkeur aan, om onze voorbeelden in [YAML formaat](https://en.wikipedia.org/wiki/YAML) te documenteren omdat deze aangenamer zijn om te lezen in plaats van [JSON](https://en.wikipedia.org/wiki/JSON). In de praktijk mogen beide vormen gebruikt worden uiteraard.
 
 
