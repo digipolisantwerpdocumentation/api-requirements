@@ -1,4 +1,4 @@
-# Digipolis API design & style requirements v6.0.2
+# Digipolis API design & style requirements v6.0.4
 
 geldig vanaf 01 mei 2019
 
@@ -98,6 +98,7 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 6.0.1        | Peter Claes            | 11/04/2019 | Expliciteren 'description'.
 6.0.2        | Erik Lenaerts          | 26/09/2019 | Aanpak datetime notatie en tijdzones
 6.0.3        | Peter Claes            | 28/10/2019 | Verduidelijking paginatie.
+6.0.4        | Erik Lenaerts          | 22/04/2020 | Herbruikbare definities toegevoegd.
 
 ## Cheat sheet
 
@@ -234,6 +235,8 @@ POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoo
 -   template : <https://drive.google.com/file/d/0B06myaSd5oKUOEduOHdHRl9RZU0/>
 -   template met extra info (opm. geen geldige swagger wegens extrainfo) : <https://drive.google.com/file/d/0B06myaSd5oKUWU1samRrODcwUVk/>
 -   steeds alle descriptions en summaries invullen (in het engels) : routes, parameters, ... : zie ook <https://github.com/digipolisantwerpdocumentation/api-requirements/blob/master/swagger-docs.md>
+- generieke swagger definities voor:
+  - [paging](paging.yaml)
 -   semantic version opnemen in swagger file
 
 ### HTTP verbs
@@ -931,6 +934,39 @@ Om de paging strategie mee te geven, gebruikt de consumer de optionele parameter
  Bij **`withCount`** worden __`Totaal aantal elementen`__ en __`Totaal aantal pagina's`__ altijd verplicht terug gegeven. Bovendien bevat de __`link naar de laatste pagina`__ het paginanummer (zie verder voor een voorbeeld). 
 Bij **`noCount`** worden de beide totalen niet terug gegeven en is de link naar de laatste pagina een link zonder paginanummer met de vermelding **`last`** (zie verder voor een voorbeeld).
 
+> Om je te helpen hebben we de definitie van `page`, `pagesize` en `paging-strategy` reeds gemaakt voor jou in de [paging.yaml swagger](paging.yaml) file. In onderstaand voorbeeld tonen we hoe je hier gebruik van kan maken:
+
+```JSON
+  "paths": {
+    "/invoices": {
+      "get": {
+        "summary": "Retrieve a list of invoices",
+        "description": "Retrieve a paged result list of Sales Invoices",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/parameters/Pagesize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/parameters/PagingStrategy"
+          },
+          {
+            ...
+          }
+        ],
+      }
+    }
+  }
+```
+
+Herbruikbare definities van oa. pagingatie parameters vind je terug in de [/components](/components) map hier op GitHub. Om er vanuit jouw swagger file ernaar te refereren kan je volgende link gebruiken:
+
+`https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/parameters/Page`
+
+Vervang daar waar nodig het deel achter de `#` in deze url.
+
 ### Paginatie response bericht
 
 Om paginatie informatie naar de consumer terug te sturen baseren we ons op de HAL specificatie:
@@ -989,6 +1025,10 @@ Dit alles resulteert in volgende structuur in de response message om pagina link
 }
 ```
 
+**Tip:** Net zoals de `page` en `pagesize` parameter, hebben we deze `_links` data structuur definitie ook reeds voorgemaakt op:
+
+`https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/schema/Links`
+
 Bij het ophalen van collections dient bovenstaande structuur steeds aanwezig te zijn in een response message. Dit maakt dat de eigenlijke resources in een wrapper object komen te zitten in het response bericht.  
 Dit kan door middel van het **\_embedded** reserved keyword. Dit \_embedded object bestaat uit property namen dewelke een link relation
 type voorstellen en wiens waarde 1 of meerdere resource objecten zijn.  
@@ -1028,6 +1068,11 @@ Voorbeeld bij `paging-strategy=noCount` :
   }
 }
 ``` 
+
+**Tip:** Deze `_page` data structuur definitie is reeds voorgemaakt op:
+
+`https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/schema/Page`
+
 
 Alle aspecten van paginatie samenvoegend geeft dit volgende response wrapper message voor paginatie:
 ```json
@@ -1104,6 +1149,32 @@ Geeft als resultaat
      "number": 1
    }
 }
+```
+
+De swagger voor bovenstaand voorbeeld gebruik makende van de generieke definities ziet er als volgt uit:
+
+```JSON
+      "MyResources": {
+        "type": "object",
+        "properties": {
+          "_links": {
+            "$ref": "https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/schema/Links"
+          },
+          "_embedded": {
+            "type": "object",
+            "properties": {
+              "business-parties": {
+                "type": "array",
+                "items": {
+                  ...
+                }
+              }
+            }
+          },
+          "_page": {
+            "$ref": "https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/schema/Page"
+          }
+
 ```
 
 Het ophalen van business parties (noCount)  
