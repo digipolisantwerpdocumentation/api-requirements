@@ -934,7 +934,7 @@ Om de paging strategie mee te geven, gebruikt de consumer de optionele parameter
  Bij **`withCount`** worden __`Totaal aantal elementen`__ en __`Totaal aantal pagina's`__ altijd verplicht terug gegeven. Bovendien bevat de __`link naar de laatste pagina`__ het paginanummer (zie verder voor een voorbeeld). 
 Bij **`noCount`** worden de beide totalen niet terug gegeven en is de link naar de laatste pagina een link zonder paginanummer met de vermelding **`last`** (zie verder voor een voorbeeld).
 
-> Om je te helpen hebben we de definitie van `page`, `pagesize` en `paging-strategy` reeds gemaakt voor jou in de [paging.yaml swagger](paging.yaml) file. In onderstaand voorbeeld tonen we hoe je hier gebruik van kan maken:
+> Om je te helpen hebben we de definitie van **`page`**, **`pagesize`** en **`paging-strategy`** reeds gemaakt voor jou in de [paging.yaml swagger](/components/paging.yaml) file. In onderstaand voorbeeld tonen we hoe je hier gebruik van kan maken:
 
 ```JSON
   "paths": {
@@ -951,9 +951,6 @@ Bij **`noCount`** worden de beide totalen niet terug gegeven en is de link naar 
           },
           {
             "$ref": "https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/parameters/PagingStrategy"
-          },
-          {
-            ...
           }
         ],
       }
@@ -1025,7 +1022,7 @@ Dit alles resulteert in volgende structuur in de response message om pagina link
 }
 ```
 
-**Tip:** Net zoals de `page` en `pagesize` parameter, hebben we deze `_links` data structuur definitie ook reeds voorgemaakt op:
+**Tip:** Net zoals de **`page`** en **`pagesize`** parameter, hebben we deze **_links** data structuur definitie ook reeds voorgemaakt op:
 
 `https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/schema/Links`
 
@@ -1069,7 +1066,7 @@ Voorbeeld bij `paging-strategy=noCount` :
 }
 ``` 
 
-**Tip:** Deze `_page` data structuur definitie is reeds voorgemaakt op:
+**Tip:** Deze **_page** data structuur definitie is reeds voorgemaakt op:
 
 `https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/schema/Page`
 
@@ -1166,7 +1163,6 @@ De swagger voor bovenstaand voorbeeld gebruik makende van de generieke definitie
               "business-parties": {
                 "type": "array",
                 "items": {
-                  ...
                 }
               }
             }
