@@ -30,7 +30,7 @@ geldig vanaf 01 mei 2019
   * [Datums en timestamps](apireq-chapters/006-resource-representation.md#datums-en-timestamps)
   * [Durations](apireq-chapters/006-resource-representation.md#durations)
   * [Geospatiale data](apireq-chapters/006-resource-representation.md#geospatiale-data)
-  * [Hiërarchie](apireq-chapters/006-resource-representation.md#hirarchie)
+  * [Hiërarchie](apireq-chapters/006-resource-representation.md#hi%c3%abrarchie)
 * [Resources](apireq-chapters/007-resources.md#resources)
   * [URI structuur](apireq-chapters/007-resources.md#uri-structuur)
   * [Naming conventions](apireq-chapters/007-resources.md#naming-conventions)
