@@ -4,10 +4,9 @@ Als algemene richtlijn geldt dat, indien filtering gewenst is, dit steeds dient 
 
 ### Filteren op resources
 
-#### Filteren op individuele velden
-
-Filteren op individuele velden is mogelijk door voor elk veld in de resource representatie, dat filtering implementeert, een unieke query parameter te definiëren. **Opgelet, dit doen we niet voor id's.**  
-Belangrijk hierbij is dat de structuur van de query parameter zo vlak mogelijk wordt gehouden zonder dat hierbij business betekenis verloren gaat. Filteren op id's, dwz. selectie van een specifieke resource binnen de collection op basis van een unieke identifier, gebeurt door deze mee op te nemen als node in de URI en niet door middel van een query parameter.
+#### Filter op een resource via id
+##### R-FR-001
+Filteren op id's, dwz. selectie van een specifieke resource binnen de collection op basis van een unieke identifier, gebeurt door deze mee op te nemen als node in de URI en niet door middel van een query parameter.
 
 Filteren op id's doe je als volgt:
 ``` prettyprint
@@ -15,7 +14,15 @@ GET /{resource}/{id}
 GET /partners/2365
 ```
 
-Indien je op andere velden dan de id's wil filteren dienen de query parameter zo te zijn opgesteld dat deze ondubbelzinnig kunnen worden geinterpreteerd.
+#### Filter op een resource via query parameters
+##### R-FR-002
+Filteren op individuele velden is mogelijk door voor elk veld in de resource representatie, dat filtering implementeert, een unieke query parameter te definiëren.
+
+**Opgelet, dit doen we niet voor id's.**  
+
+Belangrijk hierbij is dat de structuur van de query parameter zo vlak mogelijk wordt gehouden zonder dat hierbij business betekenis verloren gaat. 
+
+Indien je op andere velden dan de id's wil filteren, dan dienen de query parameters zo te zijn opgesteld dat deze ondubbelzinnig kunnen worden geinterpreteerd.
 
 Zo kies je bijvoorbeeld best voor `city` ipv `address-city` als query parameter indien je wil filteren op onderstaand antwoord:
 ```json
@@ -41,6 +48,8 @@ Indien de query parameter waarmee je gaat filteren meerdere waarden kan bevatten
 
 ### Filteren op resource representatie
 
+#### Filter op een resource representatie via de `fields` query parameter
+##### R-FP-001
 Een API dient steeds een minimale hoeveelheid informatie terug te sturen in zijn response. Soms is het wenselijk dat een API consumer slechts een subset (1 of meerdere velden) van een resource representatie wenst op te vragen. Dit kan door middel van een reserved query parameter genaamd `fields`.
 
 Deze query parameter definieert een door middel van komma's gescheiden lijst van velden dewelke de API consumer wenst te verkrijgen.
@@ -102,7 +111,8 @@ HTTP Response code 404 (city wordt niet gevonden)
 ```
 
 ### Sorteren
-
+#### Sorteer response door middel van de `sort` query parameter
+##### R-SR-001
 Sorteren van antwoorden gebeurt steeds door middel van de reserved query parameter `sort`.
 
 Standaard worden resultaten in oplopende volgorde gesorteerd. Indien aflopend gesorteerd dient te worden, dan dient "-" te worden toegevoegd vooraan de parameter dewelke aflopend gesorteerd dient te worden. Indien gesorteerd dient te worden op meerdere parameters, dan kan dit door deze met komma's van elkaar te scheiden.
@@ -113,4 +123,4 @@ Een voorbeeld van een URI met sortering:
 https://api-gateway/digipolis/business-party/v1/business-parties?sort=-zip,company
 ```
 
-Dit geeft als resultaat een lijst van business parties aflopend volgens zip code. Voor een specifieke zip code zullen business parties alfabetisch gerangschikt worden volgens company naam.
+Dit geeft als resultaat een lijst van business parties aflopend volgens zip code. Voor een specifieke zip code zullen business parties alfabetisch gerangschikt worden volgens company naam in oplopende volgorde.
