@@ -1,4 +1,7 @@
 ## Event resources
+### Event resource afspraken voor het URI formaat
+#### Gebruik POST methode en een voltooid deelwoord dat het event beschrijft
+##### R-ER-001
 Event resources worden als volgt aangegeven : 
 
 POST [/\<groepering>]*/\<event>
