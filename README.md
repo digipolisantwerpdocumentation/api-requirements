@@ -104,6 +104,8 @@ geldig vanaf 01 mei 2019
     * [PATCH](apireq-chapters/008-request.md#patch)
     * [DELETE](apireq-chapters/008-request.md#delete)
 * [Status codes & response](apireq-chapters/009-statuscodes-response.md#status-codes--response)
+    * [Gebruik de correcte status code bij elke response](apireq-chapters/009-statuscodes-response.md#gebruik-de-correcte-status-code-bij-elke-response)
+      * [R-SC-001](apireq-chapters/009-statuscodes-response.md#r-sc-001)
 * [Filteren en sorteren](apireq-chapters/010-filter-sort.md#filteren-en-sorteren)
   * [Filteren op resources](apireq-chapters/010-filter-sort.md#filteren-op-resources)
     * [Filteren op individuele velden](apireq-chapters/010-filter-sort.md#filteren-op-individuele-velden)
