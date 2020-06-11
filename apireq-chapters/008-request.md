@@ -41,6 +41,12 @@ Veronderstel dat een consumer een update wil doen van een resource door middel v
 **Optionele velden in de resource representatie dienen op hun default waarde ingesteld te worden op de backend indien deze niet worden
 opgegeven in de request.**
 
+#### Gebruik HTTP verb PATCH volgens RFC7386 of RFC6902
+##### R-HV-002
+- eenvoudige wijzigingen : [RFC7386](https://tools.ietf.org/html/rfc7386)
+- complexe wijzigingen : [RFC6902](https://tools.ietf.org/html/rfc6902)
+
+
 ### Voorbeelden
 
 #### GET
@@ -161,9 +167,3 @@ DELETE https://api-gateway/digipolis/business-party/v1/business-parties/6532/con
 ``` prettyprint
 DELETE https://api-gateway/digipolis/business-party/v1/business-parties/6532
 ```
-
-#### Gebruik HTTP verb PATCH volgens RFC7386 of RFC6902
-##### R-HV-002
-- eenvoudige wijzigingen : [RFC7386](https://tools.ietf.org/html/rfc7386)
-- complexe wijzigingen : [RFC6902](https://tools.ietf.org/html/rfc6902)
-
