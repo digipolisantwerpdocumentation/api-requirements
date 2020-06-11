@@ -58,9 +58,9 @@ GET /partners/
 gebruik je dus NIET
 ```
 
-#### Gebruik geen fragments (\#) in de URI
+#### Gebruik geen fragments in de URI
 ##### R-NC-006
-Fragments worden gebruikt om te navigeren binnen een web context pagina, maar mogen niet gebruikt worden in een API URI.
+Fragments (\#) worden gebruikt om te navigeren binnen een web context pagina, maar mogen niet gebruikt worden in een API URI.
 ``` prettyprint
 GET /partners#name/
 gebruik je dus NIET

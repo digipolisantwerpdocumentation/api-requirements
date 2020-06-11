@@ -74,6 +74,7 @@ geldig vanaf 01 mei 2019
       * [R-NC-004](apireq-chapters/007-resources.md#r-nc-004)
     * [Gebruik geen trailing slash in de URI](apireq-chapters/007-resources.md#gebruik-geen-trailing-slash-in-de-uri)
       * [R-NC-005](apireq-chapters/007-resources.md#r-nc-005)
+    * [Gebruik geen fragments in de URI](apireq-chapters/007-resources.md#gebruik-geen-fragments-in-de-uri)
       * [R-NC-006](apireq-chapters/007-resources.md#r-nc-006)
   * [Media types en content negotiation](apireq-chapters/007-resources.md#media-types-en-content-negotiation)
     * [Gebruik steeds media types en content negotiation](apireq-chapters/007-resources.md#gebruik-steeds-media-types-en-content-negotiation)
