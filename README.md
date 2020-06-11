@@ -171,7 +171,7 @@ geldig vanaf 01 mei 2019
       * [R-AV-001](apireq-chapters/015-long-running.md#r-av-001)
     * [Gebruik minimaal status code 202 Accepted](apireq-chapters/015-long-running.md#gebruik-minimaal-status-code-202-accepted)
       * [R-AV-002](apireq-chapters/015-long-running.md#r-av-002)
-    * [Implmenteer eventueel een polling mechanisme voor statusopvolging](apireq-chapters/015-long-running.md#implmenteer-eventueel-een-polling-mechanisme-voor-statusopvolging)
+    * [Implementeer eventueel een polling mechanisme voor statusopvolging](apireq-chapters/015-long-running.md#implementeer-eventueel-een-polling-mechanisme-voor-statusopvolging)
       * [R-AV-003](apireq-chapters/015-long-running.md#r-av-003)
 * [Postman tips](postman-tips.md#postman-tips)
   * [Wat doe je gewoonlijk](postman-tips.md#wat-doe-je-gewoonlijk)
