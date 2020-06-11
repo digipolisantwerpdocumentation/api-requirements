@@ -29,7 +29,7 @@ Voorbeelden van breaking changes zijn:
 
 ### API contract versionering
 #### Gebruik `semver` versionering
-##### R-VC-01
+##### R-VC-001
 De algemene versionering strategie voor APIs is als volgt en is gebaseerd op semantic versioning (http://semver.org)
 
 -   **Major**: backwards incompatibele wijzigingen
@@ -45,7 +45,7 @@ Dit versienummer dient steeds te worden opgenomen in de Swagger file en definiee
 
 ### API technische versionering
 #### Gebruik `major` versionering
-##### R-VT-01
+##### R-VT-001
 Versionering van de API zelf (major versie) doen we aan de hand van root namespace versionering.
 
 In dit versioneringsmodel definieert een API versie een verzameling van resources die een welbepaalde set van functionaliteiten voorzien binnen een bepaald domein.
