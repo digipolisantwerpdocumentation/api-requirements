@@ -2,49 +2,61 @@
 
 ### Taal
 
+#### API's in het Engels
+##### R-L-001 
 Om onze API's zo breed mogelijk bruikbaar te maken worden ze in het **Engels** gemaakt.
 
 ### JSON conventies
 
 Hanteer onderstaande conventies voor berichten die JSON als payload formaat hebben.
 
--   Gebruik steeds dubbele quotes bij keys.
+#### Gebruik steeds dubbele quotes bij keys
+##### R-J-001
 ```prettyprint
 "company" : "Digipolis"
 ```
 
--   Gebruik steeds dubbele quotes bij string values.
+#### Gebruik steeds dubbele quotes bij string values
+##### R-J-002
 ```prettyprint
 "company" : "Digipolis"
 ```
 
--   Gebruik steeds camelCase om keys weer te geven.
+#### Gebruik steeds camelCase om keys weer te geven
+##### R-J-003
 ```prettyprint
 "addressLine" : "Generaal Armstrongweg"
 ```
 
--   Gebruik geen dots "." in keys.
+#### Gebruik geen dots "." in keys
+##### R-J-004
 ```prettyprint
 "address.street" : "Generaal Armstrongweg" wordt NIET toegelaten (gebruik dan hiërarchieën)
 ```
 
--   Keys mogen niet starten met cijfers. Dit verlaagt immers de leesbaarheid.
+#### Keys mogen niet starten met cijfers
+##### R-J-005
+Dit verlaagt immers de leesbaarheid.
 ```prettyprint
 "5street" : "Generaal Armstrongweg" wordt NIET toegelaten
 ```
 
--   Verwijder `null` waardes uit de resource representatie indien deze geen betekenis hebben.
+#### Verwijder `null` waardes uit de resource representatie indien deze geen betekenis hebben
+##### R-J-006
 ```prettyprint
 "middleName" : null
 ```
 
--   Toon lege waardes in de resource representatie.
+#### Toon lege waardes in de resource representatie
+##### R-J-007
 ```prettyprint
 "middleName" : "",
 "orders" : []
 ```
 
--   Encapsuleer arrays steeds in een object. Dit omdat bepaalde frameworks niet goed overweg kunnen met native arrays
+#### Encapsuleer arrays steeds in een object
+##### R-J-008
+Dit omdat bepaalde frameworks niet goed overweg kunnen met native arrays
 ```json
 {
    "adresses":[

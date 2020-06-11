@@ -3,7 +3,7 @@
 geldig vanaf 01 mei 2019
 
 ## Inhoudstabel
-<!-- PC : generated with md-toc (...) -->
+<!-- PC : generated with md-toc (https://github.com/digipolisantwerp/markdown-toc_app_go) -->
 
 <!-- dgp-toc-start -->
 * [Document historiek](apireq-chapters/001-document-history.md#document-historiek)
@@ -26,7 +26,25 @@ geldig vanaf 01 mei 2019
 * [REST introductie](apireq-chapters/005-rest.md#rest-introductie)
 * [Resource representatie](apireq-chapters/006-resource-representation.md#resource-representatie)
   * [Taal](apireq-chapters/006-resource-representation.md#taal)
+    * [API's in het Engels](apireq-chapters/006-resource-representation.md#apis-in-het-engels)
+      * [R-L-001](apireq-chapters/006-resource-representation.md#r-l-001)
   * [JSON conventies](apireq-chapters/006-resource-representation.md#json-conventies)
+    * [Gebruik steeds dubbele quotes bij keys](apireq-chapters/006-resource-representation.md#gebruik-steeds-dubbele-quotes-bij-keys)
+      * [R-J-001](apireq-chapters/006-resource-representation.md#r-j-001)
+    * [Gebruik steeds dubbele quotes bij string values](apireq-chapters/006-resource-representation.md#gebruik-steeds-dubbele-quotes-bij-string-values)
+      * [R-J-002](apireq-chapters/006-resource-representation.md#r-j-002)
+    * [Gebruik steeds camelCase om keys weer te geven](apireq-chapters/006-resource-representation.md#gebruik-steeds-camelcase-om-keys-weer-te-geven)
+      * [R-J-003](apireq-chapters/006-resource-representation.md#r-j-003)
+    * [Gebruik geen dots "." in keys](apireq-chapters/006-resource-representation.md#gebruik-geen-dots--in-keys)
+      * [R-J-004](apireq-chapters/006-resource-representation.md#r-j-004)
+    * [Keys mogen niet starten met cijfers](apireq-chapters/006-resource-representation.md#keys-mogen-niet-starten-met-cijfers)
+      * [R-J-005](apireq-chapters/006-resource-representation.md#r-j-005)
+    * [Verwijder null waardes uit de resource representatie indien deze geen betekenis hebben](apireq-chapters/006-resource-representation.md#verwijder-null-waardes-uit-de-resource-representatie-indien-deze-geen-betekenis-hebben)
+      * [R-J-006](apireq-chapters/006-resource-representation.md#r-j-006)
+    * [Toon lege waardes in de resource representatie](apireq-chapters/006-resource-representation.md#toon-lege-waardes-in-de-resource-representatie)
+      * [R-J-007](apireq-chapters/006-resource-representation.md#r-j-007)
+    * [Encapsuleer arrays steeds in een object](apireq-chapters/006-resource-representation.md#encapsuleer-arrays-steeds-in-een-object)
+      * [R-J-008](apireq-chapters/006-resource-representation.md#r-j-008)
   * [Datums en timestamps](apireq-chapters/006-resource-representation.md#datums-en-timestamps)
   * [Durations](apireq-chapters/006-resource-representation.md#durations)
   * [Geospatiale data](apireq-chapters/006-resource-representation.md#geospatiale-data)
