@@ -125,7 +125,7 @@ geldig vanaf 01 mei 2019
     * [Gebruik altijd het vastgelegde pagineringsmodel bij het ophalen van collecties](apireq-chapters/011-paging.md#gebruik-altijd-het-vastgelegde-pagineringsmodel-bij-het-ophalen-van-collecties)
       * [R-PC-002](apireq-chapters/011-paging.md#r-pc-002)
     * [Ondersteun beide paging-strategy methodes](apireq-chapters/011-paging.md#ondersteun-beide-paging-strategy-methodes)
-      * [R-PR-003](apireq-chapters/011-paging.md#r-pr-003)
+      * [R-PC-003](apireq-chapters/011-paging.md#r-pc-003)
   * [Paginatie query parameters](apireq-chapters/011-paging.md#paginatie-query-parameters)
     * [Gebruik de vastgelegde query parameters page, pagesize en paging-strategy voor paginering](apireq-chapters/011-paging.md#gebruik-de-vastgelegde-query-parameters-page-pagesize-en-paging-strategy-voor-paginering)
       * [R-PQ-001](apireq-chapters/011-paging.md#r-pq-001)

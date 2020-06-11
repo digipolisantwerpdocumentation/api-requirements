@@ -30,7 +30,7 @@ Daarom kiezen we met onze API requirements voor een oplossing die 2 strategieën
 De client toepassing kiest welke strategie wordt toegepast dmv van een (optionele) query parameter : **`paging-strategy`** (zie verder).
 
 #### Ondersteun beide `paging-strategy` methodes
-##### R-PR-003
+##### R-PC-003
 Een API moet altijd beide `paging-strategy` methodes ondersteunen, zijnde `withCount`en `noCount` (zie verder).  
 
 ### Paginatie query parameters
