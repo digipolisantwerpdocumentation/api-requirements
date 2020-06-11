@@ -1,7 +1,8 @@
 ## Request
 
 ### Request body & query parameters
-
+#### Verstuur resource representaties via de request body
+##### R-RQ-001
 Resource representations dienen steeds in de request body te worden doorgestuurd en nooit via query parameters.
 
 Query parameters worden steeds gebruikt om bepaalde functionaliteiten zoals paginatie, filtering, sortering, etc aan te spreken.  
@@ -14,14 +15,10 @@ gebruik je dus NIET
 Bovenstaand voorbeeld is niet enkel onleesbaar, het laat ook niet toe om hiërarchieën op een eenvoudige manier op te nemen in de representatie.
 
 ### HTTP verbs
-
+#### Gebruik HTTP verbs correct en volgens RFC7231
+##### R-HV-001
 Gebruik steeds de juiste HTTP verbs voor de bijhorende request zoals weergegeven in onderstaande tabel. HTTP verbs moeten in lijn zijn
 met [RFC7231](https://tools.ietf.org/html/rfc7231).
-
-Voor **PATCH** zijn volgende RFC's van toepassing :
-
-- eenvoudige wijzigingen : [RFC7386](https://tools.ietf.org/html/rfc7386)
-- complexe wijzigingen : [RFC6902](https://tools.ietf.org/html/rfc6902)
 
 
 HTTP Verb | Safe | Idempotent | Toepassing                                                                                                                                             | Request
@@ -117,7 +114,6 @@ Voor elk van onderstaande voorbeelden bevat de request body enkel die attributen
 ``` prettyprint
 PATCH https://api-gateway/digipolis/business-party/v1/business-parties/6532/contracts/42
 ```
-
 			   
 Stel dat contract 42 van business party 6532 volgende resource representatie heeft
 ``` json
@@ -152,7 +148,6 @@ met als request body
 }
 ```
 
-
 #### DELETE
 
 Voor elk van onderstaande voorbeelden is de request body steeds leeg
@@ -166,3 +161,9 @@ DELETE https://api-gateway/digipolis/business-party/v1/business-parties/6532/con
 ``` prettyprint
 DELETE https://api-gateway/digipolis/business-party/v1/business-parties/6532
 ```
+
+#### Gebruik HTTP verb PATCH volgens RFC7386 of RFC6902
+##### R-HV-002
+- eenvoudige wijzigingen : [RFC7386](https://tools.ietf.org/html/rfc7386)
+- complexe wijzigingen : [RFC6902](https://tools.ietf.org/html/rfc6902)
+
