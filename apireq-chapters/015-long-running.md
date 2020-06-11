@@ -10,7 +10,7 @@ In REST wordt HTTP status code 202 gebruikt om een asynchrone verwerking aan te 
 
 #### Implementeer eventueel een polling mechanisme voor statusopvolging
 ##### R-AV-003
-Een API zal bij asynchrone verwerking aan de consumer toelaten om de status van de verwerking op te volgen.
+Meestal zal een API bij asynchrone verwerking aan de consumer toelaten om de status van de verwerking op te volgen.
 Hierbij wordt gebruik gemaakt van de HTTP `Location` header en de HTTP status code.
 
 Vanuit technisch perspectief kan volgende flow gevolgd worden :
