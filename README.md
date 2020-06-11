@@ -169,7 +169,7 @@ geldig vanaf 01 mei 2019
   * [Asynchrone verwerking](apireq-chapters/015-long-running.md#asynchrone-verwerking)
     * [Gebruik Asynchrone verwerking voor langdurende operaties](apireq-chapters/015-long-running.md#gebruik-asynchrone-verwerking-voor-langdurende-operaties)
       * [R-AV-001](apireq-chapters/015-long-running.md#r-av-001)
-    * [Gebruik minimaal status code 202 Accepted](apireq-chapters/015-long-running.md#gebruik-minimaal-status-code-202-accepted)
+    * [Gebruik minimaal HTTP status code 202 Accepted](apireq-chapters/015-long-running.md#gebruik-minimaal-http-status-code-202-accepted)
       * [R-AV-002](apireq-chapters/015-long-running.md#r-av-002)
     * [Implementeer eventueel een polling mechanisme voor statusopvolging](apireq-chapters/015-long-running.md#implementeer-eventueel-een-polling-mechanisme-voor-statusopvolging)
       * [R-AV-003](apireq-chapters/015-long-running.md#r-av-003)

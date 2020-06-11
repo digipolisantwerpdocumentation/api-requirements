@@ -4,7 +4,7 @@
 ##### R-AV-001
 API operaties dienen steeds zo kort mogelijk worden gehouden. Indien bepaalde operaties toch langer zouden duren, zoals bijvoorbeeld update operaties, dan kunnen deze asynchroon worden afgehandeld indien functioneel mogelijk.
 
-#### Gebruik minimaal status code 202 Accepted
+#### Gebruik minimaal HTTP status code `202 Accepted`
 ##### R-AV-002
 In REST wordt HTTP status code 202 gebruikt om een asynchrone verwerking aan te geven.
 
