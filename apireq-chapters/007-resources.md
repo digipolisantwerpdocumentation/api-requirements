@@ -35,7 +35,7 @@ GET /partners
 Resources zijn in de meeste gevallen entiteiten (uitzondering : controllers, status resource)
 ``` prettyprint
 GET /getpartners
-is **niet** toegelaten
+gebruik je dus NIET
 ```
 
 #### Definieer resources in het meervoud

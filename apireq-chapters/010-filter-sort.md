@@ -3,19 +3,40 @@
 Als algemene richtlijn geldt dat, indien filtering gewenst is, dit steeds dient te gebeuren door middel van query parameters.
 
 ### Filteren op resources
+Elke resource in een collection is uniek identificeerbaar via een unieke sleutel (id).
+De unieke sleutel kan leesbaar zijn zoals bv een rijksregisternummer, maar kan ook een id zijn (bv UUID).
 
 #### Filter op een resource via id
 ##### R-FR-001
-Filteren op id's, dwz. selectie van een specifieke resource binnen de collection op basis van een unieke identifier, gebeurt door deze mee op te nemen als node in de URI en niet door middel van een query parameter.
+Filteren op id, dwz. selectie van een specifieke resource binnen de collection op basis van een unieke identifier, gebeurt door deze mee op te nemen als node in de URI en niet door middel van een query parameter.
 
 Filteren op id's doe je als volgt:
 ``` prettyprint
 GET /{resource}/{id}
 GET /partners/2365
 ```
+#### Filter op een resource via andere unieke sleutel
+##### R-FR-002
+Filteren op een andere unieke sleutel gebeurt op dezelfde manier als filteren op een id.
+
+Filteren op een andere unieke sleutel doe je als volgt:
+``` prettyprint
+GET /{resource}/{id}
+GET /partners/93051822361  # rijksregisternr
+```
+
+#### Gebruik geen gecombineerde sleutels voor een unieke sleutel
+##### R-FR-003
+Het is niet toegelaten om via een combinatie van sleutels een unieke sleutel voor een resource te definiëren.
+
+``` prettyprint
+GET /{resource}/{id}/{subid}
+GET /partners/man/001
+gebruik je dus NIET
+```
 
 #### Filter op een resource via query parameters
-##### R-FR-002
+##### R-FR-004
 Filteren op individuele velden is mogelijk door voor elk veld in de resource representatie, dat filtering implementeert, een unieke query parameter te definiëren.
 
 **Opgelet, dit doen we niet voor id's.**  
@@ -47,7 +68,6 @@ https://api-gateway/digipolis/business-party/v1/business-parties?city=New%20York
 Indien de query parameter waarmee je gaat filteren meerdere waarden kan bevatten, dan gebruik je volgende conventie (comma separated) : **resource?parameter=waarde1,waarde2,waarde3** 
 
 ### Filteren op resource representatie
-
 #### Filter op een resource representatie via de `fields` query parameter
 ##### R-FP-001
 Een API dient steeds een minimale hoeveelheid informatie terug te sturen in zijn response. Soms is het wenselijk dat een API consumer slechts een subset (1 of meerdere velden) van een resource representatie wenst op te vragen. Dit kan door middel van een reserved query parameter genaamd `fields`.
