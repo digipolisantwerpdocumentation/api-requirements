@@ -63,7 +63,7 @@ Om de paging strategie mee te geven, gebruikt de consumer de optionele parameter
  Bij **`withCount`** worden __`Totaal aantal elementen`__ en __`Totaal aantal pagina's`__ altijd verplicht terug gegeven. Bovendien bevat de __`link naar de laatste pagina`__ het paginanummer (zie verder voor een voorbeeld). 
 Bij **`noCount`** worden de beide totalen niet terug gegeven en is de link naar de laatste pagina een link zonder paginanummer met de vermelding **`last`** (zie verder voor een voorbeeld).
 
-> Om je te helpen hebben we de definitie van **`page`**, **`pagesize`** en **`paging-strategy`** reeds gemaakt voor jou in de [paging.yaml swagger](../components/paging.yaml) file. In onderstaand voorbeeld tonen we hoe je hier gebruik van kan maken:
+> Om je te helpen hebben we de definitie van **`page`**, **`pagesize`** en **`paging-strategy`** reeds gemaakt voor jou in de [paging.yaml swagger](/components/paging.yaml) file. In onderstaand voorbeeld tonen we hoe je hier gebruik van kan maken:
 ```JSON
   "paths": {
     "/invoices": {
@@ -86,7 +86,7 @@ Bij **`noCount`** worden de beide totalen niet terug gegeven en is de link naar 
   }
 ```
 
-Herbruikbare definities van oa. pagingatie parameters vind je terug in de [/components](/components) map hier op GitHub. Om er vanuit jouw swagger file ernaar te refereren kan je volgende link gebruiken:
+Herbruikbare definities van oa. paginatie parameters vind je terug in de [/components](/components) map hier op GitHub. Om er vanuit jouw swagger file ernaar te refereren kan je volgende link gebruiken:
 
 `https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/parameters/Page`
 

@@ -13,7 +13,7 @@ Collections kunnen als top level element gedefinieerd zijn binnen een API, maar 
 
 Visueel voorgesteld ziet dit er als volgt uit:
 
-![alt\_text](../images/APIReq02.png "")
+![alt\_text](/images/APIReq02.png "")
 
 Elke **resource** heeft zijn **representatie**. Een representatie bestaat uit een set attributen dewelke de **state** van de resource
 omschrijven.

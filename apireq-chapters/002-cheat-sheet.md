@@ -134,7 +134,7 @@ POST [/\<groepering>]*/\<event> waarbij \<event> eindigt op een voltooid deelwoo
 -   template met extra info (opm. geen geldige swagger wegens extrainfo) : <https://drive.google.com/file/d/0B06myaSd5oKUWU1samRrODcwUVk/>
 -   steeds alle descriptions en summaries invullen (in het engels) : routes, parameters, ... : zie ook <https://github.com/digipolisantwerpdocumentation/api-requirements/blob/master/swagger-docs.md>
 - generieke swagger definities voor :
-  - [paging](../components/paging.yaml)
+  - [paging](/components/paging.yaml)
 -   semantic version opnemen in swagger file
 
 ### HTTP verbs

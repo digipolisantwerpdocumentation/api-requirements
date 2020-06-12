@@ -13,7 +13,7 @@ bedreiging kunnen vormen.
 
 Bovendien bieden ze geen meerwaarde naar consumers toe aangezien deze laatste niet de verantwoordelijkheid heeft deze technische fout af te handelen.
 
-![alt\_text](../images/APIReq03.png "")
+![alt\_text](/images/APIReq03.png "")
 
 Wat wel wenselijk is, is een algemeen technische fout type die we naar de consumer toe willen tonen, maar dewelke de technische details
 afschermt. De API consumer kan gebruik maken van de identifier in dit fout type om bijkomende informatie te bekomen.
