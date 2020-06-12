@@ -66,7 +66,7 @@ geldig vanaf 01 mei 2019
   * [Naming conventions](apireq-chapters/007-resources.md#naming-conventions)
     * [Gebruik zelfstandige naamwoorden voor resources, behalve voor controllers](apireq-chapters/007-resources.md#gebruik-zelfstandige-naamwoorden-voor-resources-behalve-voor-controllers)
       * [R-NC-001](apireq-chapters/007-resources.md#r-nc-001)
-    * [Gebruik <b>geen</b> werkwoorden in resource namen, behalve bij controllers](apireq-chapters/007-resources.md#gebruik-%3cb%3egeen%3c%2fb%3e-werkwoorden-in-resource-namen-behalve-bij-controllers)
+    * [Gebruik geen werkwoorden in resource namen, behalve bij controllers](apireq-chapters/007-resources.md#gebruik-geen-werkwoorden-in-resource-namen-behalve-bij-controllers)
       * [R-NC-002](apireq-chapters/007-resources.md#r-nc-002)
     * [Definieer resources in het meervoud](apireq-chapters/007-resources.md#definieer-resources-in-het-meervoud)
       * [R-NC-003](apireq-chapters/007-resources.md#r-nc-003)

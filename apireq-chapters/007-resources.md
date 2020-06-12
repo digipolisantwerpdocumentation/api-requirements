@@ -30,7 +30,7 @@ Resources zijn in de meeste gevallen entiteiten (uitzondering : controllers, sta
 GET /partners
 ```
 
-#### Gebruik **geen** werkwoorden in resource namen, behalve bij controllers
+#### Gebruik geen werkwoorden in resource namen, behalve bij controllers
 ##### R-NC-002 
 Resources zijn in de meeste gevallen entiteiten (uitzondering : controllers, status resource)
 ``` prettyprint
