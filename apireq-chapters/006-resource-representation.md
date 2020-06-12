@@ -2,60 +2,60 @@
 
 ### Taal
 
-#### API's in het Engels
-##### R-TL-001 
+#### R-TL-001 
+##### API's in het Engels
 Om onze API's zo breed mogelijk bruikbaar te maken worden ze in het **Engels** gemaakt.
 
 ### JSON conventies
 
 Hanteer onderstaande conventies voor berichten die JSON als payload formaat hebben.
 
-#### Gebruik steeds dubbele quotes bij keys
-##### R-JS-001
+#### R-JS-001
+##### Gebruik steeds dubbele quotes bij keys
 ```prettyprint
 "company" : "Digipolis"
 ```
 
-#### Gebruik steeds dubbele quotes bij string values
-##### R-JS-002
+#### R-JS-002
+##### Gebruik steeds dubbele quotes bij string values
 ```prettyprint
 "company" : "Digipolis"
 ```
 
-#### Gebruik steeds camelCase om keys weer te geven
-##### R-JS-003
+#### R-JS-003
+##### Gebruik steeds camelCase om keys weer te geven
 ```prettyprint
 "addressLine" : "Generaal Armstrongweg"
 ```
 
-#### Gebruik geen dots "." in keys
-##### R-JS-004
+#### R-JS-004
+##### Gebruik geen dots "." in keys
 ```prettyprint
 "address.street" : "Generaal Armstrongweg" wordt NIET toegelaten (gebruik dan hiërarchieën)
 ```
 
-#### Keys mogen niet starten met cijfers
-##### R-JS-005
+#### R-JS-005
+##### Keys mogen niet starten met cijfers
 Dit verlaagt immers de leesbaarheid.
 ```prettyprint
 "5street" : "Generaal Armstrongweg" wordt NIET toegelaten
 ```
 
-#### Verwijder `null` waardes uit de resource representatie indien deze geen betekenis hebben
-##### R-JS-006
+#### R-JS-006
+##### Verwijder `null` waardes uit de resource representatie indien deze geen betekenis hebben
 ```prettyprint
 "middleName" : null
 ```
 
-#### Toon lege waardes in de resource representatie
-##### R-JS-007
+#### R-JS-007
+##### Toon lege waardes in de resource representatie
 ```prettyprint
 "middleName" : "",
 "orders" : []
 ```
 
-#### Encapsuleer arrays steeds in een object
-##### R-JS-008
+#### R-JS-008
+##### Encapsuleer arrays steeds in een object
 Dit omdat bepaalde frameworks niet goed overweg kunnen met native arrays
 ```json
 {
@@ -77,8 +77,8 @@ Dit omdat bepaalde frameworks niet goed overweg kunnen met native arrays
 ```
 
 ### Datums en timestamps
-#### Formatteer datums en timestamps volgens RFC339
-##### R-DT-001
+#### R-DT-001
+##### Formatteer datums en timestamps volgens RFC339
 Formatteer datums en timestamps steeds volgens [RFC3339](https://www.ietf.org/rfc/rfc3339.txt). JSON definieert immers geen standaard formaat voor datums en timestamps.
 
 > RFC3339 volgt de ISO 8601 standaard maar heeft enkele optimalisaties voor het internet en machine to machine communicatie. Bijgevolg is deze ideaal voor REST API's)
@@ -102,16 +102,16 @@ Hier enkele basis regels voor het gebruik van datum en/of tijd in jouw API:
 
 
 ### Durations
-#### Formatteer durations volgens ISO8601
-##### R-DU-001
+#### R-DU-001
+##### Formatteer durations volgens ISO8601
 Durations worden geformatteerd volgens [ISO8601](https://en.wikipedia.org/wiki/ISO_8601).
 ``` prettyprint
 "duration" : "P0003-04-06T12:00:00" (3 jaar, 4 maanden, 6 dagen, 12 uur)
 ```
 
 ### Geospatiale data
-#### Formatteer geospatiale data volgens RFC7946
-##### R-GS-001
+#### R-GS-001
+##### Formatteer geospatiale data volgens RFC7946
 Alle geospatiale data wordt steeds geformatteerd volgens [RFC7946](https://tools.ietf.org/html/rfc7946)
 
 Deze standaard laat toe om van eenvoudige locatie objecten in een longitude, latitude array...
@@ -148,8 +148,8 @@ tot meer complexe geospatiale objecten zoals bijvoorbeeld een polygoon (en nog v
 ```
 
 ### Hiërarchie
-#### Structureer resource hiërarchisch ipv vlak
-##### R-HA-001
+#### R-HA-001
+##### Structureer resource hiërarchisch ipv vlak
 Kies steeds voor een hiërarchisch gestructureerde resource representatie in plaats van een vlakke structuur. Een hiërarchische voorstelling biedt als grote voordeel dat het overzichtelijker en duidelijker is voor resources met een groot aantal velden. Daarnaast biedt het als grote voordeel het hergebruik van entiteiten over APIs heen.
 
 Als algemene richtlijn kan je stellen dat wanneer het aantal velden \> 15 je best naar een hiërarchische structuur kan overgaan indien dit meer duidelijkheid schept.

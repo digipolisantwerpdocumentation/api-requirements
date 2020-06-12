@@ -1,11 +1,11 @@
 ## Paginatie
 ### Pagineren van collecties
-#### Gebruik altijd paginering bij het ophalen van collecties
-##### R-PC-001
+#### R-PC-001
+##### Gebruik altijd paginering bij het ophalen van collecties
 Paginatie informatie wordt **steeds** terug gegeven bij het ophalen van collections. Dit zorgt er voor dat collections, die in eerste instantie een beperkt aantal entiteiten bevatten en op termijn groot kunnen worden, performant kunnen blijven.
 
-#### Gebruik altijd het vastgelegde pagineringsmodel bij het ophalen van collecties
-##### R-PC-002
+#### R-PC-002
+##### Gebruik altijd het vastgelegde pagineringsmodel bij het ophalen van collecties
 Vanuit consumer standpunt is het noodzakelijk dat volgende informatie in de response wordt gegeven om voldoende informatie te bekomen rond de pagina's:
 
 | Info                         |                             | Verplicht                       |
@@ -29,13 +29,13 @@ Daarom kiezen we met onze API requirements voor een oplossing die 2 strategieën
 
 De client toepassing kiest welke strategie wordt toegepast dmv van een (optionele) query parameter : **`paging-strategy`** (zie verder).
 
-#### Ondersteun beide `paging-strategy` methodes
-##### R-PC-003
+#### R-PC-003
+##### Ondersteun beide `paging-strategy` methodes
 Een API moet altijd beide `paging-strategy` methodes ondersteunen, zijnde `withCount`en `noCount` (zie verder).  
 
 ### Paginatie query parameters
-#### Gebruik de vastgelegde query parameters `page`, `pagesize` en `paging-strategy` voor paginering
-##### R-PQ-001
+#### R-PQ-001
+##### Gebruik de vastgelegde query parameters `page`, `pagesize` en `paging-strategy` voor paginering
 Het ophalen van een bepaalde pagina zelf dient te gebeuren door middel van de **`page`** en **`pagesize`** query parameters (behalve voor de `last` link bij `paging-strategy=noCount`, zie verder).
 ``` prettyprint
 /partners?page=1&pagesize=10
@@ -50,12 +50,12 @@ De paginatie query parameters zijn **optioneel**. Dat maakt dat wanneer deze **n
 response message**, gebruik makend van de `withCount` paginatie strategie.    
 Het aantal elementen dat in zulk geval wordt teruggegeven (page size) is API specifiek en dient te worden bepaald tijdens de API design fase.
 
-#### Paginering is `1` based
-##### R-PQ-002
+#### R-PQ-002
+##### Paginering is `1` based
 Paginatie queries starten steeds met *page=1*, niet 0. De keuze hiervoor is gemaakt op basis van gebruiksvriendelijkheid naar de API consumer en gebruiker toe.
 
-#### Gebruik `withCount` of `noCount` waarden voor de paging strategie 
-##### R-PQ-003
+#### R-PQ-003
+##### Gebruik `withCount` of `noCount` waarden voor de paging strategie 
 Om de paging strategie mee te geven, gebruikt de consumer de optionele parameter **`paging-strategy`**. Deze heeft 2 mogelijke waardes : 
 - withCount (default als de query parameter niet wordt meegegeven)
 - noCount
@@ -94,8 +94,8 @@ Vervang daar waar nodig het deel achter de `#` in deze url.
 
 
 ### Paginatie response bericht
-#### Gebruik de HAL specificatie voor gepagineerde responses
-##### R-PR-001
+#### R-PR-001
+##### Gebruik de HAL specificatie voor gepagineerde responses
 Om paginatie informatie naar de consumer terug te sturen baseren we ons op de HAL specificatie:
 
 <http://stateless.co/hal_specification.html>
@@ -237,8 +237,8 @@ Alle aspecten van paginatie samengevoegd geeft dit volgende response wrapper mes
 
 Zoals reeds vermeld vallen `totalElements` en `totalPages` weg bij `paging-strategy=noCount`.  
 
-#### Gebruik media type `application/hal+json` voor gepagineerde responses
-##### R-PR-002
+#### R-PR-002
+##### Gebruik media type `application/hal+json` voor gepagineerde responses
 Het voorziene media type is steeds **`application/hal+json`**
 
 
@@ -344,6 +344,3 @@ Geeft als resultaat
 ```
 
 In de **last** link wordt gebruik gemaakt van **page=last** ipv het exacte paginanummer om te vermijden dat een count moet uitgevoerd worden bij het ophalen van de lijst. Dit houdt wel impliciet in **dat de API deze waarde (=last) ook verplicht moet ondersteunen**. Pas wanneer deze wordt gebruikt zal de API een count uitvoeren om op dat moment de laatste pagina te berekenen en terug te geven.  
-
-
-

@@ -1,15 +1,15 @@
 ## Langdurende operaties
 ### Asynchrone verwerking
-#### Gebruik Asynchrone verwerking voor langdurende operaties
-##### R-AV-001
+#### R-AV-001
+##### Gebruik Asynchrone verwerking voor langdurende operaties
 API operaties dienen steeds zo kort mogelijk worden gehouden. Indien bepaalde operaties toch langer zouden duren, zoals bijvoorbeeld update operaties, dan kunnen deze asynchroon worden afgehandeld indien functioneel mogelijk.
 
-#### Gebruik minimaal HTTP status code `202 Accepted`
-##### R-AV-002
+#### R-AV-002
+##### Gebruik minimaal HTTP status code `202 Accepted`
 In REST wordt HTTP status code 202 gebruikt om een asynchrone verwerking aan te geven.
 
-#### Implementeer eventueel een polling mechanisme voor statusopvolging
-##### R-AV-003
+#### R-AV-003
+##### Implementeer eventueel een polling mechanisme voor statusopvolging
 Meestal zal bij asynchrone verwerking een API de consumer toelaten om de status van de verwerking op te volgen.
 Hierbij wordt gebruik gemaakt van de HTTP `Location` header en HTTP status codes om de toestand weer te geven.
 

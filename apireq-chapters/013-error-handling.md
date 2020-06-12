@@ -4,8 +4,8 @@ Naast een correcte weergave van fouten via response codes is het vaak nuttig om 
 Denk hierbij aan functionele fouten die op een correcte en uniforme manier door de API consumer dienen te worden geïnterpreteerd.
 
 ### Exception shielding
-#### Gebruik Exception Shielding
-##### R-ES-001
+#### R-ES-001
+##### Gebruik Exception Shielding
 Belangrijk om te benadrukken is het principe van exception shielding.
 
 Bij exception shielding willen we vermijden dat interne technische foutboodschappen naar consumers toe worden blootgesteld door deze af te schermen. Interne implementatie details van een API dienen zoveel mogelijk te worden afgeschermd aangezien ze security gewijs een
@@ -19,8 +19,8 @@ Wat wel wenselijk is, is een algemeen technische fout type die we naar de consum
 afschermt. De API consumer kan gebruik maken van de identifier in dit fout type om bijkomende informatie te bekomen.
 
 ### Error model
-#### Gebruik het door Digipolis vastgelegde error model
-##### R-EM-001
+#### R-EM-001
+##### Gebruik het door Digipolis vastgelegde error model
 Algemeen kan worden aangenomen dat een error response minimaal volgende informatie dient te bevatten:
 
 -   Een unieke identifier waarmee de foutboodschap kan worden teruggevonden in logs en/of andere operationele systemen
@@ -109,8 +109,8 @@ In sommige gevallen kan het nuttig zijn om **extra info** mee te geven zodat de 
 ```
 
 ### HTTP status codes en error model
-#### Gebruik de correcte status codes en error responses
-##### R-EC-001
+#### R-EC-001
+##### Gebruik de correcte status codes en error responses
 Deze sectie beschrijft welke HTTP status codes vergezeld dienen te worden van een bijhorend error object
 
 HTTP status code           | Betekenis                                                                                                                                   | Error object                  
