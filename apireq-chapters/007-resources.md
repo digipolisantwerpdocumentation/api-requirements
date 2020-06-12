@@ -23,35 +23,50 @@ https://api-gateway/digipolis/business-party/v1/…
 ```
 
 ### Naming conventions
-#### Definieer resources in het meervoud
+#### Gebruik zelfstandige naamwoorden voor resources, behalve voor controllers
 ##### R-NC-001 
+Resources zijn in de meeste gevallen entiteiten (uitzondering : controllers, status resource)
+``` prettyprint
+GET /partners
+```
+
+#### Gebruik **geen** werkwoorden in resource namen, behalve bij controllers
+##### R-NC-002 
+Resources zijn in de meeste gevallen entiteiten (uitzondering : controllers, status resource)
+``` prettyprint
+GET /getpartners
+is **niet** toegelaten
+```
+
+#### Definieer resources in het meervoud
+##### R-NC-003 
 Resources worden steeds in het meervoud gedefinieerd (uitzondering : controllers, status resource)
 ``` prettyprint
 GET /partners
 ```
 
 #### Gebruik steeds lowercase voor URI en query parameters
-##### R-NC-002 
+##### R-NC-004 
 Dit vermijdt technologie afhankelijke problemen met casing.
 ``` prettyprint
 GET /partners?page=10&pagesize=20
 ```
 
 #### Gebruik geen underscores "\_" of dots "." in de URI
-##### R-NC-003
+##### R-NC-005
 ``` prettyprint
 GET /business-parties?page=10&pagesize=20
 ```
 
 #### Gebruik hyphenation om woorden van elkaar te scheiden
-##### R-NC-004
+##### R-NC-006
 Dit verhoogt de leesbaarheid van de URI.
 ``` prettyprint
 GET /business-parties?page=10&pagesize=20
 ```
 
 #### Gebruik geen trailing slash in de URI
-##### R-NC-005
+##### R-NC-007
 Een trailing slash heeft geen toegevoegde waarde en verlaagt bovendien de leesbaarheid van de URI.
 ``` prettyprint
 GET /partners/
@@ -59,7 +74,7 @@ gebruik je dus NIET
 ```
 
 #### Gebruik geen fragments in de URI
-##### R-NC-006
+##### R-NC-008
 Fragments (\#) worden gebruikt om te navigeren binnen een web context pagina, maar mogen niet gebruikt worden in een API URI.
 ``` prettyprint
 GET /partners#name/
