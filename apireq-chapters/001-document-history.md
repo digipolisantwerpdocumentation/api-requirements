@@ -18,4 +18,7 @@ Versie       | Auteur                 | Datum      | Opmerkingen
 5.3.0        | Peter Claes            | 05/04/2019 | HTTP methode HEAD.
 6.0.0        | Tom Sluyts             | 11/04/2019 | Wijziging geolocatie standaard naar geospatiale data standaard.
 6.0.1        | Peter Claes            | 11/04/2019 | Expliciteren 'description'.
-6.0.2        | Peter Claes            | 28/10/2019 | Verduidelijking paginatie.
+6.0.2        | Erik Lenaerts          | 26/09/2019 | Aanpak datetime notatie en tijdzones.
+6.0.3        | Peter Claes            | 28/10/2019 | Verduidelijking paginatie.
+6.0.4        | Erik Lenaerts          | 22/04/2020 | Herbruikbare definities toegevoegd.
+6.0.5        | Peter Claes            | 15/06/2020 | Document opgesplits, enkele verduidelijkingen en Rule identificaties toegevoegd.

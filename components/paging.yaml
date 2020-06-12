@@ -1,0 +1,109 @@
+openapi: 3.0.1
+info:
+  title: Paging
+  description: In this OAS document we describe the commonly used Paging parameters
+    as well as the links & pages schema's
+  version: 1.0.0
+servers:
+- url: /
+paths: {}
+components:
+  schemas:
+    Pages:
+      required:
+      - number
+      - size
+      type: object
+      properties:
+        size:
+          type: integer
+          description: returns the size of a page provided in the pagesize query parameter
+            of the request
+          example: 10
+        totalElements:
+          type: integer
+          description: the total number of items in the resulting collection
+          example: 34
+        totalPages:
+          type: integer
+          description: the total number of pages in the resulting array. This is calculated
+            with the given size value
+          example: 4
+        number:
+          type: integer
+          description: return the page number provided in the page query parameter
+            of the request
+          example: 1
+      description: A generic model used to describe paging information when requesting
+        a list of resources.
+    Links:
+      type: object
+      properties:
+        self:
+          type: object
+          properties:
+            href:
+              type: string
+              format: uri
+              example: https://my-api.digipolis.be/base?pagesize=5&page=2
+          description: contains a link to this page of this collection
+        first:
+          type: object
+          properties:
+            href:
+              type: string
+              format: uri
+              example: https://my-api.digipolis.be/base?pagesize=5&page=1
+          description: contains a link to the first page of this collection
+        last:
+          type: object
+          properties:
+            href:
+              type: string
+              format: uri
+              example: https://my-api.digipolis.be/base?pagesize=5&page=last
+          description: contains a link to the last page of this collection
+        prev:
+          type: object
+          properties:
+            href:
+              type: string
+              format: uri
+              example: https://my-api.digipolis.be/base?pagesize=5&page=1
+          description: contains a link to the previous page of this collection
+        next:
+          type: object
+          properties:
+            href:
+              type: string
+              format: uri
+              example: https://my-api.digipolis.be/base?pagesize=5&page=3
+          description: contains a link to the next page of this collection
+      description: provides navigational uri's to other pages of the collection
+  parameters:
+    Pagesize:
+      name: pagesize
+      in: query
+      description: Max number of items for each page
+      required: true
+      schema:
+        type: integer
+    PagingStrategy:
+      name: paging-strategy
+      in: query
+      description: Specify the paging strategy, i.e. if totalPages and totalElements
+        should be included in the response output
+      schema:
+        type: string
+        default: noCount
+        enum:
+        - noCount
+        - withCount
+    Page:
+      name: page
+      in: query
+      description: Starting offset for the list, this can be either a number or the
+        literal "last"
+      required: true
+      schema:
+        type: string

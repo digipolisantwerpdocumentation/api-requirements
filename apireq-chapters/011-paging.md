@@ -63,6 +63,36 @@ Om de paging strategie mee te geven, gebruikt de consumer de optionele parameter
  Bij **`withCount`** worden __`Totaal aantal elementen`__ en __`Totaal aantal pagina's`__ altijd verplicht terug gegeven. Bovendien bevat de __`link naar de laatste pagina`__ het paginanummer (zie verder voor een voorbeeld). 
 Bij **`noCount`** worden de beide totalen niet terug gegeven en is de link naar de laatste pagina een link zonder paginanummer met de vermelding **`last`** (zie verder voor een voorbeeld).
 
+> Om je te helpen hebben we de definitie van **`page`**, **`pagesize`** en **`paging-strategy`** reeds gemaakt voor jou in de [paging.yaml swagger](../components/paging.yaml) file. In onderstaand voorbeeld tonen we hoe je hier gebruik van kan maken:
+```JSON
+  "paths": {
+    "/invoices": {
+      "get": {
+        "summary": "Retrieve a list of invoices",
+        "description": "Retrieve a paged result list of Sales Invoices",
+        "parameters": [
+          {
+            "$ref": "https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/parameters/Page"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/parameters/Pagesize"
+          },
+          {
+            "$ref": "https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/parameters/PagingStrategy"
+          }
+        ],
+      }
+    }
+  }
+```
+
+Herbruikbare definities van oa. pagingatie parameters vind je terug in de [/components](/components) map hier op GitHub. Om er vanuit jouw swagger file ernaar te refereren kan je volgende link gebruiken:
+
+`https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/parameters/Page`
+
+Vervang daar waar nodig het deel achter de `#` in deze url.
+
+
 ### Paginatie response bericht
 #### Gebruik de HAL specificatie voor gepagineerde responses
 ##### R-PR-001
@@ -120,6 +150,11 @@ Dit alles resulteert in volgende structuur in de response message om pagina link
 }
 ```
 
+**Tip:** Net zoals de **`page`** en **`pagesize`** parameter, hebben we deze **_links** data structuur definitie ook reeds voorgemaakt op:
+
+`https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/schema/Links`
+
+
 Bij het ophalen van collections dient bovenstaande structuur steeds aanwezig te zijn in een response message. Dit maakt dat de eigenlijke resources in een wrapper object komen te zitten in het response bericht.  
 Dit kan door middel van het **\_embedded** reserved keyword. Dit \_embedded object bestaat uit property namen dewelke een link relation
 type voorstellen en wiens waarde 1 of meerdere resource objecten zijn.  
@@ -160,7 +195,12 @@ Voorbeeld bij `paging-strategy=noCount` :
 }
 ``` 
 
-Alle aspecten van paginatie samenvoegend geeft dit volgende response wrapper message voor paginatie:
+**Tip:** Deze **_page** data structuur definitie is reeds voorgemaakt op:
+
+`https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/schema/Page`
+
+
+Alle aspecten van paginatie samengevoegd geeft dit volgende response wrapper message voor paginatie:
 ```json
 {
    "_links": {
@@ -241,6 +281,31 @@ Geeft als resultaat
    }
 }
 ```
+
+De swagger voor bovenstaand voorbeeld gebruik makende van de generieke definities ziet er als volgt uit:
+
+```JSON
+      "MyResources": {
+        "type": "object",
+        "properties": {
+          "_links": {
+            "$ref": "https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/schema/Links"
+          },
+          "_embedded": {
+            "type": "object",
+            "properties": {
+              "business-parties": {
+                "type": "array",
+                "items": {
+                }
+              }
+            }
+          },
+          "_page": {
+            "$ref": "https://raw.githubusercontent.com/digipolisantwerpdocumentation/api-requirements/components/paging.yaml#/components/schema/Page"
+          }
+```
+
 
 Het ophalen van business parties (noCount)  
 
