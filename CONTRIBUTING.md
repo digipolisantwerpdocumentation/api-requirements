@@ -1,4 +1,4 @@
-# Contributing to the Digipolis API Requirments #
+# Contributing to the Digipolis API Requirements #
 
 ### Steps ###
 
