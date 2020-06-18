@@ -31,9 +31,10 @@ components:
           example: 4
         number:
           type: integer
+          minimum: 1
           description: return the page number provided in the page query parameter
             of the request
-          example: 0
+          example: 1
       description: A generic model used to describe paging information when requesting
         a list of resources.
     Links:
@@ -53,7 +54,7 @@ components:
             href:
               type: string
               format: uri
-              example: https://my-api.digipolis.be/base?pagesize=5&page=0
+              example: https://my-api.digipolis.be/base?pagesize=5&page=1
           description: contains a link to the first page of this collection
         last:
           type: object
