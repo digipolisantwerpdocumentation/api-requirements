@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Digipolis API System</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="API documentation, guidelines and best practices.">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify/lib/themes/vue.css">
+  <link rel="stylesheet" href="css/custom.css">
+  <link rel="apple-touch-icon" sizes="180x180"
+    href="https://cdn.antwerpen.be/acpaas_branding_favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32"
+    href="https://cdn.antwerpen.be/acpaas_branding_favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16"
+    href="https://cdn.antwerpen.be/acpaas_branding_favicons/favicon-16x16.png">
+  <link rel="manifest" href="https://cdn.antwerpen.be/acpaas_branding_favicons/site.webmanifest">
+  <link rel="mask-icon" href="https://cdn.antwerpen.be/acpaas_branding_favicons/safari-pinned-tab.svg" color="#01afb8">
+  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/fontawesome.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/brands.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/regular.css" />
+  <link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free/css/solid.css" />
+  <meta name="msapplication-TileColor" content="#322a56">
+  <meta name="theme-color" content="#322a56">
+
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+      name: 'Digipolis API System 7.0.0',
+      repo: 'digipolisantwerpdocumentation/api-requirements',
+      maxLevel: 4,
+      auto2top: true,
+      loadSidebar: false,
+      autoHeader: false,
+      loadNavbar: false,
+      coverpage: false,
+      onlyCover: false,
+      noEmoji: true,
+      themeColor: '#322A56',
+      plantuml: {
+        skin: 'default',
+      },
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: 'Tik hier om te zoeken'
+      },
+      footer: {
+        copy: '<span>Digipolis &copy; 2020</span>',
+        auth: 'by ACPaaS Team',
+        pre: '<hr/>',
+        style: 'text-align: right;',
+        style: 'className',
+      },
+      homepage: '/content/getting-started.md',
+      alias : {
+          '/.*/_navbar.md' : '/_navbar.md',
+          '/.*/_sidebar.md' : '/_sidebar.md',
+      },
+    //   plugins: [
+    //     function (hook, vm) {
+    //       hook.ready(function () {
+    //         let urlQueryParam = new URL(
+    //           window.location.origin + location.pathname + window.location.search + location.hash.substring(1)
+    //         ).searchParams
+
+    //         if (urlQueryParam.has('id')) {
+    //           let urlId = urlQueryParam.get('id')
+    //           try {
+    //             document.querySelector('a[data-id*=\'' + urlId + '\']')
+    //               .scrollIntoView()
+    //           } catch (e) {
+    //             console.warn('First load scroll failed', e)
+    //           }
+    //         }
+    //       });
+    //     }
+    //   ]
+    }
+  </script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/docsify.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-count@latest/dist/countable.min.js"></script>
+  <script src="https://unpkg.com/docsify-plugin-flexible-alerts"></script>
+  <script src="//unpkg.com/docsify-plantuml/dist/docsify-plantuml.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs/components/prism-bash.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs/components/prism-http.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs/components/prism-json.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs/components/prism-yaml.min.js"></script>
+  <script src="//unpkg.com/docsify-fontawesome/dist/docsify-fontawesome.min.js"></script>
+  <script src="//unpkg.com/docsify-footer-enh/dist/docsify-footer-enh.min.js"></script>
+
+</body>
+
+</html>
